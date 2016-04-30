@@ -1,6 +1,6 @@
 ﻿namespace UwCore.Services.Navigation
 {
-    public class NavigatedEvent
+    internal class NavigatedEvent
     {
         public object ViewModel { get; }
 
