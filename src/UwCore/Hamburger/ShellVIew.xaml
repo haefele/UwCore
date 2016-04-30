@@ -43,7 +43,7 @@
                     <VisualState.Setters>
                         <Setter Target="Navigation.(SplitView.DisplayMode)" Value="Inline" />
                         <Setter Target="Navigation.(SplitView.IsPaneOpen)" Value="True" />
-                        <Setter Target="Header.NavigationButtonVisibility" Value="Collapsed" />
+                        <Setter Target="HeaderOld.NavigationButtonVisibility" Value="Collapsed" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

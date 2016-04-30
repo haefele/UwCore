@@ -1,11 +1,13 @@
 ﻿using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 namespace UwCore.Controls
 {
-    public partial class LoadingOverlay
+    public class LoadingOverlay : Control
     {
+        #region Properties
         public static readonly DependencyProperty MessageProperty = DependencyProperty.Register(
-            "Message", typeof(string), typeof(LoadingOverlay), new PropertyMetadata(default(string)));
+            nameof(Message), typeof(string), typeof(LoadingOverlay), new PropertyMetadata(default(string)));
 
         public string Message
         {
@@ -14,17 +16,20 @@ namespace UwCore.Controls
         }
 
         public static readonly DependencyProperty IsActiveProperty = DependencyProperty.Register(
-            "IsActive", typeof(bool), typeof(LoadingOverlay), new PropertyMetadata(default(bool)));
+            nameof(IsActive), typeof(bool), typeof(LoadingOverlay), new PropertyMetadata(default(bool)));
 
         public bool IsActive
         {
             get { return (bool)this.GetValue(IsActiveProperty); }
             set { this.SetValue(IsActiveProperty, value); }
         }
+        #endregion
 
+        #region Constructors
         public LoadingOverlay()
         {
-            this.InitializeComponent();
+            this.DefaultStyleKey = typeof(LoadingOverlay);
         }
+        #endregion
     }
 }

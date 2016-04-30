@@ -6,24 +6,24 @@ namespace UwCore.Services.Loading
 {
     public class LoadingService : ILoadingService
     {
-        private readonly LoadingOverlay _overlay;
+        private readonly LoadingOverlay _overlayOld;
 
-        public LoadingService(LoadingOverlay overlay)
+        public LoadingService(LoadingOverlay overlayOld)
         {
-            this._overlay = overlay;
+            this._overlayOld = overlayOld;
         }
 
         public IDisposable Show(string message)
         {
-            if (this._overlay.IsActive)
+            if (this._overlayOld.IsActive)
                 return new DisposableAction(() => { });
 
-            this._overlay.Message = message;
-            this._overlay.IsActive = true;
+            this._overlayOld.Message = message;
+            this._overlayOld.IsActive = true;
 
             return new DisposableAction(() =>
             {
-                this._overlay.IsActive = false;
+                this._overlayOld.IsActive = false;
             });
         }
     }

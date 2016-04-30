@@ -115,12 +115,8 @@
     <Compile Include="Common\DisposableAction.cs" />
     <Compile Include="Common\Guard.cs" />
     <Compile Include="Common\ResourceAccessor.cs" />
-    <Compile Include="Controls\Header.xaml.cs">
-      <DependentUpon>Header.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\LoadingOverlay.xaml.cs">
-      <DependentUpon>LoadingOverlay.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="Controls\Header.cs" />
+    <Compile Include="Controls\LoadingOverlay.cs" />
     <Compile Include="Converter\BooleanNegationConverter.cs" />
     <Compile Include="Converter\BooleanToNullableBooleanConverter.cs" />
     <Compile Include="Converter\BooleanToObjectConverter .cs" />
@@ -155,17 +151,14 @@
     <EmbeddedResource Include="Properties\UwCore.rd.xml" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Controls\Header.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Controls\LoadingOverlay.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Hamburger\ShellView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\generic.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Page>
   </ItemGroup>
   <ItemGroup />
