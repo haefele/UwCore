@@ -98,7 +98,7 @@ namespace UwCore.Services.ApplicationState
             try
             {
                 var file = await ApplicationData.Current.LocalFolder.CreateFileAsync("ApplicationState.bin", CreationCollisionOption.OpenIfExists);
-                this._localState = await this.RestoreFileStateAsync(file);
+                this._localState = await this.RestoreFileStateAsync(file) ?? new ConcurrentDictionary<string, string>();
             }
             catch
             {
@@ -117,7 +117,7 @@ namespace UwCore.Services.ApplicationState
             try
             {
                 var file = await ApplicationData.Current.RoamingFolder.CreateFileAsync("ApplicationState.bin", CreationCollisionOption.OpenIfExists);
-                this._roamingState = await this.RestoreFileStateAsync(file);
+                this._roamingState = await this.RestoreFileStateAsync(file) ?? new ConcurrentDictionary<string, string>();
             }
             catch
             {
@@ -145,7 +145,7 @@ namespace UwCore.Services.ApplicationState
                 var credentials = vault.Retrieve("UwCore", "ApplicationState");
                 credentials.RetrievePassword();
 
-                this._vaultState = JsonConvert.DeserializeObject<ConcurrentDictionary<string, string>>(credentials.Password, this._jsonSerializerSettings);
+                this._vaultState = JsonConvert.DeserializeObject<ConcurrentDictionary<string, string>>(credentials.Password, this._jsonSerializerSettings) ?? new ConcurrentDictionary<string, string>();
                 return Task.CompletedTask;
             }
             catch
