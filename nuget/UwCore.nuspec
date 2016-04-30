@@ -11,7 +11,6 @@
       <dependency id="Newtonsoft.Json" version="8.0.3" />
       <dependency id="JetBrains.Annotations" version="10.1.4" />
       <dependency id="MetroLog" version="1.0.1" />
-      <dependency id="Caliburn.Micro.ReactiveUI" version="2.3.0" />
       <dependency id="Caliburn.Micro" version="3.0.0" />
     </dependencies>
   </metadata>

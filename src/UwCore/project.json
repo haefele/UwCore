@@ -4,7 +4,6 @@
     "JetBrains.Annotations": "10.1.4",
     "MetroLog": "1.0.1",
     "Newtonsoft.Json": "8.0.3",
-    "Caliburn.Micro.ReactiveUI": "2.3.0",
     "Caliburn.Micro":  "3.0.0" 
   },
   "frameworks": {
