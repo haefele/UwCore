@@ -12,6 +12,7 @@ using Caliburn.Micro;
 using UwCore.Extensions;
 using UwCore.Hamburger;
 using UwCore.Logging;
+using UwCore.Services.ApplicationState;
 using UwCore.Services.Dialog;
 using UwCore.Services.ExceptionHandler;
 using UwCore.Services.Loading;
@@ -42,23 +43,28 @@ namespace UwCore.Application
             this._container = new WinRTContainer();
             this._container.RegisterWinRTServices();
 
+            //Dialog
             this._container.Singleton<IDialogService, DialogService>();
 
-            var exceptionHandlerType = this.GetExceptionHandlerType();
-            if (exceptionHandlerType != null)
-                this._container.RegisterSingleton(typeof(IExceptionHandler), null, exceptionHandlerType);
+            //Exception
+            var dialogService = this._container.GetInstance<IDialogService>();
+            var commonExceptionType = this.GetCommonExceptionType();
+            var errorMessage = this.GetErrorMessage();
+            var errorTitle = this.GetErrorTitle();
+            this._container.Instance((IExceptionHandler) new ExceptionHandler(dialogService, commonExceptionType, errorMessage, errorTitle));
 
+            //ApplicationState
+            this._container.Singleton<IApplicationStateService, ApplicationStateService>();
+            
+            //ViewModels
             var viewModelTypes = this.GetViewModelTypes();
             foreach (var viewModelType in viewModelTypes)
             {
                 this._container.RegisterPerRequest(viewModelType, null, viewModelType);
             }
 
-            var applicationModeTypes = this.GetApplicationModeTypes();
-            foreach (var applicationModeType in applicationModeTypes)
-            {
-                this._container.RegisterPerRequest(applicationModeType, null, applicationModeType);
-            }
+            //Other
+            this.RegisterInContainer(this._container);
         }
 
         private void ConfigureCaliburnMicro()
@@ -94,7 +100,7 @@ namespace UwCore.Application
 
             this.Initialize();
 
-            await this.RestoreStateAsync();
+            await IoC.Get<IApplicationStateService>().RestoreStateAsync();
 
             var view = new ShellView();
             this._container.Instance((INavigationService)new NavigationService(view.ContentFrame, this._container.GetInstance<IEventAggregator>()));
@@ -116,7 +122,7 @@ namespace UwCore.Application
         {
             var deferral = e.SuspendingOperation.GetDeferral();
 
-            await this.SaveStateAsync();
+            await IoC.Get<IApplicationStateService>().SaveStateAsync();
             IoC.Get<IEventAggregator>().PublishOnCurrentThread(new ApplicationSuspendingEvent());
 
             deferral.Complete();
@@ -134,34 +140,20 @@ namespace UwCore.Application
         #endregion
 
         #region To Override 
-
         public virtual IEnumerable<Type> GetViewModelTypes()
         {
             yield break;
         }
 
-        public virtual IEnumerable<Type> GetApplicationModeTypes()
+        public virtual void RegisterInContainer(WinRTContainer container)
         {
-            yield break;
+            
         }
-
-        public virtual Type GetExceptionHandlerType()
-        {
-            return null;
-        }
-
-        public virtual Task RestoreStateAsync()
-        {
-            return Task.CompletedTask;
-        }
-
-        public virtual Task SaveStateAsync()
-        {
-            return Task.CompletedTask;
-        }
-
+        
         public abstract ApplicationMode GetCurrentMode();
-
+        public abstract string GetErrorTitle();
+        public abstract string GetErrorMessage();
+        public abstract Type GetCommonExceptionType();
         #endregion
     }
 }
