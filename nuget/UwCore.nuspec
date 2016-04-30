@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>UwCore</id>
-    <version>1.0.0</version>
+    <version></version>
     <authors>Daniel Haefele</authors>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Makes my life with uwp projects easier.</description>
@@ -15,6 +15,10 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="..\src\UwCore\bin\Release\UwCore.dll" target="lib\uap10.0" />
+    <file src="..\src\UwCore\bin\Release\UwCore.dll" 		 	  target="lib\uap10.0\UwCore.dll" />
+    <file src="..\src\UwCore\bin\Release\UwCore.pri" 		 	  target="lib\uap10.0\UwCore.pri" />
+	<file src="..\src\UwCore\bin\Release\UwCore.xr.xml" 	 	  target="lib\uap10.0\UwCore\UwCore.xr.xml" />
+    <file src="..\src\UwCore\bin\Release\Themes\generic.xbf" 	  target="lib\uap10.0\UwCore\Themes\generic.xbf" />
+    <file src="..\src\UwCore\bin\Release\Hamburger\ShellView.xbf" target="lib\uap10.0\UwCore\Hamburger\ShellVIew.xbf" />
   </files>
 </package>
