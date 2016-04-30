@@ -12,9 +12,11 @@ using Caliburn.Micro;
 using UwCore.Extensions;
 using UwCore.Hamburger;
 using UwCore.Logging;
+using UwCore.Services.Dialog;
+using UwCore.Services.ExceptionHandler;
 using UwCore.Services.Loading;
 using UwCore.Services.Navigation;
-using INavigationService = Caliburn.Micro.INavigationService;
+using INavigationService = UwCore.Services.Navigation.INavigationService;
 
 namespace UwCore.Application
 {
@@ -39,9 +41,24 @@ namespace UwCore.Application
         {
             this._container = new WinRTContainer();
             this._container.RegisterWinRTServices();
-            
 
-            this.RegisterComponents(this._container);
+            this._container.Singleton<IDialogService, DialogService>();
+
+            var exceptionHandlerType = this.GetExceptionHandlerType();
+            if (exceptionHandlerType != null)
+                this._container.RegisterSingleton(typeof(IExceptionHandler), null, exceptionHandlerType);
+
+            var viewModelTypes = this.GetViewModelTypes();
+            foreach (var viewModelType in viewModelTypes)
+            {
+                this._container.RegisterPerRequest(viewModelType, null, viewModelType);
+            }
+
+            var applicationModeTypes = this.GetApplicationModeTypes();
+            foreach (var applicationModeType in applicationModeTypes)
+            {
+                this._container.RegisterPerRequest(applicationModeType, null, applicationModeType);
+            }
         }
 
         private void ConfigureCaliburnMicro()
@@ -83,7 +100,7 @@ namespace UwCore.Application
             this._container.Instance((INavigationService)new NavigationService(view.ContentFrame, this._container.GetInstance<IEventAggregator>()));
             this._container.Instance((ILoadingService)new LoadingService(view.LoadingOverlay));
 
-            var viewModel = IoC.Get<ShellViewModel>();
+            var viewModel = new ShellViewModel(IoC.Get<INavigationService>(), IoC.Get<IEventAggregator>());
             this._container.Instance((IApplication)viewModel);
 
             viewModel.CurrentMode = this.GetCurrentMode();
@@ -118,9 +135,19 @@ namespace UwCore.Application
 
         #region To Override 
 
-        public virtual void RegisterComponents(WinRTContainer container)
+        public virtual IEnumerable<Type> GetViewModelTypes()
         {
-            
+            yield break;
+        }
+
+        public virtual IEnumerable<Type> GetApplicationModeTypes()
+        {
+            yield break;
+        }
+
+        public virtual Type GetExceptionHandlerType()
+        {
+            return null;
         }
 
         public virtual Task RestoreStateAsync()
