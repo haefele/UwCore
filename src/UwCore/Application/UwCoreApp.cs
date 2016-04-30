@@ -64,7 +64,7 @@ namespace UwCore.Application
             }
 
             //Other
-            this.RegisterInContainer(this._container);
+            this.ConfigureContainer(this._container);
         }
 
         private void ConfigureCaliburnMicro()
@@ -145,7 +145,7 @@ namespace UwCore.Application
             yield break;
         }
 
-        public virtual void RegisterInContainer(WinRTContainer container)
+        public virtual void ConfigureContainer(WinRTContainer container)
         {
             
         }

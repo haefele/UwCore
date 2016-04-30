@@ -1,0 +1,10 @@
+﻿<application:UwCoreApp
+    x:Class="UwCoreTest.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UwCoreTest"
+    xmlns:application="using:UwCore.Application"
+    RequestedTheme="Light">
+
+</application:UwCoreApp>
+

@@ -5,6 +5,8 @@ VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UwCore", "UwCore\UwCore.csproj", "{BEE32CEA-DC4E-4C55-9D7D-80AFF9D7D027}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UwCoreTest", "UwCoreTest\UwCoreTest.csproj", "{957DE25D-4534-48ED-9ECF-1655F2C320DA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,30 @@ Global
 		{BEE32CEA-DC4E-4C55-9D7D-80AFF9D7D027}.Release|x64.Build.0 = Release|x64
 		{BEE32CEA-DC4E-4C55-9D7D-80AFF9D7D027}.Release|x86.ActiveCfg = Release|x86
 		{BEE32CEA-DC4E-4C55-9D7D-80AFF9D7D027}.Release|x86.Build.0 = Release|x86
+		{957DE25D-4534-48ED-9ECF-1655F2C320DA}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{957DE25D-4534-48ED-9ECF-1655F2C320DA}.Debug|Any CPU.Build.0 = Debug|x86
+		{957DE25D-4534-48ED-9ECF-1655F2C320DA}.Debug|Any CPU.Deploy.0 = Debug|x86
+		{957DE25D-4534-48ED-9ECF-1655F2C320DA}.Debug|ARM.ActiveCfg = Debug|ARM
+		{957DE25D-4534-48ED-9ECF-1655F2C320DA}.Debug|ARM.Build.0 = Debug|ARM
+		{957DE25D-4534-48ED-9ECF-1655F2C320DA}.Debug|ARM.Deploy.0 = Debug|ARM
+		{957DE25D-4534-48ED-9ECF-1655F2C320DA}.Debug|x64.ActiveCfg = Debug|x64
+		{957DE25D-4534-48ED-9ECF-1655F2C320DA}.Debug|x64.Build.0 = Debug|x64
+		{957DE25D-4534-48ED-9ECF-1655F2C320DA}.Debug|x64.Deploy.0 = Debug|x64
+		{957DE25D-4534-48ED-9ECF-1655F2C320DA}.Debug|x86.ActiveCfg = Debug|x86
+		{957DE25D-4534-48ED-9ECF-1655F2C320DA}.Debug|x86.Build.0 = Debug|x86
+		{957DE25D-4534-48ED-9ECF-1655F2C320DA}.Debug|x86.Deploy.0 = Debug|x86
+		{957DE25D-4534-48ED-9ECF-1655F2C320DA}.Release|Any CPU.ActiveCfg = Release|x86
+		{957DE25D-4534-48ED-9ECF-1655F2C320DA}.Release|Any CPU.Build.0 = Release|x86
+		{957DE25D-4534-48ED-9ECF-1655F2C320DA}.Release|Any CPU.Deploy.0 = Release|x86
+		{957DE25D-4534-48ED-9ECF-1655F2C320DA}.Release|ARM.ActiveCfg = Release|ARM
+		{957DE25D-4534-48ED-9ECF-1655F2C320DA}.Release|ARM.Build.0 = Release|ARM
+		{957DE25D-4534-48ED-9ECF-1655F2C320DA}.Release|ARM.Deploy.0 = Release|ARM
+		{957DE25D-4534-48ED-9ECF-1655F2C320DA}.Release|x64.ActiveCfg = Release|x64
+		{957DE25D-4534-48ED-9ECF-1655F2C320DA}.Release|x64.Build.0 = Release|x64
+		{957DE25D-4534-48ED-9ECF-1655F2C320DA}.Release|x64.Deploy.0 = Release|x64
+		{957DE25D-4534-48ED-9ECF-1655F2C320DA}.Release|x86.ActiveCfg = Release|x86
+		{957DE25D-4534-48ED-9ECF-1655F2C320DA}.Release|x86.Build.0 = Release|x86
+		{957DE25D-4534-48ED-9ECF-1655F2C320DA}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
