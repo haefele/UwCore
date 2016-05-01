@@ -15,10 +15,10 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="..\src\UwCore\bin\Release\UwCore.dll" 		 	  target="lib\uap10.0\UwCore.dll" />
-    <file src="..\src\UwCore\bin\Release\UwCore.pri" 		 	  target="lib\uap10.0\UwCore.pri" />
-	<file src="..\src\UwCore\bin\Release\UwCore.xr.xml" 	 	  target="lib\uap10.0\UwCore\UwCore.xr.xml" />
-    <file src="..\src\UwCore\bin\Release\Themes\generic.xbf" 	  target="lib\uap10.0\UwCore\Themes\generic.xbf" />
-    <file src="..\src\UwCore\bin\Release\Hamburger\ShellView.xbf" target="lib\uap10.0\UwCore\Hamburger\ShellVIew.xbf" />
+    <file src="..\src\UwCore\bin\Release\UwCore.dll" target="lib\uap10.0\UwCore.dll" />
+    <file src="..\src\UwCore\bin\Release\UwCore.pri" target="lib\uap10.0\UwCore.pri" />
+	  <file src="..\src\UwCore\bin\Release\UwCore.xr.xml" target="lib\uap10.0\UwCore\UwCore.xr.xml" />
+    <file src="..\src\UwCore\bin\Release\Themes\generic.xbf" target="lib\uap10.0\UwCore\Themes\generic.xbf" />
+    <file src="..\src\UwCore\bin\Release\Hamburger\HamburgerView.xbf" target="lib\uap10.0\UwCore\Hamburger\HamburgerView.xbf" />
   </files>
 </package>
