@@ -102,11 +102,11 @@ namespace UwCore.Application
 
             await IoC.Get<IApplicationStateService>().RestoreStateAsync();
 
-            var view = new ShellView();
+            var view = new HamburgerView();
             this._container.Instance((INavigationService)new NavigationService(view.ContentFrame, this._container.GetInstance<IEventAggregator>()));
             this._container.Instance((ILoadingService)new LoadingService(view.LoadingOverlay));
 
-            var viewModel = new ShellViewModel(IoC.Get<INavigationService>(), IoC.Get<IEventAggregator>());
+            var viewModel = new HamburgerViewModel(IoC.Get<INavigationService>(), IoC.Get<IEventAggregator>());
             this._container.Instance((IApplication)viewModel);
 
             viewModel.CurrentMode = this.GetCurrentMode();

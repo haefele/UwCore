@@ -1,5 +1,5 @@
 ﻿<Page
-    x:Class="UwCore.Hamburger.ShellView"
+    x:Class="UwCore.Hamburger.HamburgerView"
     
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -43,7 +43,7 @@
                     <VisualState.Setters>
                         <Setter Target="Navigation.(SplitView.DisplayMode)" Value="Inline" />
                         <Setter Target="Navigation.(SplitView.IsPaneOpen)" Value="True" />
-                        <Setter Target="HeaderOld.NavigationButtonVisibility" Value="Collapsed" />
+                        <Setter Target="Header.NavigationButtonVisibility" Value="Collapsed" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -61,6 +61,7 @@
                          Title="{Binding ElementName=ContentFrame, Path=Content.DataContext.DisplayName}" />
 
         <SplitView x:Name="Navigation"
+                   OpenPaneLength="250"
                    IsPaneOpen="False"
                    DisplayMode="CompactOverlay"
                    Grid.Row="1">

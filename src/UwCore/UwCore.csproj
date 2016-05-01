@@ -133,10 +133,10 @@
     <Compile Include="Hamburger\ClickableHamburgerItem.cs" />
     <Compile Include="Hamburger\HamburgerItem.cs" />
     <Compile Include="Hamburger\NavigatingHamburgerItem.cs" />
-    <Compile Include="Hamburger\ShellView.xaml.cs">
-      <DependentUpon>ShellView.xaml</DependentUpon>
+    <Compile Include="Hamburger\HamburgerView.xaml.cs">
+      <DependentUpon>HamburgerView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Hamburger\ShellViewModel.cs" />
+    <Compile Include="Hamburger\HamburgerViewModel.cs" />
     <Compile Include="Logging\CaliburnMicroLoggingAdapter.cs" />
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="Logging\LoggerExtensions.cs" />
@@ -156,7 +156,7 @@
     <EmbeddedResource Include="Properties\UwCore.rd.xml" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Hamburger\ShellView.xaml">
+    <Page Include="Hamburger\HamburgerView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

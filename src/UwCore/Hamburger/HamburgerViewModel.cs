@@ -8,7 +8,7 @@ using INavigationService = UwCore.Services.Navigation.INavigationService;
 
 namespace UwCore.Hamburger
 {
-    public class ShellViewModel : Screen, IApplication, IHandle<NavigatedEvent>
+    public class HamburgerViewModel : Screen, IApplication, IHandle<NavigatedEvent>
     {
         private readonly INavigationService _navigationService;
 
@@ -50,7 +50,7 @@ namespace UwCore.Hamburger
             }
         }
 
-        public ShellViewModel(INavigationService navigationService, IEventAggregator eventAggregator)
+        public HamburgerViewModel(INavigationService navigationService, IEventAggregator eventAggregator)
         {
             this._navigationService = navigationService;
 

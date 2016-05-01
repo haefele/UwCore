@@ -5,9 +5,9 @@ using Windows.UI.Xaml.Media.Animation;
 
 namespace UwCore.Hamburger
 {
-    public sealed partial class ShellView : Page
+    public sealed partial class HamburgerView : Page
     {
-        public ShellView()
+        public HamburgerView()
         {
             this.InitializeComponent();
 
@@ -20,7 +20,7 @@ namespace UwCore.Hamburger
             };
         }
 
-        public ShellViewModel ViewModel => this.DataContext as ShellViewModel;
+        public HamburgerViewModel ViewModel => this.DataContext as HamburgerViewModel;
 
         private void ListViewBase_OnItemClick(object sender, ItemClickEventArgs e)
         {
