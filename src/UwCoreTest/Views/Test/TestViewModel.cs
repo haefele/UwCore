@@ -9,10 +9,17 @@ namespace UwCoreTest.Views.Test
     {
         private readonly ILoadingService _loadingService;
 
+        public int SomeId { get; set; }
+
         public TestViewModel(ILoadingService loadingService)
         {
             this._loadingService = loadingService;
             this.DisplayName = "Test-View-Model";
+        }
+        
+        protected override void OnActivate()
+        {
+            base.OnActivate();
         }
 
         public async void Click()

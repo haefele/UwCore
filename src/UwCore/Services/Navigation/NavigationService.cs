@@ -17,9 +17,9 @@ namespace UwCore.Services.Navigation
             this._eventAggregator = eventAggregator;
         }
         
-        public new void Navigate(Type viewModelType)
+        public new void Navigate(Type viewModelType, object parameter = null)
         {
-            this.NavigateToViewModel(viewModelType);
+            this.NavigateToViewModel(viewModelType, parameter);
         }
 
         public void ClearBackStack()
