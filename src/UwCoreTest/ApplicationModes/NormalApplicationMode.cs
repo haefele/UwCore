@@ -24,10 +24,9 @@ namespace UwCoreTest.ApplicationModes
         {
             this.Application.Actions.Add(this._testHamburgerItem);
 
-            this._navigationService.Navigate(typeof(TestViewModel), new Dictionary<string, object>
-            {
-                [nameof(TestViewModel.SomeId)] = 15,
-            });
+            this._navigationService.For<TestViewModel>()
+                .WithParam(f => f.SomeId, 15)
+                .Navigate();
         }
 
         public override void Leave()

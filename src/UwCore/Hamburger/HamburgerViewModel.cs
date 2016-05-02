@@ -93,7 +93,7 @@ namespace UwCore.Hamburger
             var navigating = hamburgerItem as NavigatingHamburgerItem;
             if (navigating != null)
             {
-                this._navigationService.Navigate(navigating.ViewModelType);
+                this._navigationService.Advanced.Navigate(navigating.ViewModelType, navigating.Parameter);
             }
 
             var clickable = hamburgerItem as ClickableHamburgerItem;

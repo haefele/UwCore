@@ -7,7 +7,7 @@ using Caliburn.Micro;
 
 namespace UwCore.Services.Navigation
 {
-    public class NavigationService : FrameAdapter, INavigationService
+    public class NavigationService : FrameAdapter, INavigationService, IAdvancedNavigationService
     {
         private readonly IEventAggregator _eventAggregator;
 
@@ -16,10 +16,17 @@ namespace UwCore.Services.Navigation
         {
             this._eventAggregator = eventAggregator;
         }
-        
-        public new void Navigate(Type viewModelType, object parameter = null)
+
+        public IAdvancedNavigationService Advanced => this;
+
+        void IAdvancedNavigationService.Navigate(Type viewModelType, object parameter)
         {
             this.NavigateToViewModel(viewModelType, parameter);
+        }
+
+        public NavigateHelper<T> For<T>()
+        {
+            return new NavigateHelper<T>().AttachTo(this);
         }
 
         public void ClearBackStack()
@@ -43,6 +50,5 @@ namespace UwCore.Services.Navigation
             var systemNavigationManager = SystemNavigationManager.GetForCurrentView();
             systemNavigationManager.AppViewBackButtonVisibility = this.CanGoBack ? AppViewBackButtonVisibility.Visible : AppViewBackButtonVisibility.Collapsed;
         }
-
     }
 }
