@@ -26,7 +26,12 @@ namespace UwCoreTest.Views.Test
         {
             using (this._loadingService.Show("Test-Message"))
             {
-                await Task.Delay(TimeSpan.FromSeconds(5));
+                using (this._loadingService.Show("Inner Loading"))
+                {
+                    await Task.Delay(TimeSpan.FromSeconds(2));
+                }
+
+                await Task.Delay(TimeSpan.FromSeconds(3));
             }
         }
     }
