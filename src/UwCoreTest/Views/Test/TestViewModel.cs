@@ -1,20 +1,28 @@
 ﻿using System;
+using System.Reactive;
 using System.Threading.Tasks;
 using Caliburn.Micro;
+using Caliburn.Micro.ReactiveUI;
+using ReactiveUI;
 using UwCore.Services.Loading;
 
 namespace UwCoreTest.Views.Test
 {
-    public class TestViewModel : Screen
+    public class TestViewModel : ReactiveScreen
     {
         private readonly ILoadingService _loadingService;
 
         public int SomeId { get; set; }
 
+        public ReactiveCommand<Unit> Test { get; }
+
         public TestViewModel(ILoadingService loadingService)
         {
             this._loadingService = loadingService;
+
             this.DisplayName = "Test-View-Model";
+
+            this.Test = ReactiveCommand.CreateAsyncTask(_ => this.TestImpl());
         }
         
         protected override void OnActivate()
@@ -22,9 +30,9 @@ namespace UwCoreTest.Views.Test
             base.OnActivate();
         }
 
-        public async void Click()
+        public async Task TestImpl()
         {
-            using (this._loadingService.Show("Test-Message"))
+            using (this._loadingService.Show("Test-Message" + this.SomeId))
             {
                 using (this._loadingService.Show("Inner Loading"))
                 {

@@ -1,6 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Reflection;
 using Caliburn.Micro;
+using Caliburn.Micro.ReactiveUI;
+using ReactiveUI;
 using UwCore.Application;
 using UwCore.Extensions;
 using UwCore.Services.Navigation;
@@ -8,7 +11,7 @@ using INavigationService = UwCore.Services.Navigation.INavigationService;
 
 namespace UwCore.Hamburger
 {
-    public class HamburgerViewModel : Screen, IApplication, IHandle<NavigatedEvent>
+    public class HamburgerViewModel : ReactiveScreen, IApplication, IHandle<NavigatedEvent>
     {
         private readonly INavigationService _navigationService;
 
@@ -18,20 +21,20 @@ namespace UwCore.Hamburger
 
         private object _latestViewModel;
 
-        public BindableCollection<HamburgerItem> Actions { get; }
+        public ReactiveObservableCollection<HamburgerItem> Actions { get; }
 
         public HamburgerItem SelectedAction
         {
             get { return this._selectedAction; }
-            set { this.SetProperty(ref this._selectedAction, value); }
+            set { this.RaiseAndSetIfChanged(ref this._selectedAction, value); }
         }
 
-        public BindableCollection<HamburgerItem> SecondaryActions { get; }
+        public ReactiveObservableCollection<HamburgerItem> SecondaryActions { get; }
 
         public HamburgerItem SelectedSecondaryAction
         {
             get { return this._selectedSecondaryAction; }
-            set { this.SetProperty(ref this._selectedSecondaryAction, value); }
+            set { this.RaiseAndSetIfChanged(ref this._selectedSecondaryAction, value); }
         }
 
         public ApplicationMode CurrentMode
@@ -54,13 +57,13 @@ namespace UwCore.Hamburger
         {
             this._navigationService = navigationService;
 
-            this.Actions = new BindableCollection<HamburgerItem>();
-            this.SecondaryActions = new BindableCollection<HamburgerItem>();
+            this.Actions = new ReactiveObservableCollection<HamburgerItem>();
+            this.SecondaryActions = new ReactiveObservableCollection<HamburgerItem>();
 
             //Just make sure the selected action is always correct
             //Because it might happen, that we navigate to some view-model and then after that update the actions
-            this.Actions.CollectionChanged += (s, e) => this.UpdateSelectedAction();
-            this.SecondaryActions.CollectionChanged += (s, e) => this.UpdateSelectedAction();
+            this.Actions.Changed.Subscribe(_ => this.UpdateSelectedAction());
+            this.SecondaryActions.Changed.Subscribe(_ => this.UpdateSelectedAction());
 
             eventAggregator.Subscribe(this);
         }

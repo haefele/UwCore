@@ -1,4 +1,5 @@
 using Caliburn.Micro;
+using Caliburn.Micro.ReactiveUI;
 using UwCore.Hamburger;
 
 namespace UwCore.Application
@@ -7,7 +8,7 @@ namespace UwCore.Application
     {
         ApplicationMode CurrentMode { get; set; }
 
-        BindableCollection<HamburgerItem> Actions { get; } 
-        BindableCollection<HamburgerItem> SecondaryActions { get; } 
+        ReactiveObservableCollection<HamburgerItem> Actions { get; }
+        ReactiveObservableCollection<HamburgerItem> SecondaryActions { get; } 
     }
 }
