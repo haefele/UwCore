@@ -12,12 +12,14 @@
       <dependency id="JetBrains.Annotations" version="10.1.4" />
       <dependency id="MetroLog" version="1.0.1" />
       <dependency id="Caliburn.Micro" version="3.0.0" />
+      <dependency id="Caliburn.Micro.ReactiveUI" version="2.3.0" />
+      <dependency id="Splat" version="1.6.2" />
     </dependencies>
   </metadata>
   <files>
     <file src="..\src\UwCore\bin\Release\UwCore.dll" target="lib\uap10.0\UwCore.dll" />
     <file src="..\src\UwCore\bin\Release\UwCore.pri" target="lib\uap10.0\UwCore.pri" />
-	  <file src="..\src\UwCore\bin\Release\UwCore.xr.xml" target="lib\uap10.0\UwCore\UwCore.xr.xml" />
+    <file src="..\src\UwCore\bin\Release\UwCore.xr.xml" target="lib\uap10.0\UwCore\UwCore.xr.xml" />
     <file src="..\src\UwCore\bin\Release\Themes\generic.xbf" target="lib\uap10.0\UwCore\Themes\generic.xbf" />
     <file src="..\src\UwCore\bin\Release\Hamburger\HamburgerView.xbf" target="lib\uap10.0\UwCore\Hamburger\HamburgerView.xbf" />
   </files>
