@@ -15,7 +15,7 @@
         <DataTemplate x:Key="NavigationItemTemplate"
                   x:DataType="hamburger:HamburgerItem">
             <StackPanel Orientation="Horizontal" Margin="2, 0, 0, 0">
-                <SymbolIcon Symbol="{x:Bind Symbol, Mode=OneWay}" />
+                <SymbolIcon Symbol="{x:Bind Symbol, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind Label, Mode=OneWay}" />
                 <TextBlock Text="{x:Bind Label, Mode=OneWay}" Margin="24, 0, 0, 0" VerticalAlignment="Center"/>
             </StackPanel>
         </DataTemplate>
