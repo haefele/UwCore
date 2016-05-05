@@ -1,5 +1,6 @@
 using System;
 using Windows.UI.Xaml.Controls;
+using UwCore.Services.Navigation;
 
 namespace UwCore.Hamburger
 {
@@ -12,5 +13,10 @@ namespace UwCore.Hamburger
         }
 
         public Action Action { get; }
+
+        public override void Execute()
+        {
+            this.Action();
+        }
     }
 }

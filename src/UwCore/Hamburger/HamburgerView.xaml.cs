@@ -25,7 +25,7 @@ namespace UwCore.Hamburger
         private void ListViewBase_OnItemClick(object sender, ItemClickEventArgs e)
         {
             var clickedItem = (HamburgerItem)e.ClickedItem;
-            this.ViewModel.ExecuteAction(clickedItem);
+            clickedItem.Execute();
 
             if (this.WindowSize.CurrentState == this.Narrow)
             {

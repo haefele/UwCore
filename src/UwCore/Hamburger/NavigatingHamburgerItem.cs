@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using Windows.UI.Xaml.Controls;
+using Caliburn.Micro;
+using INavigationService = UwCore.Services.Navigation.INavigationService;
 
 namespace UwCore.Hamburger
 {
@@ -15,5 +17,11 @@ namespace UwCore.Hamburger
 
         public Type ViewModelType { get; }
         public Dictionary<string, object> Parameter { get; }
+
+        public override void Execute()
+        {
+            var navigationService = IoC.Get<INavigationService>();
+            navigationService.Advanced.Navigate(this.ViewModelType, this.Parameter);
+        }
     }
 }

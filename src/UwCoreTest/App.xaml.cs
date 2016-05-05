@@ -39,7 +39,7 @@ namespace UwCoreTest
 
         public override ApplicationMode GetCurrentMode()
         {
-            return new NormalApplicationMode(IoC.Get<INavigationService>());
+            return new NormalApplicationMode();
         }
 
         public override string GetErrorTitle() => "Fehler";

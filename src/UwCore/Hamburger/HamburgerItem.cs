@@ -1,4 +1,5 @@
 using Windows.UI.Xaml.Controls;
+using UwCore.Services.Navigation;
 
 namespace UwCore.Hamburger
 {
@@ -12,5 +13,7 @@ namespace UwCore.Hamburger
         
         public Symbol Symbol { get; }
         public string Label { get; }
+
+        public abstract void Execute();
     }
 }

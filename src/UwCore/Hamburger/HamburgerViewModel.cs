@@ -6,7 +6,6 @@ using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;
 using ReactiveUI;
 using UwCore.Application;
-using UwCore.Extensions;
 using UwCore.Services.Navigation;
 using INavigationService = UwCore.Services.Navigation.INavigationService;
 
@@ -112,21 +111,6 @@ namespace UwCore.Hamburger
         {
             this._latestViewModel = message.ViewModel;
             this.UpdateSelectedAction();
-        }
-
-        public void ExecuteAction(HamburgerItem hamburgerItem)
-        {
-            var navigating = hamburgerItem as NavigatingHamburgerItem;
-            if (navigating != null)
-            {
-                this._navigationService.Advanced.Navigate(navigating.ViewModelType, navigating.Parameter);
-            }
-
-            var clickable = hamburgerItem as ClickableHamburgerItem;
-            if (clickable != null)
-            {
-                clickable.Action();
-            }
         }
     }
 }
