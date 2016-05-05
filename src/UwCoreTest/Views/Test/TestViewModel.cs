@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;
 using ReactiveUI;
+using UwCore.Extensions;
 using UwCore.Services.Loading;
 
 namespace UwCoreTest.Views.Test
@@ -23,6 +24,8 @@ namespace UwCoreTest.Views.Test
             this.DisplayName = "Test-View-Model";
 
             this.Test = ReactiveCommand.CreateAsyncTask(_ => this.TestImpl());
+            this.Test.AttachLoadingService("Test-Message");
+            this.Test.AttachExceptionHandler();
         }
         
         protected override void OnActivate()
@@ -32,15 +35,10 @@ namespace UwCoreTest.Views.Test
 
         public async Task TestImpl()
         {
-            using (this._loadingService.Show("Test-Message" + this.SomeId))
-            {
-                using (this._loadingService.Show("Inner Loading"))
-                {
-                    await Task.Delay(TimeSpan.FromSeconds(2));
-                }
+            await Task.Delay(TimeSpan.FromSeconds(2));
+            await Task.Delay(TimeSpan.FromSeconds(3));
 
-                await Task.Delay(TimeSpan.FromSeconds(3));
-            }
+            throw new Exception("Holla");
         }
     }
 }
