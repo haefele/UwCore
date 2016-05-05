@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Caliburn.Micro;
 
 namespace UwCore.Services.Navigation
@@ -13,6 +14,6 @@ namespace UwCore.Services.Navigation
 
     public interface IAdvancedNavigationService
     {
-        void Navigate(Type viewModelType, object parameter = null);
+        void Navigate(Type viewModelType, Dictionary<string, object> parameter = null);
     }
 }

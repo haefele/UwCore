@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -19,7 +20,7 @@ namespace UwCore.Services.Navigation
 
         public IAdvancedNavigationService Advanced => this;
 
-        void IAdvancedNavigationService.Navigate(Type viewModelType, object parameter)
+        void IAdvancedNavigationService.Navigate(Type viewModelType, Dictionary<string, object> parameter)
         {
             this.NavigateToViewModel(viewModelType, parameter);
         }

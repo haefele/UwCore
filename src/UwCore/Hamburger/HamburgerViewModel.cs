@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Caliburn.Micro;
@@ -72,17 +73,39 @@ namespace UwCore.Hamburger
         {
             var selectedAction = this.Actions
                 .OfType<NavigatingHamburgerItem>()
-                .FirstOrDefault(f => f.ViewModelType.IsInstanceOfType(this._latestViewModel));
+                .FirstOrDefault(f => f.ViewModelType.IsInstanceOfType(this._latestViewModel) && this.AreParametersEqual(f, this._latestViewModel));
 
             var selectedSecondaryAction = this.SecondaryActions
                 .OfType<NavigatingHamburgerItem>()
-                .FirstOrDefault(f => f.ViewModelType.IsInstanceOfType(this._latestViewModel));
+                .FirstOrDefault(f => f.ViewModelType.IsInstanceOfType(this._latestViewModel) && this.AreParametersEqual(f, this._latestViewModel));
 
             if (selectedAction != null || selectedSecondaryAction != null)
             {
                 this.SelectedAction = selectedAction;
                 this.SelectedSecondaryAction = selectedSecondaryAction;
             }
+        }
+
+        private bool AreParametersEqual(NavigatingHamburgerItem hamburgerItem, object viewModel)
+        {
+            if (hamburgerItem.Parameter == null)
+                return true;
+
+            foreach (KeyValuePair<string, object> param in hamburgerItem.Parameter)
+            {
+                var property = viewModel.GetType().GetPropertyCaseInsensitive(param.Key);
+
+                if (property == null)
+                    continue;
+
+                var expectedValue = MessageBinder.CoerceValue(property.PropertyType, param.Value, null);
+                var actualValue = property.GetValue(viewModel);
+
+                if (object.Equals(expectedValue, actualValue) == false)
+                    return false;
+            }
+
+            return true;
         }
         
         void IHandle<NavigatedEvent>.Handle(NavigatedEvent message)

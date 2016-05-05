@@ -1,11 +1,12 @@
 using System;
+using System.Collections.Generic;
 using Windows.UI.Xaml.Controls;
 
 namespace UwCore.Hamburger
 {
     public class NavigatingHamburgerItem : HamburgerItem
     {
-        public NavigatingHamburgerItem(string label, Symbol symbol, Type viewModelType, object parameter = null)
+        public NavigatingHamburgerItem(string label, Symbol symbol, Type viewModelType, Dictionary<string, object> parameter = null)
             : base(label, symbol)
         {
             this.ViewModelType = viewModelType;
@@ -13,6 +14,6 @@ namespace UwCore.Hamburger
         }
 
         public Type ViewModelType { get; }
-        public object Parameter { get; }
+        public Dictionary<string, object> Parameter { get; }
     }
 }
