@@ -8,7 +8,7 @@ namespace UwCoreTest.ApplicationModes
 {
     public class NormalApplicationMode : ApplicationMode
     {
-        private readonly HamburgerItem _testHamburgerItem;
+        private readonly NavigatingHamburgerItem _testHamburgerItem;
         private readonly NavigatingHamburgerItem _test2HamburgerItem;
 
         public NormalApplicationMode()

@@ -18,6 +18,21 @@ namespace UwCore.Hamburger
         public Type ViewModelType { get; }
         public Dictionary<string, object> Parameter { get; }
 
+        public T TryGetParameterValue<T>(string name)
+        {
+            if (this.Parameter == null)
+                return default(T);
+
+            object value;
+            if (this.Parameter.TryGetValue(name, out value) == false)
+                return default(T);
+
+            if (value is T == false)
+                return default(T);
+
+            return (T) value;
+        }
+
         public override void Execute()
         {
             var navigationService = IoC.Get<INavigationService>();
