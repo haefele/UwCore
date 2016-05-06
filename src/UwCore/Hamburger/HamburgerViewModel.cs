@@ -6,6 +6,7 @@ using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;
 using ReactiveUI;
 using UwCore.Application;
+using UwCore.Application.Events;
 using UwCore.Services.Navigation;
 using INavigationService = UwCore.Services.Navigation.INavigationService;
 
@@ -14,6 +15,7 @@ namespace UwCore.Hamburger
     public class HamburgerViewModel : ReactiveScreen, IApplication, IHandle<NavigatedEvent>
     {
         private readonly INavigationService _navigationService;
+        private readonly IEventAggregator _eventAggregator;
 
         private HamburgerItem _selectedAction;
         private HamburgerItem _selectedSecondaryAction;
@@ -42,12 +44,17 @@ namespace UwCore.Hamburger
             get { return this._currentMode; }
             set
             {
-                this._currentMode?.Leave();
+                if (this._currentMode != null)
+                {
+                    this._currentMode.Leave();
+                    this._eventAggregator.PublishOnCurrentThread(new ApplicationModeLeft(this._currentMode));
+                }
 
                 this._currentMode = value;
                 this._currentMode.Application = this;
 
-                this._currentMode?.Enter();
+                this._currentMode.Enter();
+                this._eventAggregator.PublishOnCurrentThread(new ApplicationModeEntered(this._currentMode));
 
                 this._navigationService.ClearBackStack();
             }
@@ -56,6 +63,7 @@ namespace UwCore.Hamburger
         public HamburgerViewModel(INavigationService navigationService, IEventAggregator eventAggregator)
         {
             this._navigationService = navigationService;
+            this._eventAggregator = eventAggregator;
 
             this.Actions = new ReactiveObservableCollection<HamburgerItem>();
             this.SecondaryActions = new ReactiveObservableCollection<HamburgerItem>();

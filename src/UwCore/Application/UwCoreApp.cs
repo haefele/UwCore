@@ -9,6 +9,7 @@ using Windows.Storage;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Caliburn.Micro;
+using UwCore.Application.Events;
 using UwCore.Extensions;
 using UwCore.Hamburger;
 using UwCore.Logging;
@@ -123,14 +124,14 @@ namespace UwCore.Application
             var deferral = e.SuspendingOperation.GetDeferral();
 
             await IoC.Get<IApplicationStateService>().SaveStateAsync();
-            IoC.Get<IEventAggregator>().PublishOnCurrentThread(new ApplicationSuspendingEvent());
+            IoC.Get<IEventAggregator>().PublishOnCurrentThread(new ApplicationSuspending());
 
             deferral.Complete();
         }
 
         protected override void OnResuming(object sender, object e)
         {
-            IoC.Get<IEventAggregator>().PublishOnCurrentThread(new ApplicationResumedEvent());
+            IoC.Get<IEventAggregator>().PublishOnCurrentThread(new ApplicationResumed());
         }
 
         protected override void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)

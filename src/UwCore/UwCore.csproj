@@ -107,9 +107,11 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Application\ApplicationResumedEvent.cs" />
+    <Compile Include="Application\Events\ApplicationModeEntered.cs" />
+    <Compile Include="Application\Events\ApplicationModeLeft.cs" />
+    <Compile Include="Application\Events\ApplicationResumed.cs" />
     <Compile Include="Application\ApplicationMode.cs" />
-    <Compile Include="Application\ApplicationSuspendingEvent.cs" />
+    <Compile Include="Application\Events\ApplicationSuspending.cs" />
     <Compile Include="Application\IApplication.cs" />
     <Compile Include="Application\UwCoreApp.cs" />
     <Compile Include="Common\DisposableAction.cs" />
