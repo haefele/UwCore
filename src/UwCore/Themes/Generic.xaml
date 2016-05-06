@@ -22,7 +22,7 @@
                                 Background="{ThemeResource SystemListAccentLowColor}"
                                 FontFamily="{ThemeResource SymbolThemeFontFamily}"/>
                         <TextBlock VerticalAlignment="Center"
-                                   Margin="20, 0, 0, 0"
+                                   Margin="{TemplateBinding Padding}"
                                    Text="{TemplateBinding Title}"
                                    Style="{StaticResource TitleTextBlockStyle}" />
                     </StackPanel>

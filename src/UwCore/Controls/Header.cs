@@ -47,6 +47,7 @@ namespace UwCore.Controls
         public Header()
         {
             this.DefaultStyleKey = typeof(Header);
+            this.Padding = new Thickness(20, 0, 0, 0);
         }
         #endregion
 
