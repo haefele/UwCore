@@ -95,10 +95,7 @@ namespace UwCore.Hamburger
 
         private bool AreParametersEqual(NavigatingHamburgerItem hamburgerItem, object viewModel)
         {
-            if (hamburgerItem.Parameter == null)
-                return true;
-
-            foreach (KeyValuePair<string, object> param in hamburgerItem.Parameter)
+            foreach (KeyValuePair<string, object> param in hamburgerItem.Parameters)
             {
                 var property = viewModel.GetType().GetPropertyCaseInsensitive(param.Key);
 

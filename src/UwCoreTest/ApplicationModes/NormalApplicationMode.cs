@@ -13,14 +13,11 @@ namespace UwCoreTest.ApplicationModes
 
         public NormalApplicationMode()
         {
-            this._testHamburgerItem = new NavigatingHamburgerItem("Test", Symbol.Contact, typeof(TestViewModel), new Dictionary<string, object>
-            {
-                [nameof(TestViewModel.SomeId)] = 15,
-            });
-            this._test2HamburgerItem = new NavigatingHamburgerItem("Test", Symbol.Contact, typeof(TestViewModel), new Dictionary<string, object>
-            {
-                [nameof(TestViewModel.SomeId)] = 13,
-            });
+            this._testHamburgerItem = new NavigatingHamburgerItem("Test", Symbol.Contact, typeof(TestViewModel));
+            this._testHamburgerItem.AddParameter<TestViewModel>(f => f.SomeId, 15);
+
+            this._test2HamburgerItem = new NavigatingHamburgerItem("Test", Symbol.Contact, typeof(TestViewModel));
+            this._test2HamburgerItem.AddParameter<TestViewModel>(f => f.SomeId, 13);
         }
 
         public override void Enter()
