@@ -5,10 +5,20 @@
     xmlns:local="using:UwCoreTest.Views.Test"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:behaviors="using:UwCore.Behaviors"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Button Command="{x:Bind ViewModel.Test}" Content="Button" HorizontalAlignment="Left" Margin="67,46,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="textBox" HorizontalAlignment="Left" Margin="61,164,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top">
+            <interactivity:Interaction.Behaviors>
+                <behaviors:TextBoxEnterTriggerBehavior>
+                    <core:InvokeCommandAction Command="{x:Bind ViewModel.Test}" />
+                </behaviors:TextBoxEnterTriggerBehavior>
+            </interactivity:Interaction.Behaviors>    
+        </TextBox>
 
     </Grid>
 </Page>
