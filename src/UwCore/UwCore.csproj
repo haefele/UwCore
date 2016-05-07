@@ -114,8 +114,7 @@
     <Compile Include="Application\Events\ApplicationSuspending.cs" />
     <Compile Include="Application\IApplication.cs" />
     <Compile Include="Application\UwCoreApp.cs" />
-    <Compile Include="Behaviors\PasswordBoxEnterTriggerBehavior.cs" />
-    <Compile Include="Behaviors\TextBoxEnterTriggerBehavior.cs" />
+    <Compile Include="Behaviors\KeyTriggerBehavior.cs" />
     <Compile Include="Common\DisposableAction.cs" />
     <Compile Include="Common\Guard.cs" />
     <Compile Include="Common\ResourceAccessor.cs" />

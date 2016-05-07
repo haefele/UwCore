@@ -1,7 +1,5 @@
-﻿using System;
 using Windows.System;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Markup;
 using Microsoft.Xaml.Interactivity;
@@ -9,19 +7,20 @@ using Microsoft.Xaml.Interactivity;
 namespace UwCore.Behaviors
 {
     [ContentProperty(Name = "Actions")]
-    public class TextBoxEnterTriggerBehavior : Behavior<TextBox>
+    public class KeyTriggerBehavior : Behavior<UIElement>
     {
+        #region Properties
         public static readonly DependencyProperty ActionsProperty = DependencyProperty.Register(
-            "Actions", 
-            typeof(ActionCollection), 
-            typeof(TextBoxEnterTriggerBehavior), 
+            nameof(Actions),
+            typeof(ActionCollection),
+            typeof(KeyTriggerBehavior),
             new PropertyMetadata(default(ActionCollection)));
 
         public ActionCollection Actions
         {
             get
             {
-                var actions = (ActionCollection) this.GetValue(ActionsProperty);
+                var actions = (ActionCollection)this.GetValue(ActionsProperty);
 
                 if (actions == null)
                 {
@@ -34,17 +33,39 @@ namespace UwCore.Behaviors
         }
 
         public static readonly DependencyProperty OnKeyDownProperty = DependencyProperty.Register(
-            "OnKeyDown", 
+            nameof(OnKeyDown), 
             typeof(bool), 
-            typeof(TextBoxEnterTriggerBehavior), 
-            new PropertyMetadata(default(bool), (s, e) => ((TextBoxEnterTriggerBehavior)s).OnOnKeyDownChanged((bool)e.OldValue, (bool)e.NewValue)));
+            typeof(KeyTriggerBehavior), 
+            new PropertyMetadata(default(bool), (s, e) => ((KeyTriggerBehavior)s).OnOnKeyDownChanged((bool)e.OldValue, (bool)e.NewValue)));
 
         public bool OnKeyDown
         {
-            get { return (bool)this.GetValue(OnKeyDownProperty); }
+            get { return (bool) this.GetValue(OnKeyDownProperty); }
             set { this.SetValue(OnKeyDownProperty, value); }
         }
 
+        public static readonly DependencyProperty KeyProperty = DependencyProperty.Register(
+            nameof(Key), 
+            typeof(VirtualKey), 
+            typeof(KeyTriggerBehavior), 
+            new PropertyMetadata(VirtualKey.Enter));
+
+        public VirtualKey Key
+        {
+            get { return (VirtualKey) this.GetValue(KeyProperty); }
+            set { this.SetValue(KeyProperty, value); }
+        }
+        #endregion
+
+        #region Propeties Changed
+        private void OnOnKeyDownChanged(bool oldValue, bool newValue)
+        {
+            this.UnRegisterEvents(oldValue);
+            this.RegisterEvents(newValue);
+        }
+        #endregion
+
+        #region Overrides of Behavior
         protected override void OnAttached()
         {
             base.OnAttached();
@@ -58,8 +79,9 @@ namespace UwCore.Behaviors
 
             this.UnRegisterEvents(this.OnKeyDown);
         }
+        #endregion
 
-
+        #region Private Methods
         private void RegisterEvents(bool onKeyDown)
         {
             if (onKeyDown)
@@ -84,20 +106,13 @@ namespace UwCore.Behaviors
             }
         }
 
-
         private void AssociatedObjectOnKeyDownOrUp(object sender, KeyRoutedEventArgs keyRoutedEventArgs)
         {
-            if (keyRoutedEventArgs.Key == VirtualKey.Enter)
+            if (keyRoutedEventArgs.Key == this.Key)
             {
                 Interaction.ExecuteActions(this.AssociatedObject, this.Actions, keyRoutedEventArgs);
             }
         }
-        
-
-        private void OnOnKeyDownChanged(bool oldValue, bool newValue)
-        {
-            this.UnRegisterEvents(oldValue);
-            this.RegisterEvents(newValue);
-        }
+        #endregion
     }
 }

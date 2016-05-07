@@ -14,9 +14,9 @@
         <Button Command="{x:Bind ViewModel.Test}" Content="Button" HorizontalAlignment="Left" Margin="67,46,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="textBox" HorizontalAlignment="Left" Margin="61,164,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top">
             <interactivity:Interaction.Behaviors>
-                <behaviors:TextBoxEnterTriggerBehavior>
+                <behaviors:KeyTriggerBehavior Key="Control">
                     <core:InvokeCommandAction Command="{x:Bind ViewModel.Test}" />
-                </behaviors:TextBoxEnterTriggerBehavior>
+                </behaviors:KeyTriggerBehavior>
             </interactivity:Interaction.Behaviors>    
         </TextBox>
 
