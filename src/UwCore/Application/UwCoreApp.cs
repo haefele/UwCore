@@ -110,6 +110,8 @@ namespace UwCore.Application
             var viewModel = new HamburgerViewModel(IoC.Get<INavigationService>(), IoC.Get<IEventAggregator>());
             this._container.Instance((IApplication)viewModel);
 
+            this.CustomizeApplication(viewModel);
+
             viewModel.CurrentMode = this.GetCurrentMode();
 
             ViewModelBinder.Bind(viewModel, view, null);
@@ -147,6 +149,11 @@ namespace UwCore.Application
         }
 
         public virtual void ConfigureContainer(WinRTContainer container)
+        {
+            
+        }
+
+        public virtual void CustomizeApplication(IApplication application)
         {
             
         }
