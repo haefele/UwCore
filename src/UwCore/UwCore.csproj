@@ -114,6 +114,7 @@
     <Compile Include="Application\Events\ApplicationSuspending.cs" />
     <Compile Include="Application\IApplication.cs" />
     <Compile Include="Application\UwCoreApp.cs" />
+    <Compile Include="Behaviors\MenuFlyoutBehavior.cs" />
     <Compile Include="Behaviors\KeyTriggerBehavior.cs" />
     <Compile Include="Common\DisposableAction.cs" />
     <Compile Include="Common\Guard.cs" />
@@ -131,7 +132,7 @@
     <Compile Include="Extensions\ExceptionExtensions.cs" />
     <Compile Include="Extensions\PackageVersionExtensions.cs" />
     <Compile Include="Extensions\PropertyChangedBaseExtensions.cs" />
-    <Compile Include="Extensions\ReactiveCommandExtensions.cs" />
+    <Compile Include="Extensions\ReactiveUIExtensions.cs" />
     <Compile Include="Extensions\StreamExtensions.cs" />
     <Compile Include="Extensions\TimeSpanExtensions.cs" />
     <Compile Include="Hamburger\ClickableHamburgerItem.cs" />
