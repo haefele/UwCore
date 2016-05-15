@@ -11,6 +11,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Markup;
 using Windows.UI.Xaml.Media;
 using Microsoft.Xaml.Interactivity;
+using UwCore.Logging;
 
 namespace UwCore.Behaviors
 {
@@ -38,7 +39,7 @@ namespace UwCore.Behaviors
     {
         private bool _isShiftPressed;
         private bool _isPointerPressed;
-        
+
         public static readonly DependencyProperty DataTypeProperty = DependencyProperty.Register(
             nameof(DataType),
             typeof(Type),
@@ -52,9 +53,9 @@ namespace UwCore.Behaviors
         }
 
         public static readonly DependencyProperty MenuProperty = DependencyProperty.Register(
-            nameof(Menu), 
-            typeof(MenuFlyout), 
-            typeof(MenuFlyoutBehavior), 
+            nameof(Menu),
+            typeof(MenuFlyout),
+            typeof(MenuFlyoutBehavior),
             new PropertyMetadata(default(MenuFlyout)));
 
         public MenuFlyout Menu
@@ -62,7 +63,7 @@ namespace UwCore.Behaviors
             get { return (MenuFlyout)this.GetValue(MenuProperty); }
             set { this.SetValue(MenuProperty, value); }
         }
-        
+
         public event EventHandler<CreateMenuEventArgs> CreateMenu;
 
         public event EventHandler<MenuShowingEventArgs> MenuShowing;
@@ -125,10 +126,10 @@ namespace UwCore.Behaviors
         {
             // Responding to HoldingState.Started will show a context menu while your finger is still down, while 
             // HoldingState.Completed will wait until the user has removed their finger. 
-            if (e.HoldingState == HoldingState.Completed)
+            if (e.HoldingState == HoldingState.Started)
             {
                 var position = e.GetPosition(null);
-                this.ShowMenu(FocusManager.GetFocusedElement() as UIElement, position);
+                this.ShowMenu(this.AssociatedObject, position, e.GetPosition(this.AssociatedObject));
                 e.Handled = true;
 
                 // This, combined with a check in OnRightTapped prevents the firing of RightTapped from
@@ -184,7 +185,7 @@ namespace UwCore.Behaviors
             return null;
         }
 
-        private void ShowMenu(UIElement target, Point offset)
+        private void ShowMenu(UIElement target, Point offset, Point? alternativeDisplayPosition = null)
         {
             if (this.Menu == null)
             {
@@ -197,10 +198,13 @@ namespace UwCore.Behaviors
                 this.Menu = eventArgs.Menu;
             }
 
-            var data = this.FindData(target ?? this.AssociatedObject, offset);
+            if (target == null)
+                target = this.AssociatedObject;
+
+            var data = this.FindData(target, offset);
             this.MenuShowing?.Invoke(this, new MenuShowingEventArgs(target, offset, data));
-            
-            this.Menu.ShowAt(target, offset);
+
+            this.Menu.ShowAt(target, alternativeDisplayPosition ?? offset);
         }
     }
 }
