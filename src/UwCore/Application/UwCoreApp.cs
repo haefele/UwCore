@@ -37,6 +37,7 @@ namespace UwCore.Application
         {
             this.ConfigureContainer();
             this.ConfigureCaliburnMicro();
+            this.CustomConfiguration();
         }
 
         private void ConfigureContainer()
@@ -158,6 +159,11 @@ namespace UwCore.Application
             
         }
         
+        public virtual void CustomConfiguration()
+        {
+
+        }
+
         public abstract ApplicationMode GetCurrentMode();
         public abstract string GetErrorTitle();
         public abstract string GetErrorMessage();

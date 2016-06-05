@@ -12,12 +12,17 @@ namespace UwCore.Extensions
     {
         public static void AttachLoadingService(this IReactiveCommand self, string message)
         {
+            self.AttachLoadingService(() => message);
+        }
+
+        public static void AttachLoadingService(this IReactiveCommand self, Func<string> message)
+        {
             IDisposable currentMessage = null;
             self.IsExecuting.Subscribe(f =>
             {
                 if (f)
                 {
-                    currentMessage = IoC.Get<ILoadingService>().Show(message);
+                    currentMessage = IoC.Get<ILoadingService>().Show(message());
                 }
                 else
                 {
@@ -32,9 +37,9 @@ namespace UwCore.Extensions
             self.ThrownExceptions.Subscribe(async e => await exceptionHandler.HandleAsync(e));
         }
 
-        public static ObservableAsPropertyHelper<TRet> ToLoadedProperty<TObj, TRet>(this IObservable<TRet> This, TObj source, Expression<Func<TObj, TRet>> property, out ObservableAsPropertyHelper<TRet> result, TRet initialValue = default(TRet), IScheduler scheduler = null) where TObj : ReactiveObject
+        public static ObservableAsPropertyHelper<TRet> ToLoadedProperty<TObj, TRet>(this IObservable<TRet> self, TObj source, Expression<Func<TObj, TRet>> property, out ObservableAsPropertyHelper<TRet> result, TRet initialValue = default(TRet), IScheduler scheduler = null) where TObj : ReactiveObject
         {
-            var res = This.ToProperty(source, property, out result, initialValue, scheduler);
+            var res = self.ToProperty(source, property, out result, initialValue, scheduler);
 
             source.WhenAnyValue(property)
                 .Subscribe(_ => { });
