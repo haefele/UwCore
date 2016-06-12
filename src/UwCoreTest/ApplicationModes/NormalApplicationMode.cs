@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Windows.UI.Xaml.Controls;
 using UwCore.Application;
 using UwCore.Hamburger;
@@ -6,7 +7,7 @@ using UwCoreTest.Views.Test;
 
 namespace UwCoreTest.ApplicationModes
 {
-    public class NormalApplicationMode : ApplicationMode
+    public class NormalApplicationMode : ApplicationMode, ICustomStartupApplicationMode
     {
         private readonly NavigatingHamburgerItem _testHamburgerItem;
         private readonly NavigatingHamburgerItem _test2HamburgerItem;
@@ -33,5 +34,25 @@ namespace UwCoreTest.ApplicationModes
             this.Application.Actions.Remove(this._testHamburgerItem);
             this.Application.Actions.Remove(this._test2HamburgerItem);
         }
+
+        public void HandleCustomStartup(string tileId, string arguments)
+        {
+            var a = new MyStartupArguments
+            {
+                Id = 2,
+                SomeString = "holla holla",
+                Date = DateTimeOffset.Now
+            };
+
+            arguments = StartupArguments.AsString(a);
+            var parsed = StartupArguments.Parse<MyStartupArguments>(arguments);
+        }
+    }
+
+    public class MyStartupArguments
+    {
+        public int Id { get; set; }
+        public string SomeString { get; set; }
+        public DateTimeOffset Date { get; set; }
     }
 }

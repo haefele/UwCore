@@ -73,6 +73,12 @@ namespace UwCore.Application
         {
             ViewModelBinder.ApplyConventionsByDefault = false;
             LogManager.GetLog = type => new CaliburnMicroLoggingAdapter(LoggerFactory.GetLogger(type));
+            MessageBinder.CustomConverters[typeof(DateTimeOffset)] = (value, context) =>
+            {
+                DateTimeOffset result;
+                DateTimeOffset.TryParse(value.ToString(), out result);
+                return result;
+            };
         }
         #endregion
 
@@ -99,7 +105,7 @@ namespace UwCore.Application
             if (args.PreviousExecutionState == ApplicationExecutionState.Running ||
                 args.PreviousExecutionState == ApplicationExecutionState.Suspended)
                 return;
-
+            
             this.Initialize();
 
             await IoC.Get<IApplicationStateService>().RestoreStateAsync();
@@ -114,6 +120,9 @@ namespace UwCore.Application
             this.CustomizeApplication(viewModel);
 
             viewModel.CurrentMode = this.GetCurrentMode();
+
+            var customStartup = viewModel.CurrentMode as ICustomStartupApplicationMode;
+            customStartup?.HandleCustomStartup(args.TileId, args.Arguments);
 
             ViewModelBinder.Bind(viewModel, view, null);
             ScreenExtensions.TryActivate(viewModel);

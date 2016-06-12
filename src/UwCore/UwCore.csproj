@@ -107,6 +107,8 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Application\ICustomStartupApplicationMode.cs" />
+    <Compile Include="Application\StartupArguments.cs" />
     <Compile Include="Application\Events\ApplicationModeEntered.cs" />
     <Compile Include="Application\Events\ApplicationModeLeft.cs" />
     <Compile Include="Application\Events\ApplicationResumed.cs" />
