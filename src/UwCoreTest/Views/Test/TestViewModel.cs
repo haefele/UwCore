@@ -25,6 +25,7 @@ namespace UwCoreTest.Views.Test
 
             this.Test = ReactiveCommand.CreateAsyncTask(_ => this.TestImpl());
             this.Test.AttachLoadingService("Test-Message");
+            this.Test.AttachLoadingService("More");
             this.Test.AttachExceptionHandler();
         }
         
