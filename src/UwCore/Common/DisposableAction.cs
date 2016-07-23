@@ -1,5 +1,4 @@
 ﻿using System;
-using JetBrains.Annotations;
 
 namespace UwCore.Common
 {
@@ -7,7 +6,7 @@ namespace UwCore.Common
     {
         private readonly Action _actionToExecuteOnDispose;
 
-        public DisposableAction([CanBeNull]Action actionToExecuteOnDispose)
+        public DisposableAction(Action actionToExecuteOnDispose)
         {
             this._actionToExecuteOnDispose = actionToExecuteOnDispose;
         }

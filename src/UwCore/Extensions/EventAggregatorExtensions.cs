@@ -1,12 +1,11 @@
 ﻿using Caliburn.Micro;
-using JetBrains.Annotations;
 using UwCore.Common;
 
 namespace UwCore.Extensions
 {
     public static class EventAggregatorExtensions
     {
-        public static void SubscribeScreen([NotNull]this IEventAggregator self, [NotNull]IScreen screen)
+        public static void SubscribeScreen(this IEventAggregator self, IScreen screen)
         {
             Guard.NotNull(self, nameof(self));
             Guard.NotNull(screen, nameof(screen));
