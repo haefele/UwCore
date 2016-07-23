@@ -1,5 +1,4 @@
-﻿using JetBrains.Annotations;
-using UwCore.Common;
+﻿using UwCore.Common;
 
 namespace UwCore.Application.Events
 {
@@ -7,7 +6,7 @@ namespace UwCore.Application.Events
     {
         public ApplicationMode ApplicationMode { get; }
 
-        public ApplicationModeEntered([NotNull]ApplicationMode applicationMode)
+        public ApplicationModeEntered(ApplicationMode applicationMode)
         {
             Guard.NotNull(applicationMode, nameof(applicationMode));
 
