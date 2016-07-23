@@ -5,17 +5,20 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Caliburn.Micro;
+using Microsoft.HockeyApp;
 
 namespace UwCore.Services.Navigation
 {
     public class NavigationService : FrameAdapter, INavigationService, IAdvancedNavigationService
     {
         private readonly IEventAggregator _eventAggregator;
+        private readonly IHockeyClient _hockeyClient;
 
-        public NavigationService(Frame frame, IEventAggregator eventAggregator, bool treatViewAsLoaded = false)
+        public NavigationService(Frame frame, IEventAggregator eventAggregator, IHockeyClient hockeyClient, bool treatViewAsLoaded = false)
             : base(frame, treatViewAsLoaded)
         {
             this._eventAggregator = eventAggregator;
+            this._hockeyClient = hockeyClient;
         }
 
         public IAdvancedNavigationService Advanced => this;
@@ -44,6 +47,8 @@ namespace UwCore.Services.Navigation
 
             var frameworkElement = (FrameworkElement)e.Content;
             this._eventAggregator.PublishOnCurrentThread(new NavigatedEvent(frameworkElement.DataContext));
+
+            this._hockeyClient.TrackEvent("Navigated", new Dictionary<string, string> { ["ViewModel"] = frameworkElement.DataContext.GetType().Name });
         }
 
         private void UpdateAppViewBackButtonVisibility()

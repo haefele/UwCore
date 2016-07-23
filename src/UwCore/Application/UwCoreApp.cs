@@ -9,6 +9,7 @@ using Windows.Storage;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Caliburn.Micro;
+using Microsoft.HockeyApp;
 using UwCore.Application.Events;
 using UwCore.Extensions;
 using UwCore.Hamburger;
@@ -35,15 +36,29 @@ namespace UwCore.Application
         #region Configure
         protected override void Configure()
         {
+            this.ConfigureHockeyApp();
             this.ConfigureContainer();
             this.ConfigureCaliburnMicro();
             this.CustomConfiguration();
+        }
+
+        private void ConfigureHockeyApp()
+        {
+            var appId = this.GetHockeyAppId();
+
+            if (string.IsNullOrWhiteSpace(appId) == false)
+            {
+                HockeyClient.Current.Configure(appId);
+            }
         }
 
         private void ConfigureContainer()
         {
             this._container = new WinRTContainer();
             this._container.RegisterWinRTServices();
+
+            //HockeyApp
+            this._container.Instance(HockeyClient.Current);
 
             //Dialog
             this._container.Singleton<IDialogService, DialogService>();
@@ -53,7 +68,7 @@ namespace UwCore.Application
             var commonExceptionType = this.GetCommonExceptionType();
             var errorMessage = this.GetErrorMessage();
             var errorTitle = this.GetErrorTitle();
-            this._container.Instance((IExceptionHandler) new ExceptionHandler(dialogService, commonExceptionType, errorMessage, errorTitle));
+            this._container.Instance((IExceptionHandler) new ExceptionHandler(dialogService, this._container.GetInstance<IHockeyClient>(), commonExceptionType, errorMessage, errorTitle));
 
             //ApplicationState
             this._container.Singleton<IApplicationStateService, ApplicationStateService>();
@@ -111,10 +126,10 @@ namespace UwCore.Application
             await IoC.Get<IApplicationStateService>().RestoreStateAsync();
 
             var view = new HamburgerView();
-            this._container.Instance((INavigationService)new NavigationService(view.ContentFrame, this._container.GetInstance<IEventAggregator>()));
+            this._container.Instance((INavigationService)new NavigationService(view.ContentFrame, this._container.GetInstance<IEventAggregator>(), this._container.GetInstance<IHockeyClient>()));
             this._container.Instance((ILoadingService)new LoadingService(view.LoadingOverlay));
 
-            var viewModel = new HamburgerViewModel(IoC.Get<INavigationService>(), IoC.Get<IEventAggregator>());
+            var viewModel = new HamburgerViewModel(IoC.Get<INavigationService>(), IoC.Get<IEventAggregator>(), IoC.Get<IHockeyClient>());
             this._container.Instance((IApplication)viewModel);
 
             this.CustomizeApplication(viewModel);
@@ -171,6 +186,11 @@ namespace UwCore.Application
         public virtual void CustomConfiguration()
         {
 
+        }
+
+        public virtual string GetHockeyAppId()
+        {
+            return null;
         }
 
         public abstract ApplicationMode GetCurrentMode();

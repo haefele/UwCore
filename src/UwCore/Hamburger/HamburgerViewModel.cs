@@ -4,9 +4,11 @@ using System.Linq;
 using System.Reflection;
 using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;
+using Microsoft.HockeyApp;
 using ReactiveUI;
 using UwCore.Application;
 using UwCore.Application.Events;
+using UwCore.Extensions;
 using UwCore.Services.Navigation;
 using INavigationService = UwCore.Services.Navigation.INavigationService;
 
@@ -16,6 +18,7 @@ namespace UwCore.Hamburger
     {
         private readonly INavigationService _navigationService;
         private readonly IEventAggregator _eventAggregator;
+        private readonly IHockeyClient _hockeyClient;
 
         private HamburgerItem _selectedAction;
         private HamburgerItem _selectedSecondaryAction;
@@ -56,14 +59,17 @@ namespace UwCore.Hamburger
                 this._currentMode.Enter();
                 this._eventAggregator.PublishOnCurrentThread(new ApplicationModeEntered(this._currentMode));
 
+                this._hockeyClient.TrackEvent("ApplicationModeChanged", new Dictionary<string, string> { ["ApplicationMode"] = this._currentMode.GetType().Name });
+
                 this._navigationService.ClearBackStack();
             }
         }
 
-        public HamburgerViewModel(INavigationService navigationService, IEventAggregator eventAggregator)
+        public HamburgerViewModel(INavigationService navigationService, IEventAggregator eventAggregator, IHockeyClient hockeyClient)
         {
             this._navigationService = navigationService;
             this._eventAggregator = eventAggregator;
+            this._hockeyClient = hockeyClient;
 
             this.Actions = new ReactiveObservableCollection<HamburgerItem>();
             this.SecondaryActions = new ReactiveObservableCollection<HamburgerItem>();
@@ -73,7 +79,7 @@ namespace UwCore.Hamburger
             this.Actions.Changed.Subscribe(_ => this.UpdateSelectedAction());
             this.SecondaryActions.Changed.Subscribe(_ => this.UpdateSelectedAction());
 
-            eventAggregator.Subscribe(this);
+            eventAggregator.SubscribeScreen(this);
         }
         
         private void UpdateSelectedAction()

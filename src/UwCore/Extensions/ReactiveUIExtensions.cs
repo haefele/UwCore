@@ -2,6 +2,7 @@
 using System.Linq.Expressions;
 using System.Reactive.Concurrency;
 using Caliburn.Micro;
+using Microsoft.HockeyApp;
 using ReactiveUI;
 using UwCore.Services.ExceptionHandler;
 using UwCore.Services.Loading;
@@ -45,6 +46,17 @@ namespace UwCore.Extensions
                 .Subscribe(_ => { });
 
             return res;
+        }
+
+        public static void TrackEvent(this IReactiveCommand self, string eventName)
+        {
+            self.IsExecuting.Subscribe(f =>
+            {
+                if (f)
+                {
+                    IoC.Get<IHockeyClient>().TrackEvent(eventName);
+                }
+            });
         }
     }
 }
