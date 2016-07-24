@@ -79,7 +79,7 @@ namespace UwCore.Hamburger
             this.Actions.Changed.Subscribe(_ => this.UpdateSelectedAction());
             this.SecondaryActions.Changed.Subscribe(_ => this.UpdateSelectedAction());
 
-            eventAggregator.SubscribeScreen(this);
+            eventAggregator.Subscribe(this);
         }
         
         private void UpdateSelectedAction()
