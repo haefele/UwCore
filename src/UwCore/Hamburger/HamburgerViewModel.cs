@@ -8,6 +8,7 @@ using Microsoft.HockeyApp;
 using ReactiveUI;
 using UwCore.Application;
 using UwCore.Application.Events;
+using UwCore.Common;
 using UwCore.Extensions;
 using UwCore.Services.Navigation;
 using INavigationService = UwCore.Services.Navigation.INavigationService;
@@ -23,6 +24,7 @@ namespace UwCore.Hamburger
         private HamburgerItem _selectedAction;
         private HamburgerItem _selectedSecondaryAction;
         private ApplicationMode _currentMode;
+        private object _headerDetailsViewModel;
 
         private object _latestViewModel;
 
@@ -47,6 +49,9 @@ namespace UwCore.Hamburger
             get { return this._currentMode; }
             set
             {
+                if (this._currentMode == value)
+                    return;
+
                 if (this._currentMode != null)
                 {
                     this._currentMode.Leave();
@@ -60,13 +65,40 @@ namespace UwCore.Hamburger
                 this._eventAggregator.PublishOnCurrentThread(new ApplicationModeEntered(this._currentMode));
 
                 this._hockeyClient.TrackEvent("ApplicationModeChanged", new Dictionary<string, string> { ["ApplicationMode"] = this._currentMode.GetType().Name });
-
+                
                 this._navigationService.ClearBackStack();
+
+                this.RaisePropertyChanged();
+            }
+        }
+
+        public object HeaderDetailsViewModel
+        {
+            get { return this._headerDetailsViewModel; }
+            set
+            {
+                if (this._headerDetailsViewModel == value)
+                    return;
+
+                if (this._headerDetailsViewModel != null)
+                {
+                    ScreenExtensions.TryDeactivate(this._headerDetailsViewModel, true);
+                }
+
+                this._headerDetailsViewModel = value;
+
+                ScreenExtensions.TryActivate(this._headerDetailsViewModel);
+                
+                this.RaisePropertyChanged();
             }
         }
 
         public HamburgerViewModel(INavigationService navigationService, IEventAggregator eventAggregator, IHockeyClient hockeyClient)
         {
+            Guard.NotNull(navigationService, nameof(navigationService));
+            Guard.NotNull(eventAggregator, nameof(eventAggregator));
+            Guard.NotNull(hockeyClient, nameof(hockeyClient));
+
             this._navigationService = navigationService;
             this._eventAggregator = eventAggregator;
             this._hockeyClient = hockeyClient;

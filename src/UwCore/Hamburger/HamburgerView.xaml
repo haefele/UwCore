@@ -5,6 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:UwCore.Controls"
     xmlns:hamburger="using:UwCore.Hamburger"
+    xmlns:caliburn="using:Caliburn.Micro"
 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -13,7 +14,7 @@
     
     <Page.Resources>
         <DataTemplate x:Key="NavigationItemTemplate"
-                  x:DataType="hamburger:HamburgerItem">
+                      x:DataType="hamburger:HamburgerItem">
             <StackPanel Orientation="Horizontal" Margin="2, 0, 0, 0">
                 <SymbolIcon Symbol="{x:Bind Symbol, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind Label, Mode=OneWay}" />
                 <TextBlock Text="{x:Bind Label, Mode=OneWay}" Margin="24, 0, 0, 0" VerticalAlignment="Center"/>
@@ -53,12 +54,18 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        
+
         <controls:Header Grid.Row="0"
                          x:Name="Header"
-                         NavigationButtonClick="OpenNavigationView"
+                         NavigationButtonClick="Header_OnNavigationButtonClick"
                          Height="48"
-                         Title="{Binding ElementName=ContentFrame, Path=Content.DataContext.DisplayName}" />
+                         Title="{Binding ElementName=ContentFrame, Path=Content.DataContext.DisplayName}">
+            <ContentControl caliburn:View.Model="{x:Bind ViewModel.HeaderDetailsViewModel}"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            HorizontalContentAlignment="Stretch"
+                            VerticalContentAlignment="Stretch" />
+        </controls:Header>
 
         <SplitView x:Name="Navigation"
                    OpenPaneLength="250"
@@ -77,13 +84,13 @@
                               Style="{StaticResource NavigationListViewStyle}"
                               ItemsSource="{x:Bind ViewModel.Actions, Mode=OneWay}"
                               SelectedItem="{Binding SelectedAction, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                              ItemClick="ListViewBase_OnItemClick" />
+                              ItemClick="ListView_OnItemClick" />
 
                     <ListView Grid.Row="1"
                               Style="{StaticResource NavigationListViewStyle}"
                               ItemsSource="{x:Bind ViewModel.SecondaryActions, Mode=OneWay}" 
                               SelectedItem="{Binding SelectedSecondaryAction, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                              ItemClick="ListViewBase_OnItemClick" />
+                              ItemClick="ListView_OnItemClick" />
                 </Grid>
             </SplitView.Pane>
             <SplitView.Content>

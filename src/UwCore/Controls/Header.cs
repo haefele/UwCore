@@ -9,7 +9,7 @@ using Windows.UI.Xaml.Controls;
 namespace UwCore.Controls
 {
     [TemplatePart(Name = NavigationButtonPartName, Type = typeof(Button))]
-    public class Header : Control
+    public class Header : ContentControl
     {
         #region Template Parts
         private const string NavigationButtonPartName = "PART_NavigationButton";
@@ -47,7 +47,6 @@ namespace UwCore.Controls
         public Header()
         {
             this.DefaultStyleKey = typeof(Header);
-            this.Padding = new Thickness(20, 0, 0, 0);
         }
         #endregion
 

@@ -17,6 +17,7 @@ using Windows.UI.Xaml.Navigation;
 using Caliburn.Micro;
 using UwCore.Application;
 using UwCoreTest.ApplicationModes;
+using UwCoreTest.Views.HeaderDetails;
 using UwCoreTest.Views.Test;
 using INavigationService = UwCore.Services.Navigation.INavigationService;
 
@@ -35,11 +36,19 @@ namespace UwCoreTest
         public override IEnumerable<Type> GetViewModelTypes()
         {
             yield return typeof(TestViewModel);
+            yield return typeof(HeaderDetailsViewModel);
         }
 
         public override ApplicationMode GetCurrentMode()
         {
             return new NormalApplicationMode();
+        }
+
+        public override void CustomizeApplication(IApplication application)
+        {
+            base.CustomizeApplication(application);
+
+            application.HeaderDetailsViewModel = IoC.Get<HeaderDetailsViewModel>();
         }
 
         public override string GetErrorTitle() => "Fehler";

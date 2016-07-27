@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using Windows.UI.Xaml.Controls;
+using Caliburn.Micro;
 using UwCore.Application;
 using UwCore.Hamburger;
+using UwCoreTest.Views.HeaderDetails;
 using UwCoreTest.Views.Test;
 
 namespace UwCoreTest.ApplicationModes

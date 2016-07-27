@@ -22,7 +22,7 @@ namespace UwCore.Hamburger
 
         public HamburgerViewModel ViewModel => this.DataContext as HamburgerViewModel;
 
-        private void ListViewBase_OnItemClick(object sender, ItemClickEventArgs e)
+        private void ListView_OnItemClick(object sender, ItemClickEventArgs e)
         {
             var clickedItem = (HamburgerItem)e.ClickedItem;
             clickedItem.Execute();
@@ -33,7 +33,7 @@ namespace UwCore.Hamburger
             }
         }
 
-        private void OpenNavigationView(object sender, RoutedEventArgs e)
+        private void Header_OnNavigationButtonClick(object sender, RoutedEventArgs e)
         {
             this.Navigation.IsPaneOpen = true;
         }

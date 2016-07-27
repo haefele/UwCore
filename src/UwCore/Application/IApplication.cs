@@ -6,6 +6,8 @@ namespace UwCore.Application
 {
     public interface IApplication
     {
+        object HeaderDetailsViewModel { get; set; }
+
         ApplicationMode CurrentMode { get; set; }
 
         ReactiveObservableCollection<HamburgerItem> Actions { get; }

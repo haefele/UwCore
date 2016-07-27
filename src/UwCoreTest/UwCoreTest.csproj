@@ -97,6 +97,10 @@
     </Compile>
     <Compile Include="ApplicationModes\NormalApplicationMode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Views\HeaderDetails\HeaderDetailsView.xaml.cs">
+      <DependentUpon>HeaderDetailsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\HeaderDetails\HeaderDetailsViewModel.cs" />
     <Compile Include="Views\Test\TestView.xaml.cs">
       <DependentUpon>TestView.xaml</DependentUpon>
     </Compile>
@@ -131,6 +135,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Views\HeaderDetails\HeaderDetailsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Test\TestView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

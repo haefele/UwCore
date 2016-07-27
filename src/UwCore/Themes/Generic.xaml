@@ -6,14 +6,16 @@
     
     <Style TargetType="controls:Header">
         <Setter Property="Height" Value="48" />
+        <Setter Property="Padding" Value="20, 0, 0, 0" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="controls:Header">
 
-                    <StackPanel Height="{TemplateBinding Height}"
-                                Background="{ThemeResource SystemListAccentMediumColor}"
-                                Orientation="Horizontal">
-                        <Button x:Name="PART_NavigationButton"
+                    <Grid Height="{TemplateBinding Height}"
+                          Background="{ThemeResource SystemListAccentMediumColor}">
+
+                        <StackPanel Orientation="Horizontal">
+                            <Button x:Name="PART_NavigationButton"
                                 Visibility="{TemplateBinding NavigationButtonVisibility}"
                                 Content="&#xE700;" 
                                 FontSize="20"
@@ -21,11 +23,18 @@
                                 Height="48"
                                 Background="{ThemeResource SystemListAccentLowColor}"
                                 FontFamily="{ThemeResource SymbolThemeFontFamily}"/>
-                        <TextBlock VerticalAlignment="Center"
+                            <TextBlock VerticalAlignment="Center"
                                    Margin="{TemplateBinding Padding}"
                                    Text="{TemplateBinding Title}"
                                    Style="{StaticResource TitleTextBlockStyle}" />
-                    </StackPanel>
+                        </StackPanel>
+                        
+                        <ContentPresenter Content="{TemplateBinding Content}" 
+                                          HorizontalAlignment="Right"
+                                          Width="{TemplateBinding Height}"
+                                          VerticalAlignment="Stretch" />
+                        
+                    </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
