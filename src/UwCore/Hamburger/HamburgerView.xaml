@@ -101,6 +101,12 @@
             </SplitView.Content>
         </SplitView>
         
+        <controls:PopupOverlay x:Name="PopupOverlay"
+                               x:FieldModifier="Public"
+                               Grid.Row="0"
+                               Grid.RowSpan="2"
+                               IsOpen="False" />
+        
         <controls:LoadingOverlay x:Name="LoadingOverlay" 
                                  x:FieldModifier="Public" 
                                  Grid.Row="0"

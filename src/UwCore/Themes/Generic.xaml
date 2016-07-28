@@ -40,6 +40,34 @@
         </Setter>
     </Style>
 
+    <Style TargetType="controls:PopupOverlay">
+        <Setter Property="Padding" Value="40" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="controls:PopupOverlay">
+                    <Grid>
+                        <Grid.Resources>
+                            <converter:BooleanToObjectConverter x:Key="IsOpenToVisibilityConverter">
+                                <converter:BooleanToObjectConverter.TrueValue>
+                                    <Visibility>Visible</Visibility>
+                                </converter:BooleanToObjectConverter.TrueValue>
+                                <converter:BooleanToObjectConverter.FalseValue>
+                                    <Visibility>Collapsed</Visibility>
+                                </converter:BooleanToObjectConverter.FalseValue>
+                            </converter:BooleanToObjectConverter>
+                        </Grid.Resources>
+
+                        <Grid Visibility="{Binding IsOpen, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource IsOpenToVisibilityConverter}}">
+                            <Grid Background="Black" Opacity="0.3" />
+                            
+                            <ContentPresenter Content="{TemplateBinding Content}" Margin="{TemplateBinding Padding}" />
+                        </Grid>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style TargetType="controls:LoadingOverlay">
         <Setter Property="Template">
             <Setter.Value>

@@ -131,6 +131,7 @@
     <Compile Include="Common\ResourceAccessor.cs" />
     <Compile Include="Controls\Header.cs" />
     <Compile Include="Controls\LoadingOverlay.cs" />
+    <Compile Include="Controls\PopupOverlay.cs" />
     <Compile Include="Converter\BooleanNegationConverter.cs" />
     <Compile Include="Converter\BooleanToNullableBooleanConverter.cs" />
     <Compile Include="Converter\BooleanToObjectConverter .cs" />
