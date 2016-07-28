@@ -126,7 +126,7 @@ namespace UwCore.Application
             await IoC.Get<IApplicationStateService>().RestoreStateAsync();
 
             var view = new HamburgerView();
-            this._container.Instance((INavigationService)new NavigationService(view.ContentFrame, this._container.GetInstance<IEventAggregator>(), this._container.GetInstance<IHockeyClient>()));
+            this._container.Instance((INavigationService)new NavigationService(view.ContentFrame, view.PopupOverlay, this._container.GetInstance<IEventAggregator>(), this._container.GetInstance<IHockeyClient>()));
             this._container.Instance((ILoadingService)new LoadingService(view.LoadingOverlay));
 
             var viewModel = new HamburgerViewModel(IoC.Get<INavigationService>(), IoC.Get<IEventAggregator>(), IoC.Get<IHockeyClient>());

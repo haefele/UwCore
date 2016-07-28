@@ -6,6 +6,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Caliburn.Micro;
 using Microsoft.HockeyApp;
+using UwCore.Controls;
 
 namespace UwCore.Services.Navigation
 {
@@ -14,23 +15,23 @@ namespace UwCore.Services.Navigation
         private readonly IEventAggregator _eventAggregator;
         private readonly IHockeyClient _hockeyClient;
 
-        public NavigationService(Frame frame, IEventAggregator eventAggregator, IHockeyClient hockeyClient, bool treatViewAsLoaded = false)
+        private readonly PopupNavigationService _popupNavigationService;
+
+        public NavigationService(Frame frame, PopupOverlay popupOverlay, IEventAggregator eventAggregator, IHockeyClient hockeyClient, bool treatViewAsLoaded = false)
             : base(frame, treatViewAsLoaded)
         {
             this._eventAggregator = eventAggregator;
             this._hockeyClient = hockeyClient;
+
+            this._popupNavigationService = new PopupNavigationService(this, popupOverlay);
         }
 
         public IAdvancedNavigationService Advanced => this;
-
-        void IAdvancedNavigationService.Navigate(Type viewModelType, Dictionary<string, object> parameter)
-        {
-            this.NavigateToViewModel(viewModelType, parameter);
-        }
+        public IPopupNavigationService Popup => this._popupNavigationService;
 
         public NavigateHelper<T> For<T>()
         {
-            return new NavigateHelper<T>().AttachTo(this);
+            return new NavigateHelper<T>(this.Navigate);
         }
 
         public void ClearBackStack()
@@ -38,7 +39,12 @@ namespace UwCore.Services.Navigation
             this.BackStack.Clear();
             this.UpdateAppViewBackButtonVisibility();
         }
-        
+
+        public void Navigate(Type viewModelType, Dictionary<string, object> parameter)
+        {
+            this.NavigateToViewModel(viewModelType, parameter);
+        }
+
         protected override void OnNavigated(object sender, NavigationEventArgs e)
         {
             base.OnNavigated(sender, e);
@@ -51,10 +57,21 @@ namespace UwCore.Services.Navigation
             this._hockeyClient.TrackEvent("Navigated", new Dictionary<string, string> { ["ViewModel"] = frameworkElement.DataContext.GetType().Name });
         }
 
-        private void UpdateAppViewBackButtonVisibility()
+        protected override void OnBackRequested(BackRequestedEventArgs e)
+        {
+            base.OnBackRequested(e);
+
+            if (this._popupNavigationService.IsOpen())
+            {
+                this._popupNavigationService.Close();
+                e.Handled = true;
+            }
+        }
+
+        internal void UpdateAppViewBackButtonVisibility()
         {
             var systemNavigationManager = SystemNavigationManager.GetForCurrentView();
-            systemNavigationManager.AppViewBackButtonVisibility = this.CanGoBack ? AppViewBackButtonVisibility.Visible : AppViewBackButtonVisibility.Collapsed;
+            systemNavigationManager.AppViewBackButtonVisibility = this.CanGoBack || this._popupNavigationService.IsOpen() ? AppViewBackButtonVisibility.Visible : AppViewBackButtonVisibility.Collapsed;
         }
     }
 }

@@ -13,7 +13,9 @@
     >
     <Button Background="{ThemeResource SystemListAccentLowColor}"
             HorizontalAlignment="Stretch"
-            VerticalAlignment="Stretch">
+            VerticalAlignment="Stretch"
+            Click="ButtonBase_OnClick"
+            >
         <SymbolIcon Symbol="ReportHacked" />
     </Button>
 </UserControl>

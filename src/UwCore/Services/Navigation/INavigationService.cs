@@ -1,6 +1,4 @@
-using System;
-using System.Collections.Generic;
-using Caliburn.Micro;
+using System.Linq;
 
 namespace UwCore.Services.Navigation
 {
@@ -8,12 +6,9 @@ namespace UwCore.Services.Navigation
     {
         IAdvancedNavigationService Advanced { get; }
 
+        IPopupNavigationService Popup { get; }
+
         NavigateHelper<T> For<T>();
         void ClearBackStack();
-    }
-
-    public interface IAdvancedNavigationService
-    {
-        void Navigate(Type viewModelType, Dictionary<string, object> parameter = null);
     }
 }
