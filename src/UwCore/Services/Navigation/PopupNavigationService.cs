@@ -28,7 +28,7 @@ namespace UwCore.Services.Navigation
         {
             var viewModel = IoC.GetInstance(viewModelType, null);
             this.InjectParameters(viewModel, parameter);
-
+            
             ScreenExtensions.TryActivate(viewModel);
             
             View.SetModel(this._popupOverlay, viewModel);

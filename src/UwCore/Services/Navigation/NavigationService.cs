@@ -51,6 +51,11 @@ namespace UwCore.Services.Navigation
 
             this.UpdateAppViewBackButtonVisibility();
 
+            if (this._popupNavigationService.IsOpen())
+            {
+                this._popupNavigationService.Close();
+            }
+
             var frameworkElement = (FrameworkElement)e.Content;
             this._eventAggregator.PublishOnCurrentThread(new NavigatedEvent(frameworkElement.DataContext));
 
