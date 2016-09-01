@@ -7,10 +7,11 @@ namespace UwCore.Services.Navigation
 {
     public class NavigateHelper<TViewModel>
     {
-        private readonly Action<Type, Dictionary<string, object>> _navigate;
+        private readonly Action<Type, Dictionary<string, object>, string> _navigate;
         private readonly Dictionary<string, object> _parameters;
+        private string _context;
 
-        public NavigateHelper(Action<Type, Dictionary<string, object>> navigate)
+        public NavigateHelper(Action<Type, Dictionary<string, object>, string> navigate)
         {
             this._navigate = navigate;
             this._parameters = new Dictionary<string, object>();
@@ -26,9 +27,16 @@ namespace UwCore.Services.Navigation
             return this;
         }
 
+        public NavigateHelper<TViewModel> Context(string context)
+        {
+            this._context = context;
+
+            return this;
+        }
+
         public void Navigate()
         {
-            this._navigate(typeof(TViewModel), this._parameters);
+            this._navigate(typeof(TViewModel), this._parameters, this._context);
         }
     }
 }

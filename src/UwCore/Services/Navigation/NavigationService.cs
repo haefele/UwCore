@@ -40,9 +40,14 @@ namespace UwCore.Services.Navigation
             this.UpdateAppViewBackButtonVisibility();
         }
 
-        public void Navigate(Type viewModelType, Dictionary<string, object> parameter)
+        public void Navigate(Type viewModelType, Dictionary<string, object> parameter, string context)
         {
-            this.NavigateToViewModel(viewModelType, parameter);
+            Type sourcePageType = ViewLocator.LocateTypeForModelType(viewModelType, null, context);
+
+            if (sourcePageType == null)
+                throw new InvalidOperationException($"No view was found for {viewModelType.FullName}. See the log for searched views.");
+            
+            this.Navigate(sourcePageType, parameter);
         }
 
         protected override void OnNavigated(object sender, NavigationEventArgs e)

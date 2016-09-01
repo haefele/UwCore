@@ -24,14 +24,16 @@ namespace UwCore.Services.Navigation
             return new NavigateHelper<T>(this.Navigate);
         }
 
-        public void Navigate(Type viewModelType, Dictionary<string, object> parameter = null)
+        public void Navigate(Type viewModelType, Dictionary<string, object> parameter = null, string context = null)
         {
             var viewModel = IoC.GetInstance(viewModelType, null);
             this.InjectParameters(viewModel, parameter);
             
             ScreenExtensions.TryActivate(viewModel);
             
+            View.SetContext(this._popupOverlay, context);
             View.SetModel(this._popupOverlay, viewModel);
+
             this._popupOverlay.IsOpen = true;
 
             this._parent.UpdateAppViewBackButtonVisibility();

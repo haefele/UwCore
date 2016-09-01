@@ -5,6 +5,6 @@ namespace UwCore.Services.Navigation
 {
     public interface IAdvancedNavigationService
     {
-        void Navigate(Type viewModelType, Dictionary<string, object> parameter = null);
+        void Navigate(Type viewModelType, Dictionary<string, object> parameter = null, string context = null);
     }
 }
