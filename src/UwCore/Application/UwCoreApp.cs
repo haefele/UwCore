@@ -46,7 +46,7 @@ namespace UwCore.Application
         {
             var appId = this.GetHockeyAppId();
 
-            if (string.IsNullOrWhiteSpace(appId) == false)
+            if (string.IsNullOrWhiteSpace(appId) == false && this.IsHockeyAppEnabled())
             {
                 HockeyClient.Current.Configure(appId);
             }
@@ -191,6 +191,12 @@ namespace UwCore.Application
         public virtual string GetHockeyAppId()
         {
             return null;
+        }
+
+        public virtual bool IsHockeyAppEnabled()
+        {
+            var currentVersion = Package.Current.Id.Version.ToVersion();
+            return currentVersion != Version.Parse("1.0.0.0");
         }
 
         public abstract ApplicationMode GetCurrentMode();
