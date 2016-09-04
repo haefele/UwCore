@@ -100,11 +100,20 @@
             <SplitView.Content>
                 <Frame x:Name="ContentFrame"
                        x:FieldModifier="public"
-                       DataContext="{x:Null}"
-                       />
+                       DataContext="{x:Null}">
+                    <Frame.ContentTransitions>
+                        <TransitionCollection>
+                            <NavigationThemeTransition>
+                                <NavigationThemeTransition.DefaultNavigationTransitionInfo>
+                                    <EntranceNavigationTransitionInfo />
+                                </NavigationThemeTransition.DefaultNavigationTransitionInfo>
+                            </NavigationThemeTransition>
+                        </TransitionCollection>
+                    </Frame.ContentTransitions>
+                </Frame>
             </SplitView.Content>
         </SplitView>
-        
+
         <controls:PopupOverlay x:Name="PopupOverlay"
                                x:FieldModifier="Public"
                                Grid.Row="0"

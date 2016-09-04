@@ -10,14 +10,6 @@ namespace UwCore.Hamburger
         public HamburgerView()
         {
             this.InitializeComponent();
-
-            this.ContentFrame.ContentTransitions = new TransitionCollection
-            {
-                new NavigationThemeTransition
-                {
-                    DefaultNavigationTransitionInfo = new EntranceNavigationTransitionInfo()
-                }
-            };
         }
 
         public HamburgerViewModel ViewModel => this.DataContext as HamburgerViewModel;
