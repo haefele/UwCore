@@ -7,6 +7,7 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -49,6 +50,11 @@ namespace UwCoreTest
             base.CustomizeApplication(application);
 
             application.HeaderDetailsViewModel = IoC.Get<HeaderDetailsViewModel>();
+        }
+        
+        public override void CustomConfiguration()
+        {
+            ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(360, 500));
         }
 
         public override string GetErrorTitle() => "Fehler";

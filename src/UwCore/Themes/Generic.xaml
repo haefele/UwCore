@@ -6,16 +6,21 @@
     
     <Style TargetType="controls:Header">
         <Setter Property="Height" Value="48" />
-        <Setter Property="Padding" Value="20, 0, 0, 0" />
+        <Setter Property="Padding" Value="20, 0, 20, 0" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="controls:Header">
 
                     <Grid Height="{TemplateBinding Height}"
                           Background="{ThemeResource SystemListAccentMediumColor}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
 
-                        <StackPanel Orientation="Horizontal">
-                            <Button x:Name="PART_NavigationButton"
+                        <Button x:Name="PART_NavigationButton"
+                                Grid.Column="0"
                                 Visibility="{TemplateBinding NavigationButtonVisibility}"
                                 Content="&#xE700;" 
                                 FontSize="20"
@@ -23,15 +28,21 @@
                                 Height="48"
                                 Background="{ThemeResource SystemListAccentLowColor}"
                                 FontFamily="{ThemeResource SymbolThemeFontFamily}"/>
+                        
+                        <Viewbox Grid.Column="1"
+                                 HorizontalAlignment="Left"
+                                 StretchDirection="DownOnly">
                             <TextBlock VerticalAlignment="Center"
                                    Margin="{TemplateBinding Padding}"
                                    Text="{TemplateBinding Title}"
                                    Style="{StaticResource TitleTextBlockStyle}" />
-                        </StackPanel>
+                        </Viewbox>
                         
                         <ContentPresenter Content="{TemplateBinding Content}" 
-                                          HorizontalAlignment="Right"
                                           Width="{TemplateBinding Height}"
+                                          Visibility="{TemplateBinding ContentVisibility}"
+                                          Grid.Column="2" 
+                                          HorizontalAlignment="Stretch"
                                           VerticalAlignment="Stretch" />
                         
                     </Grid>

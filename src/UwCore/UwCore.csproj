@@ -136,6 +136,7 @@
     <Compile Include="Converter\BooleanToNullableBooleanConverter.cs" />
     <Compile Include="Converter\BooleanToObjectConverter .cs" />
     <Compile Include="Converter\FormatStringConverter.cs" />
+    <Compile Include="Converter\NullToVisibilityConverter.cs" />
     <Compile Include="Converter\StringToOneLineConverter.cs" />
     <Compile Include="Extensions\ByteArrayExtensions.cs" />
     <Compile Include="Extensions\DateTimeOffsetExtensions.cs" />

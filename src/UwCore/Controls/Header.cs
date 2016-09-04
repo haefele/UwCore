@@ -37,6 +37,15 @@ namespace UwCore.Controls
             get { return (Visibility)this.GetValue(NavigationButtonVisibilityProperty); }
             set { this.SetValue(NavigationButtonVisibilityProperty, value); }
         }
+
+        public static readonly DependencyProperty ContentVisibilityProperty = DependencyProperty.Register(
+            "ContentVisibility", typeof(Visibility), typeof(Header), new PropertyMetadata(default(Visibility)));
+
+        public Visibility ContentVisibility
+        {
+            get { return (Visibility) GetValue(ContentVisibilityProperty); }
+            set { SetValue(ContentVisibilityProperty, value); }
+        }
         #endregion
 
         #region Events

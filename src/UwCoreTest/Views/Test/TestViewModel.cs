@@ -24,7 +24,7 @@ namespace UwCoreTest.Views.Test
             this._loadingService = loadingService;
             this._navigationService = navigationService;
 
-            this.DisplayName = "Test-View-Model";
+            this.DisplayName = "Statistics from 9/1/2016 to 9/30/2016";
 
             this.Test = ReactiveCommand.CreateAsyncTask(_ => this.TestImpl());
             this.Test.AttachLoadingService("Test-Message");
