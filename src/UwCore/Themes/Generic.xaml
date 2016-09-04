@@ -39,10 +39,9 @@
                         </Viewbox>
                         
                         <ContentPresenter Content="{TemplateBinding Content}" 
-                                          Width="{TemplateBinding Height}"
                                           Visibility="{TemplateBinding ContentVisibility}"
                                           Grid.Column="2" 
-                                          HorizontalAlignment="Stretch"
+                                          HorizontalAlignment="Right"
                                           VerticalAlignment="Stretch" />
                         
                     </Grid>

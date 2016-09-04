@@ -8,8 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     
-    d:DesignWidth="400"
-    d:DesignHeight="300"
+    Width="48"
     >
     <Button Background="{ThemeResource SystemListAccentLowColor}"
             HorizontalAlignment="Stretch"
