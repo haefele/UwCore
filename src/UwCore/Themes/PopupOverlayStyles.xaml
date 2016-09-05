@@ -1,0 +1,55 @@
+﻿<ResourceDictionary x:Class="UwCore.Themes.PopupOverlayStyles"
+                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="using:UwCore.Themes"
+                    xmlns:controls="using:UwCore.Controls"
+                    xmlns:converter="using:UwCore.Converter">
+    
+    <Style TargetType="controls:PopupOverlay">
+        <Setter Property="Padding"
+                Value="40" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="controls:PopupOverlay">
+                    <Grid>
+                        <Grid.Resources>
+                            <ResourceDictionary>
+                                <ResourceDictionary.ThemeDictionaries>
+                                    <ResourceDictionary x:Key="Light">
+                                        <SolidColorBrush x:Key="BorderBrush"
+                                                         Color="#7A7A7A" />
+                                    </ResourceDictionary>
+                                    <ResourceDictionary x:Key="Dark">
+                                        <SolidColorBrush x:Key="BorderBrush"
+                                                         Color="#797979" />
+                                    </ResourceDictionary>
+                                </ResourceDictionary.ThemeDictionaries>
+
+                                <converter:BooleanToObjectConverter x:Key="IsOpenToVisibilityConverter">
+                                    <converter:BooleanToObjectConverter.TrueValue>
+                                        <Visibility>Visible</Visibility>
+                                    </converter:BooleanToObjectConverter.TrueValue>
+                                    <converter:BooleanToObjectConverter.FalseValue>
+                                        <Visibility>Collapsed</Visibility>
+                                    </converter:BooleanToObjectConverter.FalseValue>
+                                </converter:BooleanToObjectConverter>
+                            </ResourceDictionary>
+                        </Grid.Resources>
+
+                        <Grid Visibility="{Binding IsOpen, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource IsOpenToVisibilityConverter}}">
+                            <Grid Background="Black"
+                                  Opacity="0.3"
+                                  PointerPressed="PopupOverlayBackground_OnPointerPressed" />
+
+                            <ContentPresenter Content="{TemplateBinding Content}"
+                                              Margin="{TemplateBinding Padding}"
+                                              BorderBrush="{ThemeResource BorderBrush}"
+                                              BorderThickness="1" />
+                        </Grid>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+</ResourceDictionary>

@@ -1,0 +1,54 @@
+﻿<ResourceDictionary x:Class="UwCore.Themes.HeaderStyles"
+                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="using:UwCore.Themes"
+                    xmlns:controls="using:UwCore.Controls">
+    
+    <Style TargetType="controls:Header">
+        <Setter Property="Height"
+                Value="48" />
+        <Setter Property="Padding"
+                Value="20, 0, 20, 0" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="controls:Header">
+
+                    <Grid Height="{TemplateBinding Height}"
+                          Background="{ThemeResource SystemListAccentMediumColor}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <Button x:Name="PART_NavigationButton"
+                                Grid.Column="0"
+                                Visibility="{TemplateBinding NavigationButtonVisibility}"
+                                Content="&#xE700;"
+                                FontSize="20"
+                                Width="48"
+                                Height="48"
+                                Background="{ThemeResource SystemListAccentLowColor}"
+                                FontFamily="{ThemeResource SymbolThemeFontFamily}" />
+
+                        <Viewbox Grid.Column="1"
+                                 HorizontalAlignment="Left"
+                                 StretchDirection="DownOnly">
+                            <TextBlock VerticalAlignment="Center"
+                                       Margin="{TemplateBinding Padding}"
+                                       Text="{TemplateBinding Title}"
+                                       Style="{StaticResource TitleTextBlockStyle}" />
+                        </Viewbox>
+
+                        <ContentPresenter Content="{TemplateBinding Content}"
+                                          Visibility="{TemplateBinding ContentVisibility}"
+                                          Grid.Column="2"
+                                          HorizontalAlignment="Right"
+                                          VerticalAlignment="Stretch" />
+
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

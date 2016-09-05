@@ -177,6 +177,18 @@
     <Compile Include="Services\Navigation\INavigationService.cs" />
     <Compile Include="Services\Navigation\NavigatedEvent.cs" />
     <Compile Include="Services\Navigation\PopupNavigationService.cs" />
+    <Compile Include="Themes\generic.xaml.cs">
+      <DependentUpon>generic.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Themes\HeaderStyles.xaml.cs">
+      <DependentUpon>HeaderStyles.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Themes\LoadingOverlayStyles.xaml.cs">
+      <DependentUpon>LoadingOverlayStyles.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Themes\PopupOverlayStyles.xaml.cs">
+      <DependentUpon>PopupOverlayStyles.xaml</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Properties\UwCore.rd.xml" />
   </ItemGroup>
   <ItemGroup>
@@ -185,6 +197,21 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Themes\generic.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
+    <Page Include="Themes\HeaderStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
+    <Page Include="Themes\LoadingOverlayStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
+    <Page Include="Themes\PopupOverlayStyles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
