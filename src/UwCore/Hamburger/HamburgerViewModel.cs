@@ -11,6 +11,7 @@ using UwCore.Application.Events;
 using UwCore.Common;
 using UwCore.Extensions;
 using UwCore.Services.Navigation;
+using UwCore.Services.UpdateNotes;
 using INavigationService = UwCore.Services.Navigation.INavigationService;
 
 namespace UwCore.Hamburger
@@ -20,6 +21,7 @@ namespace UwCore.Hamburger
         private readonly INavigationService _navigationService;
         private readonly IEventAggregator _eventAggregator;
         private readonly IHockeyClient _hockeyClient;
+        private readonly IUpdateNotesService _updateNotesService;
 
         private HamburgerItem _selectedAction;
         private HamburgerItem _selectedSecondaryAction;
@@ -93,7 +95,7 @@ namespace UwCore.Hamburger
             }
         }
 
-        public HamburgerViewModel(INavigationService navigationService, IEventAggregator eventAggregator, IHockeyClient hockeyClient)
+        public HamburgerViewModel(INavigationService navigationService, IEventAggregator eventAggregator, IHockeyClient hockeyClient, IUpdateNotesService updateNotesService)
         {
             Guard.NotNull(navigationService, nameof(navigationService));
             Guard.NotNull(eventAggregator, nameof(eventAggregator));
@@ -102,6 +104,7 @@ namespace UwCore.Hamburger
             this._navigationService = navigationService;
             this._eventAggregator = eventAggregator;
             this._hockeyClient = hockeyClient;
+            this._updateNotesService = updateNotesService;
 
             this.Actions = new ReactiveObservableCollection<HamburgerItem>();
             this.SecondaryActions = new ReactiveObservableCollection<HamburgerItem>();
@@ -113,7 +116,20 @@ namespace UwCore.Hamburger
 
             eventAggregator.Subscribe(this);
         }
-        
+
+        protected override void OnActivate()
+        {
+            base.OnActivate();
+
+            var updateNotesViewModel = UwCoreApp.Current.GetUpdateNotesViewModelType();
+            if (updateNotesViewModel != null && this._updateNotesService.HasSeenUpdateNotes() == false)
+            {
+                this._navigationService.Popup.Advanced.Navigate(updateNotesViewModel);
+
+                this._updateNotesService.MarkUpdateNotesAsSeen();
+            }
+        }
+
         private void UpdateSelectedAction()
         {
             var selectedAction = this.Actions

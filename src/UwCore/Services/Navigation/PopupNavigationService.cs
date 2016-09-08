@@ -57,6 +57,9 @@ namespace UwCore.Services.Navigation
 
         private void InjectParameters(object viewModel, Dictionary<string, object> parameter)
         {
+            if (parameter == null)
+                return;
+
             foreach (var pair in parameter)
             {
                 var property = viewModel.GetType().GetPropertyCaseInsensitive(pair.Key);

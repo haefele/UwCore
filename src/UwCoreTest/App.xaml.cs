@@ -64,5 +64,7 @@ namespace UwCoreTest
         public override string GetErrorMessage() => "Ups, es ist ein Fehler aufgetreten.";
 
         public override Type GetCommonExceptionType() => typeof(Exception);
+
+        public override Type GetUpdateNotesViewModelType() => typeof(HeaderDetailsViewModel);
     }
 }

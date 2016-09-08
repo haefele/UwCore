@@ -19,6 +19,7 @@ using UwCore.Services.Dialog;
 using UwCore.Services.ExceptionHandler;
 using UwCore.Services.Loading;
 using UwCore.Services.Navigation;
+using UwCore.Services.UpdateNotes;
 using INavigationService = UwCore.Services.Navigation.INavigationService;
 
 namespace UwCore.Application
@@ -32,7 +33,11 @@ namespace UwCore.Application
         #region Fields
         private WinRTContainer _container;
         #endregion
-        
+
+        #region Properties
+        public new static UwCoreApp Current => Windows.UI.Xaml.Application.Current as UwCoreApp;
+        #endregion
+
         #region Configure
         protected override void Configure()
         {
@@ -73,6 +78,9 @@ namespace UwCore.Application
             //ApplicationState
             this._container.Singleton<IApplicationStateService, ApplicationStateService>();
             
+            //UpdateNotes
+            this._container.Singleton<IUpdateNotesService, UpdateNotesService>();
+
             //ViewModels
             var viewModelTypes = this.GetViewModelTypes();
             foreach (var viewModelType in viewModelTypes)
@@ -129,7 +137,7 @@ namespace UwCore.Application
             this._container.Instance((INavigationService)new NavigationService(view.ContentFrame, view.PopupOverlay, this._container.GetInstance<IEventAggregator>(), this._container.GetInstance<IHockeyClient>()));
             this._container.Instance((ILoadingService)new LoadingService(view.LoadingOverlay));
 
-            var viewModel = new HamburgerViewModel(IoC.Get<INavigationService>(), IoC.Get<IEventAggregator>(), IoC.Get<IHockeyClient>());
+            var viewModel = new HamburgerViewModel(IoC.Get<INavigationService>(), IoC.Get<IEventAggregator>(), IoC.Get<IHockeyClient>(), IoC.Get<IUpdateNotesService>());
             this._container.Instance((IApplication)viewModel);
 
             this.CustomizeApplication(viewModel);
@@ -197,6 +205,11 @@ namespace UwCore.Application
         {
             var currentVersion = Package.Current.Id.Version.ToVersion();
             return currentVersion != Version.Parse("1.0.0.0");
+        }
+
+        public virtual Type GetUpdateNotesViewModelType()
+        {
+            return null;
         }
 
         public abstract ApplicationMode GetCurrentMode();
