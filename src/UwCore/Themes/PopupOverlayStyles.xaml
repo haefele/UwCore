@@ -41,10 +41,15 @@
                                   Opacity="0.3"
                                   PointerPressed="PopupOverlayBackground_OnPointerPressed" />
 
-                            <ContentPresenter Content="{TemplateBinding Content}"
-                                              Margin="{TemplateBinding Padding}"
-                                              BorderBrush="{ThemeResource BorderBrush}"
-                                              BorderThickness="1" />
+                            <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                                          VerticalScrollBarVisibility="Auto"
+                                          Margin="{TemplateBinding Padding}"
+                                          BorderBrush="{ThemeResource BorderBrush}"
+                                          BorderThickness="1"
+                                          VerticalAlignment="Center"
+                                          HorizontalAlignment="Center">
+                                <ContentPresenter Content="{TemplateBinding Content}" />
+                            </ScrollViewer>
                         </Grid>
                     </Grid>
                 </ControlTemplate>
