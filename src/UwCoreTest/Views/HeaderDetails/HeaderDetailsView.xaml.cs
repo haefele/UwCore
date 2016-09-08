@@ -13,6 +13,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Caliburn.Micro;
+using UwCoreTest.Views.MahPopup;
 using UwCoreTest.Views.Test;
 using INavigationService = UwCore.Services.Navigation.INavigationService;
 
@@ -29,7 +30,7 @@ namespace UwCoreTest.Views.HeaderDetails
 
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
-            IoC.Get<INavigationService>().Popup.For<TestViewModel>().Navigate();
+            IoC.Get<INavigationService>().Popup.For<MahPopupViewModel>().Navigate();
         }
     }
 }

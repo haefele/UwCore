@@ -101,6 +101,10 @@
       <DependentUpon>HeaderDetailsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\HeaderDetails\HeaderDetailsViewModel.cs" />
+    <Compile Include="Views\MahPopup\MahPopupView.xaml.cs">
+      <DependentUpon>MahPopupView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MahPopup\MahPopupViewModel.cs" />
     <Compile Include="Views\Test\TestView.xaml.cs">
       <DependentUpon>TestView.xaml</DependentUpon>
     </Compile>
@@ -136,6 +140,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Views\HeaderDetails\HeaderDetailsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\MahPopup\MahPopupView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

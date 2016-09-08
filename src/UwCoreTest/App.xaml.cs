@@ -19,6 +19,7 @@ using Caliburn.Micro;
 using UwCore.Application;
 using UwCoreTest.ApplicationModes;
 using UwCoreTest.Views.HeaderDetails;
+using UwCoreTest.Views.MahPopup;
 using UwCoreTest.Views.Test;
 using INavigationService = UwCore.Services.Navigation.INavigationService;
 
@@ -38,6 +39,7 @@ namespace UwCoreTest
         {
             yield return typeof(TestViewModel);
             yield return typeof(HeaderDetailsViewModel);
+            yield return typeof(MahPopupViewModel);
         }
 
         public override ApplicationMode GetCurrentMode()
