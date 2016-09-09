@@ -38,14 +38,14 @@ namespace UwCore.Themes
         private void ContentPresenter_OnContentChanged(DependencyObject sender, DependencyProperty dp)
         {
             var contentPresenter = (ContentPresenter) sender;
-            var scrollViewer = (ScrollViewer)contentPresenter.Parent;
+            var grid = (Grid)contentPresenter.Parent;
             var content = contentPresenter.Content as FrameworkElement;
 
-            scrollViewer.HorizontalAlignment = double.IsNaN(content?.Width ?? double.NaN) 
+            grid.HorizontalAlignment = double.IsNaN(content?.Width ?? double.NaN) 
                 ? HorizontalAlignment.Stretch 
                 : HorizontalAlignment.Center;
 
-            scrollViewer.VerticalAlignment = double.IsNaN(content?.Height ?? double.NaN)
+            grid.VerticalAlignment = double.IsNaN(content?.Height ?? double.NaN)
                 ? VerticalAlignment.Stretch 
                 : VerticalAlignment.Center;
         }

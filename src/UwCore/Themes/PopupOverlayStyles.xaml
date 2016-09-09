@@ -42,14 +42,11 @@
                                   PointerPressed="PopupOverlayBackground_OnPointerPressed" />
 
                             <!-- HorizontalAlignment and VerticalAlignment are set in code-behind according to the content -->
-                            <ScrollViewer x:Name="ScrollViewer" 
-                                          HorizontalScrollBarVisibility="Auto"
-                                          VerticalScrollBarVisibility="Auto"
-                                          Margin="{TemplateBinding Padding}"
-                                          BorderBrush="{ThemeResource BorderBrush}"
-                                          BorderThickness="1">
+                            <Grid Margin="{TemplateBinding Padding}"
+                                  BorderBrush="{ThemeResource BorderBrush}"
+                                  BorderThickness="1">
                                 <ContentPresenter Content="{TemplateBinding Content}" Loaded="ContentPresenter_OnLoaded"   />
-                            </ScrollViewer>
+                            </Grid>
                         </Grid>
                     </Grid>
                 </ControlTemplate>
