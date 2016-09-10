@@ -38,5 +38,10 @@ namespace UwCore.Services.UpdateNotes
             var currentVersion = Package.Current.Id.Version.ToVersion();
             this._applicationStateService.Set("SeenUpdateNotes", currentVersion, ApplicationState.ApplicationState.Local);
         }
+
+        public void Clear()
+        {
+            this._applicationStateService.Set("SeenUpdateNotes", (Version)null, ApplicationState.ApplicationState.Local);
+        }
     }
 }

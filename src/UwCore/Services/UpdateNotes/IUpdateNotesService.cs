@@ -5,5 +5,7 @@
         bool HasSeenUpdateNotes();
 
         void MarkUpdateNotesAsSeen();
+
+        void Clear();
     }
 }
