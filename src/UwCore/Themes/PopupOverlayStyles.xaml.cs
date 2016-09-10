@@ -41,13 +41,27 @@ namespace UwCore.Themes
             var grid = (Grid)contentPresenter.Parent;
             var content = contentPresenter.Content as FrameworkElement;
 
-            grid.HorizontalAlignment = double.IsNaN(content?.Width ?? double.NaN) 
-                ? HorizontalAlignment.Stretch 
-                : HorizontalAlignment.Center;
+            grid.MaxWidth = this.GetMax(content, f => f.Width, f => f.MaxWidth) 
+                + grid.BorderThickness.Left 
+                + grid.BorderThickness.Right;
 
-            grid.VerticalAlignment = double.IsNaN(content?.Height ?? double.NaN)
-                ? VerticalAlignment.Stretch 
-                : VerticalAlignment.Center;
+            grid.MaxHeight = this.GetMax(content, f => f.Height, f => f.MaxHeight) 
+                + grid.BorderThickness.Bottom 
+                + grid.BorderThickness.Top;
+        }
+
+        private double GetMax(FrameworkElement element, Func<FrameworkElement, double> selector, Func<FrameworkElement, double> maxSelector)
+        {
+            if (element == null)
+                return double.PositiveInfinity;
+
+            if (double.IsInfinity(maxSelector(element)) == false)
+                return maxSelector(element);
+
+            if (double.IsInfinity(selector(element)) == false)
+                return selector(element);
+
+            return double.PositiveInfinity;
         }
     }
 }

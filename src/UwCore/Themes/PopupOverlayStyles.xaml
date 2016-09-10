@@ -41,11 +41,12 @@
                                   Opacity="0.3"
                                   PointerPressed="PopupOverlayBackground_OnPointerPressed" />
 
-                            <!-- HorizontalAlignment and VerticalAlignment are set in code-behind according to the content -->
+                            <!-- MaxWidth and MaxHeight are set in code-behind taken to the content -->
                             <Grid Margin="{TemplateBinding Padding}"
                                   BorderBrush="{ThemeResource BorderBrush}"
                                   BorderThickness="1">
-                                <ContentPresenter Content="{TemplateBinding Content}" Loaded="ContentPresenter_OnLoaded"   />
+                                <ContentPresenter Content="{TemplateBinding Content}" 
+                                                  Loaded="ContentPresenter_OnLoaded"   />
                             </Grid>
                         </Grid>
                     </Grid>

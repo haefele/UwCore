@@ -7,13 +7,22 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     
-    Width="1000"
-    Height="1000"
+    MaxWidth="500"
+    MaxHeight="500"
     >
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Grid Width="50" Height="50" Background="Red">
+        <ScrollViewer Margin="50" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
             
-        </Grid>
+            <Grid Width="1000" Height="1000">
+                <Grid.Background>
+                    <LinearGradientBrush EndPoint="1,0.5" StartPoint="0, 0.5">
+                        <GradientStop Color="Black" Offset="0"/>
+                        <GradientStop Color="White" Offset="1"/>
+                    </LinearGradientBrush>
+                </Grid.Background>
+
+            </Grid>
+        </ScrollViewer>
     </Grid>
 </Page>
