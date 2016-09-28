@@ -9,50 +9,44 @@ using UwCore.Common;
 
 namespace UwCore
 {
-    public class UwCoreCommand : UwCoreCommand<Unit>
+    public static class UwCoreCommand
     {
         public static UwCoreCommandBuilder<Unit> Create(Func<Task> execute)
         {
             Guard.NotNull(execute, nameof(execute));
 
-            return Create(_ => execute());
+            return Create(token => execute());
         }
 
         public static UwCoreCommandBuilder<Unit> Create(Func<CancellationToken, Task> execute)
         {
             Guard.NotNull(execute, nameof(execute));
 
-            return new UwCoreCommandBuilder<Unit>(async token =>
+            return Create(async token =>
             {
                 await execute(token);
                 return Unit.Default;
             });
         }
 
-        public UwCoreCommand(ReactiveCommand<Unit> innerCommand) 
-            : base(innerCommand)
-        {
-            Guard.NotNull(innerCommand, nameof(innerCommand));
-        }
-    }
-
-    public class UwCoreCommand<T> : ICommand
-    {
-        private readonly ReactiveCommand<T> _innerCommand;
-
-        public static UwCoreCommandBuilder<T> Create(Func<Task<T>> execute)
+        public static UwCoreCommandBuilder<T> Create<T>(Func<Task<T>> execute)
         {
             Guard.NotNull(execute, nameof(execute));
 
             return Create(_ => execute());
         }
 
-        public static UwCoreCommandBuilder<T> Create(Func<CancellationToken, Task<T>> execute)
+        public static UwCoreCommandBuilder<T> Create<T>(Func<CancellationToken, Task<T>> execute)
         {
             Guard.NotNull(execute, nameof(execute));
 
             return new UwCoreCommandBuilder<T>(execute);
         }
+    }
+
+    public class UwCoreCommand<T> : ICommand
+    {
+        private readonly ReactiveCommand<T> _innerCommand;
 
         internal UwCoreCommand(ReactiveCommand<T> innerCommand)
         {

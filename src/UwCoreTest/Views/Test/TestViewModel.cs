@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reactive;
+using System.Threading;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;
@@ -15,13 +16,13 @@ namespace UwCoreTest.Views.Test
     {
         private readonly ILoadingService _loadingService;
         private readonly INavigationService _navigationService;
-        private ObservableAsPropertyHelper<Unit> _someUnitHelper;
+        private ObservableAsPropertyHelper<string> _someUnitHelper;
 
         public int SomeId { get; set; }
 
-        public Unit SomeUnit => this._someUnitHelper.Value;
+        public string SomeUnit => this._someUnitHelper.Value;
 
-        public UwCoreCommand<Unit> Test { get; }
+        public UwCoreCommand<string> Test { get; }
 
         public TestViewModel(ILoadingService loadingService, INavigationService navigationService)
         {
@@ -55,7 +56,7 @@ namespace UwCoreTest.Views.Test
 
         private static bool _asPopup = true;
 
-        public async Task TestImpl()
+        public async Task<string> TestImpl(CancellationToken token)
         {
             throw new Exception("Bääm bääm bääm bääm");
         }

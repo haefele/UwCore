@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -19,7 +20,7 @@ namespace UwCore
         private string _eventName;
         private IObservable<bool> _canExecute;
         
-        public UwCoreCommandBuilder(Func<CancellationToken, Task<T>> execute)
+        internal UwCoreCommandBuilder(Func<CancellationToken, Task<T>> execute)
         {
             Guard.NotNull(execute, nameof(execute));
 
@@ -67,21 +68,27 @@ namespace UwCore
             return this;
         }
 
-        public static implicit operator UwCoreCommand<T>(UwCoreCommandBuilder<T> builder)
+        protected ReactiveCommand<T> CreateInnerCommand()
         {
             ReactiveCommand<T> innerCommand = ReactiveCommand.CreateAsyncTask(
-                builder._canExecute ?? Observable.Return(true),
-                async (_, token) => await builder._execute(token));
+                this._canExecute ?? Observable.Return(true),
+                async (_, token) => await this._execute(token));
 
-            if (builder._loadingServiceMessage != null)
-                AttachLoadingService(innerCommand, builder._loadingServiceMessage);
+            if (this._loadingServiceMessage != null)
+                AttachLoadingService(innerCommand, this._loadingServiceMessage);
 
-            if (builder._handleExceptions)
+            if (this._handleExceptions)
                 AttachExceptionHandler(innerCommand);
 
-            if (builder._eventName != null)
-                TrackEvent(innerCommand, builder._eventName);
+            if (this._eventName != null)
+                TrackEvent(innerCommand, this._eventName);
 
+            return innerCommand;
+        }
+
+        public static implicit operator UwCoreCommand<T>(UwCoreCommandBuilder<T> builder)
+        {
+            var innerCommand = builder.CreateInnerCommand();
             return new UwCoreCommand<T>(innerCommand);
         }
 
