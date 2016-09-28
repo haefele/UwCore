@@ -55,10 +55,10 @@ namespace UwCore.Themes
             if (element == null)
                 return double.PositiveInfinity;
 
-            if (double.IsInfinity(maxSelector(element)) == false)
+            if (double.IsInfinity(maxSelector(element)) == false && double.IsNaN(maxSelector(element)) == false)
                 return maxSelector(element);
 
-            if (double.IsInfinity(selector(element)) == false)
+            if (double.IsInfinity(selector(element)) == false && double.IsNaN(selector(element)) == false)
                 return selector(element);
 
             return double.PositiveInfinity;

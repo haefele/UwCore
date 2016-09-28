@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;
 using ReactiveUI;
+using UwCore;
 using UwCore.Extensions;
 using UwCore.Services.Loading;
 using INavigationService = UwCore.Services.Navigation.INavigationService;
@@ -14,10 +15,13 @@ namespace UwCoreTest.Views.Test
     {
         private readonly ILoadingService _loadingService;
         private readonly INavigationService _navigationService;
+        private ObservableAsPropertyHelper<Unit> _someUnitHelper;
 
         public int SomeId { get; set; }
 
-        public ReactiveCommand<Unit> Test { get; }
+        public Unit SomeUnit => this._someUnitHelper.Value;
+
+        public UwCoreCommand<Unit> Test { get; }
 
         public TestViewModel(ILoadingService loadingService, INavigationService navigationService)
         {
@@ -26,10 +30,12 @@ namespace UwCoreTest.Views.Test
 
             this.DisplayName = "Statistics from 9/1/2016 to 9/30/2016";
 
-            this.Test = ReactiveCommand.CreateAsyncTask(_ => this.TestImpl());
-            this.Test.AttachLoadingService("Test-Message");
-            this.Test.AttachExceptionHandler();
-            this.Test.TrackEvent("TestCommand");
+            this.Test = UwCoreCommand.Create(this.TestImpl)
+                .ShowLoadingService("Test-Message")
+                .HandleExceptions()
+                .TrackEvent("TestCommand");
+
+            this.Test.ToProperty(this, f => f.SomeUnit, out this._someUnitHelper);
         }
         
         protected override void OnActivate()
@@ -48,14 +54,10 @@ namespace UwCoreTest.Views.Test
         }
 
         private static bool _asPopup = true;
+
         public async Task TestImpl()
         {
-            if (_asPopup)
-                this._navigationService.Popup.For<TestViewModel>().Navigate();
-            else
-                this._navigationService.For<TestViewModel>().Navigate();
-
-            _asPopup = !_asPopup;
+            throw new Exception("Bääm bääm bääm bääm");
         }
     }
 }
