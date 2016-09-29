@@ -15,32 +15,75 @@ namespace UwCore
         {
             Guard.NotNull(execute, nameof(execute));
 
-            return Create(token => execute());
+            return CreateInternal(null, async token =>
+            {
+                await execute();
+                return Unit.Default;
+            });
         }
+        public static UwCoreCommandBuilder<T> Create<T>(Func<Task<T>> execute)
+        {
+            Guard.NotNull(execute, nameof(execute));
 
+            return CreateInternal(null, _ => execute());
+        }
         public static UwCoreCommandBuilder<Unit> Create(Func<CancellationToken, Task> execute)
         {
             Guard.NotNull(execute, nameof(execute));
 
-            return Create(async token =>
+            return CreateInternal(null, async token =>
             {
                 await execute(token);
                 return Unit.Default;
             });
         }
-
-        public static UwCoreCommandBuilder<T> Create<T>(Func<Task<T>> execute)
-        {
-            Guard.NotNull(execute, nameof(execute));
-
-            return Create(_ => execute());
-        }
-
         public static UwCoreCommandBuilder<T> Create<T>(Func<CancellationToken, Task<T>> execute)
         {
             Guard.NotNull(execute, nameof(execute));
 
-            return new UwCoreCommandBuilder<T>(execute);
+            return CreateInternal(null, execute);
+        }
+        
+        public static UwCoreCommandBuilder<Unit> Create(IObservable<bool> canExecute, Func<Task> execute)
+        {
+            Guard.NotNull(canExecute, nameof(canExecute));
+            Guard.NotNull(execute, nameof(execute));
+
+            return CreateInternal(canExecute, async token =>
+            {
+                await execute();
+                return Unit.Default;
+            });
+        }
+        public static UwCoreCommandBuilder<T> Create<T>(IObservable<bool> canExecute, Func<Task<T>> execute)
+        {
+            Guard.NotNull(canExecute, nameof(canExecute));
+            Guard.NotNull(execute, nameof(execute));
+
+            return CreateInternal(canExecute, _ => execute());
+        }
+        public static UwCoreCommandBuilder<Unit> Create(IObservable<bool> canExecute, Func<CancellationToken, Task> execute)
+        {
+            Guard.NotNull(canExecute, nameof(canExecute));
+            Guard.NotNull(execute, nameof(execute));
+
+            return CreateInternal(canExecute, async token =>
+            {
+                await execute(token);
+                return Unit.Default;
+            });
+        }
+        public static UwCoreCommandBuilder<T> Create<T>(IObservable<bool> canExecute, Func<CancellationToken, Task<T>> execute)
+        {
+            Guard.NotNull(canExecute, nameof(canExecute));
+            Guard.NotNull(execute, nameof(execute));
+
+            return CreateInternal(canExecute, execute);
+        }
+
+        private static UwCoreCommandBuilder<T> CreateInternal<T>(IObservable<bool> canExecute, Func<CancellationToken, Task<T>> execute)
+        {
+            return new UwCoreCommandBuilder<T>(canExecute, execute);
         }
     }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reactive;
+using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Caliburn.Micro;
@@ -31,8 +32,11 @@ namespace UwCoreTest.Views.Test
 
             this.DisplayName = "Statistics from 9/1/2016 to 9/30/2016";
 
-            this.Test = UwCoreCommand.Create(this.TestImpl)
-                .ShowLoadingService("Test-Message")
+            var canTest = this.WhenAnyValue(f => f.SomeUnit)
+                .Select(string.IsNullOrEmpty);
+
+            this.Test = UwCoreCommand.Create(canTest, this.TestImpl)
+                .ShowLoadingOverlay("Test-Message")
                 .HandleExceptions()
                 .TrackEvent("TestCommand");
 

@@ -14,36 +14,30 @@ namespace UwCore
 {
     public class UwCoreCommandBuilder<T>
     {
+        private readonly IObservable<bool> _canExecute;
         private readonly Func<CancellationToken, Task<T>> _execute;
+
         private Func<string> _loadingServiceMessage;
         private bool _handleExceptions;
         private string _eventName;
-        private IObservable<bool> _canExecute;
         
-        internal UwCoreCommandBuilder(Func<CancellationToken, Task<T>> execute)
+        internal UwCoreCommandBuilder(IObservable<bool> canExecute, Func<CancellationToken, Task<T>> execute)
         {
+            //canExecute can be null
             Guard.NotNull(execute, nameof(execute));
 
+            this._canExecute = canExecute;
             this._execute = execute;
         }
 
-        public UwCoreCommandBuilder<T> CanExecute(IObservable<bool> canExecute)
-        {
-            Guard.NotNull(canExecute, nameof(canExecute));
-
-            this._canExecute = canExecute;
-
-            return this;
-        }
-
-        public UwCoreCommandBuilder<T> ShowLoadingService(string message)
+        public UwCoreCommandBuilder<T> ShowLoadingOverlay(string message)
         {
             Guard.NotNullOrWhiteSpace(message, nameof(message));
 
-            return this.ShowLoadingService(() => message);
+            return this.ShowLoadingOverlay(() => message);
         }
 
-        public UwCoreCommandBuilder<T> ShowLoadingService(Func<string> message)
+        public UwCoreCommandBuilder<T> ShowLoadingOverlay(Func<string> message)
         {
             Guard.NotNull(message, nameof(message));
 
