@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Linq;
+using Caliburn.Micro;
 using UwCore.Common;
 using UwCore.Controls;
 
@@ -10,13 +11,11 @@ namespace UwCore.Services.Loading
     {
         private readonly LoadingOverlay _overlay;
         private readonly ConcurrentDictionary<Guid, string> _messages;
-        private readonly object _updateLock;
 
         public LoadingService(LoadingOverlay overlay)
         {
             this._overlay = overlay;
             this._messages = new ConcurrentDictionary<Guid, string>();
-            this._updateLock = new object();
         }
 
         public IDisposable Show(string message)
@@ -35,13 +34,13 @@ namespace UwCore.Services.Loading
         
         private void Update()
         {
-            lock (this._updateLock)
+            Execute.OnUIThread(() =>
             {
                 string message = string.Join(Environment.NewLine, this._messages.Values);
 
                 this._overlay.Message = message;
                 this._overlay.IsActive = string.IsNullOrWhiteSpace(this._overlay.Message) == false;
-            }
+            });
         }
     }
 }
