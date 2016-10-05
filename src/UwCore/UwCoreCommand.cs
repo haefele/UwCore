@@ -91,6 +91,7 @@ namespace UwCore
     {
         private readonly ReactiveCommand<T> _innerCommand;
         private readonly ObservableAsPropertyHelper<bool> _isExecutingHelper;
+        private readonly ObservableAsPropertyHelper<bool> _canExecuteHelper;
 
         internal UwCoreCommand(ReactiveCommand<T> innerCommand)
         {
@@ -99,9 +100,11 @@ namespace UwCore
             this._innerCommand = innerCommand;
 
             this._innerCommand.IsExecuting.ToProperty(this, f => f.IsExecuting, out this._isExecutingHelper);
+            this._innerCommand.CanExecuteObservable.ToProperty(this, f => f.CanExecute, out this._canExecuteHelper);
         }
 
         public bool IsExecuting => this._isExecutingHelper.Value;
+        public bool CanExecute => this._canExecuteHelper.Value;
 
         public async Task<T> ExecuteAsync()
         {
