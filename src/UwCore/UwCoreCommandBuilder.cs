@@ -67,7 +67,7 @@ namespace UwCore
             ReactiveCommand<T> innerCommand = ReactiveCommand.CreateAsyncTask(
                 this._canExecute ?? Observable.Return(true),
                 async (_, token) => await this._execute(token));
-
+            
             if (this._loadingServiceMessage != null)
                 AttachLoadingService(innerCommand, this._loadingServiceMessage);
 

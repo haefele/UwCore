@@ -87,16 +87,21 @@ namespace UwCore
         }
     }
 
-    public class UwCoreCommand<T> : ICommand
+    public class UwCoreCommand<T> : ReactiveObject, ICommand
     {
         private readonly ReactiveCommand<T> _innerCommand;
+        private readonly ObservableAsPropertyHelper<bool> _isExecutingHelper;
 
         internal UwCoreCommand(ReactiveCommand<T> innerCommand)
         {
             Guard.NotNull(innerCommand, nameof(innerCommand));
 
             this._innerCommand = innerCommand;
+
+            this._innerCommand.IsExecuting.ToProperty(this, f => f.IsExecuting, out this._isExecutingHelper);
         }
+
+        public bool IsExecuting => this._isExecutingHelper.Value;
 
         public async Task<T> ExecuteAsync()
         {
@@ -126,12 +131,12 @@ namespace UwCore
         #region Implementation of ICommand
         bool ICommand.CanExecute(object parameter)
         {
-            return ((ICommand) this._innerCommand).CanExecute(parameter);
+            return (this._innerCommand as ICommand).CanExecute(parameter);
         }
 
         void ICommand.Execute(object parameter)
         {
-            ((ICommand) this._innerCommand).Execute(parameter);
+            (this._innerCommand as ICommand).Execute(parameter);
         }
 
         event EventHandler ICommand.CanExecuteChanged
