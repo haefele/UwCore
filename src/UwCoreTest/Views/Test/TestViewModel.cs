@@ -8,6 +8,7 @@ using Caliburn.Micro.ReactiveUI;
 using ReactiveUI;
 using UwCore;
 using UwCore.Extensions;
+using UwCore.Logging;
 using UwCore.Services.Loading;
 using INavigationService = UwCore.Services.Navigation.INavigationService;
 
@@ -17,7 +18,8 @@ namespace UwCoreTest.Views.Test
     {
         private readonly ILoadingService _loadingService;
         private readonly INavigationService _navigationService;
-        private ObservableAsPropertyHelper<string> _someUnitHelper;
+
+        private readonly ObservableAsPropertyHelper<string> _someUnitHelper;
 
         public int SomeId { get; set; }
 
@@ -31,38 +33,35 @@ namespace UwCoreTest.Views.Test
             this._navigationService = navigationService;
 
             this.DisplayName = "Statistics from 9/1/2016 to 9/30/2016";
-
-            var canTest = this.WhenAnyValue(f => f.SomeUnit)
-                .Select(string.IsNullOrEmpty);
-
-            this.Test = UwCoreCommand.Create(canTest, this.TestImpl)
+            
+            this.Test = UwCoreCommand.Create(this.TestImpl)
                 .ShowLoadingOverlay("Test-Message")
                 .HandleExceptions()
                 .TrackEvent("TestCommand");
-
+            
             this.Test.ToProperty(this, f => f.SomeUnit, out this._someUnitHelper);
         }
         
-        protected override void OnActivate()
+        private void Log()
         {
-            base.OnActivate();
+            LoggerFactory.GetLogger<TestViewModel>().Debug($"IsExecuting: {this.Test.IsExecuting}, CanExecute: {this.Test.CanExecute}");
         }
 
-        protected override void OnDeactivate(bool close)
+        protected override async void OnActivate()
         {
-            base.OnDeactivate(close);
+            this.Log();
+
+            await this.Test.ExecuteAsync();
+            this.Log();
         }
 
-        public override void CanClose(Action<bool> callback)
+        private async Task<string> TestImpl(CancellationToken token)
         {
-            base.CanClose(callback);
-        }
+            await Task.Delay(TimeSpan.FromSeconds(2), token);
 
-        private static bool _asPopup = true;
+            this.Log();
 
-        public async Task<string> TestImpl(CancellationToken token)
-        {
-            throw new Exception("Bääm bääm bääm bääm");
+            return "Holla";
         }
     }
 }

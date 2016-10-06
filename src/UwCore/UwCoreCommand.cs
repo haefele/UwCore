@@ -4,6 +4,7 @@ using System.Reactive;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Caliburn.Micro.ReactiveUI;
 using ReactiveUI;
 using UwCore.Common;
 
@@ -87,24 +88,32 @@ namespace UwCore
         }
     }
 
-    public class UwCoreCommand<T> : ReactiveObject, ICommand
+    public class UwCoreCommand<T> : ReactivePropertyChangedBase, ICommand
     {
         private readonly ReactiveCommand<T> _innerCommand;
-        private readonly ObservableAsPropertyHelper<bool> _isExecutingHelper;
-        private readonly ObservableAsPropertyHelper<bool> _canExecuteHelper;
+        private bool _isExecuting;
+        private bool _canExecute;
 
         internal UwCoreCommand(ReactiveCommand<T> innerCommand)
         {
             Guard.NotNull(innerCommand, nameof(innerCommand));
 
             this._innerCommand = innerCommand;
-
-            this._innerCommand.IsExecuting.ToProperty(this, f => f.IsExecuting, out this._isExecutingHelper);
-            this._innerCommand.CanExecuteObservable.ToProperty(this, f => f.CanExecute, out this._canExecuteHelper);
+            this._innerCommand.IsExecuting.Subscribe(isExecuting => this.IsExecuting = isExecuting);
+            this._innerCommand.CanExecuteObservable.Subscribe(canExecute => this.CanExecute = canExecute);
         }
 
-        public bool IsExecuting => this._isExecutingHelper.Value;
-        public bool CanExecute => this._canExecuteHelper.Value;
+        public bool IsExecuting
+        {
+            get { return this._isExecuting; }
+            private set { this.RaiseAndSetIfChanged(ref this._isExecuting, value); }
+        }
+
+        public bool CanExecute
+        {
+            get { return this._canExecute; }
+            private set { this.RaiseAndSetIfChanged(ref this._canExecute, value); }
+        }
 
         public async Task<T> ExecuteAsync()
         {
@@ -137,9 +146,9 @@ namespace UwCore
             return (this._innerCommand as ICommand).CanExecute(parameter);
         }
 
-        void ICommand.Execute(object parameter)
+        async void ICommand.Execute(object parameter)
         {
-            (this._innerCommand as ICommand).Execute(parameter);
+            await this.ExecuteAsync();
         }
 
         event EventHandler ICommand.CanExecuteChanged
