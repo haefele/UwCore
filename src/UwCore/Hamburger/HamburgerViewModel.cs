@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Windows.UI.Xaml;
 using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;
 using Microsoft.HockeyApp;
@@ -25,6 +26,7 @@ namespace UwCore.Hamburger
 
         private HamburgerItem _selectedAction;
         private HamburgerItem _selectedSecondaryAction;
+        private ElementTheme _theme;
         private ApplicationMode _currentMode;
         private object _headerDetailsViewModel;
 
@@ -44,6 +46,12 @@ namespace UwCore.Hamburger
         {
             get { return this._selectedSecondaryAction; }
             set { this.RaiseAndSetIfChanged(ref this._selectedSecondaryAction, value); }
+        }
+
+        public ElementTheme Theme
+        {
+            get { return this._theme; }
+            set { this.RaiseAndSetIfChanged(ref this._theme, value); }
         }
 
         public ApplicationMode CurrentMode
@@ -105,6 +113,8 @@ namespace UwCore.Hamburger
             this._eventAggregator = eventAggregator;
             this._hockeyClient = hockeyClient;
             this._updateNotesService = updateNotesService;
+
+            this.Theme = ElementTheme.Default;
 
             this.Actions = new ReactiveObservableCollection<HamburgerItem>();
             this.SecondaryActions = new ReactiveObservableCollection<HamburgerItem>();

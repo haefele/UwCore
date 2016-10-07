@@ -50,7 +50,7 @@ namespace UwCoreTest
         public override void CustomizeApplication(IApplication application)
         {
             base.CustomizeApplication(application);
-
+            
             application.HeaderDetailsViewModel = IoC.Get<HeaderDetailsViewModel>();
         }
         

@@ -11,6 +11,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:converter="using:UwCore.Converter"
     mc:Ignorable="d"
+    
+    RequestedTheme="{x:Bind ViewModel.Theme, Mode=OneWay}"
     >
     
     <Page.Resources>

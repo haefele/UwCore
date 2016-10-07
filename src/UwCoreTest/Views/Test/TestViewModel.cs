@@ -3,10 +3,12 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.UI.Xaml;
 using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;
 using ReactiveUI;
 using UwCore;
+using UwCore.Application;
 using UwCore.Extensions;
 using UwCore.Logging;
 using UwCore.Services.Loading;
@@ -18,6 +20,7 @@ namespace UwCoreTest.Views.Test
     {
         private readonly ILoadingService _loadingService;
         private readonly INavigationService _navigationService;
+        private readonly IApplication _application;
 
         private readonly ObservableAsPropertyHelper<string> _someUnitHelper;
 
@@ -27,10 +30,11 @@ namespace UwCoreTest.Views.Test
 
         public UwCoreCommand<string> Test { get; }
 
-        public TestViewModel(ILoadingService loadingService, INavigationService navigationService)
+        public TestViewModel(ILoadingService loadingService, INavigationService navigationService, IApplication application)
         {
             this._loadingService = loadingService;
             this._navigationService = navigationService;
+            this._application = application;
 
             this.DisplayName = "Statistics from 9/1/2016 to 9/30/2016";
             
@@ -59,9 +63,20 @@ namespace UwCoreTest.Views.Test
         {
             await Task.Delay(TimeSpan.FromSeconds(2), token);
 
-            this.Log();
+            if (this._application.Theme == ElementTheme.Default)
+            {
+                this._application.Theme = ElementTheme.Dark;
+            }
+            else if (this._application.Theme == ElementTheme.Dark)
+            {
+                this._application.Theme = ElementTheme.Light;
+            }
+            else if (this._application.Theme == ElementTheme.Light)
+            {
+                this._application.Theme = ElementTheme.Default;
+            }
 
-            return "Holla";
+            return string.Empty;
         }
     }
 }
