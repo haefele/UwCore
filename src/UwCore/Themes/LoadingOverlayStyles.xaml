@@ -11,18 +11,29 @@
                 <ControlTemplate TargetType="controls:LoadingOverlay">
                     <Grid>
                         <Grid.Resources>
-                            <converter:BooleanToObjectConverter x:Key="IsActiveToVisibilityConverter">
-                                <converter:BooleanToObjectConverter.TrueValue>
-                                    <Visibility>Visible</Visibility>
-                                </converter:BooleanToObjectConverter.TrueValue>
-                                <converter:BooleanToObjectConverter.FalseValue>
-                                    <Visibility>Collapsed</Visibility>
-                                </converter:BooleanToObjectConverter.FalseValue>
-                            </converter:BooleanToObjectConverter>
+                            <ResourceDictionary>
+                                <ResourceDictionary.ThemeDictionaries>
+                                    <ResourceDictionary x:Key="Light">
+                                        <SolidColorBrush x:Key="OverlayBackgroundBrush" Color="Black" />
+                                    </ResourceDictionary>
+                                    <ResourceDictionary x:Key="Dark">
+                                        <SolidColorBrush x:Key="OverlayBackgroundBrush" Color="White" />
+                                    </ResourceDictionary>
+                                </ResourceDictionary.ThemeDictionaries>
+                            
+                                <converter:BooleanToObjectConverter x:Key="IsActiveToVisibilityConverter">
+                                    <converter:BooleanToObjectConverter.TrueValue>
+                                        <Visibility>Visible</Visibility>
+                                    </converter:BooleanToObjectConverter.TrueValue>
+                                    <converter:BooleanToObjectConverter.FalseValue>
+                                        <Visibility>Collapsed</Visibility>
+                                    </converter:BooleanToObjectConverter.FalseValue>
+                                </converter:BooleanToObjectConverter>
+                            </ResourceDictionary>
                         </Grid.Resources>
 
                         <Grid Visibility="{Binding IsActive, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource IsActiveToVisibilityConverter}}">
-                            <Grid Background="Black"
+                            <Grid Background="{ThemeResource OverlayBackgroundBrush}"
                                   Opacity="0.3" />
 
                             <StackPanel VerticalAlignment="Center"

@@ -54,28 +54,13 @@ namespace UwCoreTest.Views.Test
         protected override async void OnActivate()
         {
             this.Log();
-
-            await this.Test.ExecuteAsync();
             this.Log();
         }
 
         private async Task<string> TestImpl(CancellationToken token)
         {
             await Task.Delay(TimeSpan.FromSeconds(2), token);
-
-            if (this._application.Theme == ElementTheme.Default)
-            {
-                this._application.Theme = ElementTheme.Dark;
-            }
-            else if (this._application.Theme == ElementTheme.Dark)
-            {
-                this._application.Theme = ElementTheme.Light;
-            }
-            else if (this._application.Theme == ElementTheme.Light)
-            {
-                this._application.Theme = ElementTheme.Default;
-            }
-
+            
             return string.Empty;
         }
     }

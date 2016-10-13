@@ -51,6 +51,7 @@ namespace UwCoreTest
         {
             base.CustomizeApplication(application);
             
+            application.Theme = ElementTheme.Light;
             application.HeaderDetailsViewModel = IoC.Get<HeaderDetailsViewModel>();
         }
         
