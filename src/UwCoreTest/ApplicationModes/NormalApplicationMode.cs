@@ -1,15 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
 using Caliburn.Micro;
 using UwCore.Application;
+using UwCore.Events;
 using UwCore.Hamburger;
 using UwCoreTest.Views.HeaderDetails;
 using UwCoreTest.Views.Test;
 
 namespace UwCoreTest.ApplicationModes
 {
-    public class NormalApplicationMode : ApplicationMode, ICustomStartupApplicationMode
+    [AutoSubscribeEvents]
+    public class NormalApplicationMode : ApplicationMode, ICustomStartupApplicationMode, IHandle<string>
     {
         private readonly NavigatingHamburgerItem _testHamburgerItem;
         private readonly NavigatingHamburgerItem _test2HamburgerItem;
@@ -23,16 +26,25 @@ namespace UwCoreTest.ApplicationModes
             this._test2HamburgerItem.AddParameter<TestViewModel>(f => f.SomeId, 13);
         }
 
-        public override void Enter()
+        protected override async Task OnEnter()
         {
-            this.Application.Actions.Add(this._testHamburgerItem);
-            this.Application.Actions.Add(this._test2HamburgerItem);
+            await base.OnEnter();
 
             this._testHamburgerItem.Execute();
         }
 
-        public override void Leave()
+        protected override async Task AddActions()
         {
+            await base.AddActions();
+
+            this.Application.Actions.Add(this._testHamburgerItem);
+            this.Application.Actions.Add(this._test2HamburgerItem);
+        }
+
+        protected override async Task RemoveActions()
+        {
+            await base.RemoveActions();
+
             this.Application.Actions.Remove(this._testHamburgerItem);
             this.Application.Actions.Remove(this._test2HamburgerItem);
         }
@@ -48,6 +60,11 @@ namespace UwCoreTest.ApplicationModes
 
             arguments = StartupArguments.AsString(a);
             var parsed = StartupArguments.Parse<MyStartupArguments>(arguments);
+        }
+
+        void IHandle<string>.Handle(string message)
+        {
+
         }
     }
 

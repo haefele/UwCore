@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
@@ -11,6 +12,7 @@ using Windows.UI.Xaml;
 using Caliburn.Micro;
 using Microsoft.HockeyApp;
 using UwCore.Application.Events;
+using UwCore.Events;
 using UwCore.Extensions;
 using UwCore.Hamburger;
 using UwCore.Logging;
@@ -88,6 +90,26 @@ namespace UwCore.Application
                 this._container.RegisterPerRequest(viewModelType, null, viewModelType);
             }
 
+            //ApplicationModes
+            var applicationModeTypes = this.GetApplicationModeTypes();
+            foreach (var applicationModeType in applicationModeTypes)
+            {
+                this._container.RegisterPerRequest(applicationModeType, null, applicationModeType);
+            }
+
+            //Services
+            var serviceTypes = this.GetServiceTypes().ToList();
+            for (int i = 0; i < serviceTypes.Count; i += 2)
+            {
+                if (serviceTypes.Count <= i + 1)
+                    throw new InvalidOperationException($"There is an error in your override of '{nameof(this.GetServiceTypes)}'. Make sure you always return the service-type first, and then the implementation-type.");
+
+                var serviceType = serviceTypes[i];
+                var implementationType = serviceTypes[i + 1];
+
+                this._container.RegisterSingleton(serviceType, null, implementationType);
+            }
+
             //Other
             this.ConfigureContainer(this._container);
         }
@@ -108,17 +130,36 @@ namespace UwCore.Application
         #region IoC
         protected override object GetInstance(Type service, string key)
         {
-            return this._container.GetInstance(service, key);
+            var instance = this._container.GetInstance(service, key);
+            this.TryAutoSubscribeToEventAggregator(instance);
+            return instance;
         }
 
         protected override IEnumerable<object> GetAllInstances(Type service)
         {
-            return this._container.GetAllInstances(service);
+            var instances = this._container.GetAllInstances(service).ToList();
+            this.TryAutoSubscribeToEventAggregator(instances);
+            return instances;
         }
 
         protected override void BuildUp(object instance)
         {
             this._container.BuildUp(instance);
+            this.TryAutoSubscribeToEventAggregator(instance);
+        }
+
+        private void TryAutoSubscribeToEventAggregator(params object[] instances)
+        {
+            foreach (object instance in instances)
+            {
+                TypeInfo typeInfo = instance.GetType().GetTypeInfo();
+
+                if (typeInfo.IsDefined(typeof(AutoSubscribeEventsAttribute)))
+                    this._container.GetInstance<IEventAggregator>().Subscribe(instance);
+
+                if (instance is IScreen && typeInfo.IsDefined(typeof(AutoSubscribeEventsForScreenAttribute)))
+                    this._container.GetInstance<IEventAggregator>().SubscribeScreen((IScreen)instance);
+            }
         }
         #endregion
 
@@ -177,6 +218,16 @@ namespace UwCore.Application
 
         #region To Override 
         public virtual IEnumerable<Type> GetViewModelTypes()
+        {
+            yield break;
+        }
+
+        public virtual IEnumerable<Type> GetApplicationModeTypes()
+        {
+            yield break;
+        }
+
+        public virtual IEnumerable<Type> GetServiceTypes()
         {
             yield break;
         }

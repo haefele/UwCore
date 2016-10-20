@@ -115,6 +115,8 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Events\AutoSubscribeEventsAttribute.cs" />
+    <Compile Include="Events\AutoSubscribeEventsForScreenAttribute.cs" />
     <Compile Include="Application\ICustomStartupApplicationMode.cs" />
     <Compile Include="Application\StartupArguments.cs" />
     <Compile Include="Application\Events\ApplicationModeEntered.cs" />
