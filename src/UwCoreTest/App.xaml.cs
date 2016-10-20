@@ -25,6 +25,16 @@ using INavigationService = UwCore.Services.Navigation.INavigationService;
 
 namespace UwCoreTest
 {
+    public interface IMyService
+    {
+        
+    }
+
+    public class MyService : IMyService
+    {
+        
+    }
+
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
     /// </summary>
@@ -42,9 +52,21 @@ namespace UwCoreTest
             yield return typeof(MahPopupViewModel);
         }
 
+        public override IEnumerable<Type> GetApplicationModeTypes()
+        {
+            yield return typeof(NormalApplicationMode);
+        }
+
+        public override IEnumerable<Type> GetServiceTypes()
+        {
+            yield return typeof(IMyService);
+            yield return typeof(MyService);
+            yield return typeof(MyService);
+        }
+
         public override ApplicationMode GetCurrentMode()
         {
-            return new NormalApplicationMode();
+            return IoC.Get<NormalApplicationMode>();
         }
 
         public override void CustomizeApplication(IApplication application)

@@ -1,13 +1,12 @@
 using System;
 using Windows.UI.Xaml.Controls;
-using UwCore.Services.Navigation;
 
 namespace UwCore.Hamburger
 {
     public class ClickableHamburgerItem : HamburgerItem
     {
-        public ClickableHamburgerItem(string label, Symbol symbol, Action action)
-            : base(label, symbol)
+        public ClickableHamburgerItem(string label, Symbol symbol, Action action, object tag = null)
+            : base(label, symbol, tag)
         {
             this.Action = action;
         }
