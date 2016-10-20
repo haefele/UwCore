@@ -55,6 +55,8 @@ namespace UwCoreTest.Views.Test
         {
             this.Log();
 
+            IoC.Get<IEventAggregator>().PublishOnCurrentThread("holla");
+
             await this.Test.ExecuteAsync();
             this.Log();
         }
