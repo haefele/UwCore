@@ -64,14 +64,14 @@ namespace UwCore.Hamburger
 
                 if (this._currentMode != null)
                 {
-                    this._currentMode.Leave();
+                    this._currentMode.Leave().Wait();
                     this._eventAggregator.PublishOnCurrentThread(new ApplicationModeLeft(this._currentMode));
                 }
 
                 this._currentMode = value;
                 this._currentMode.Application = this;
 
-                this._currentMode.Enter();
+                this._currentMode.Enter().Wait();
                 this._eventAggregator.PublishOnCurrentThread(new ApplicationModeEntered(this._currentMode));
 
                 this._hockeyClient.TrackEvent("ApplicationModeChanged", new Dictionary<string, string> { ["ApplicationMode"] = this._currentMode.GetType().Name });

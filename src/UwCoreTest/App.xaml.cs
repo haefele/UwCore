@@ -61,7 +61,6 @@ namespace UwCoreTest
         {
             yield return typeof(IMyService);
             yield return typeof(MyService);
-            yield return typeof(MyService);
         }
 
         public override ApplicationMode GetCurrentMode()
