@@ -18,10 +18,14 @@
                                     <ResourceDictionary x:Key="Light">
                                         <SolidColorBrush x:Key="BorderBrush"
                                                          Color="#7A7A7A" />
+                                        <SolidColorBrush x:Key="OverlayBackgroundBrush"
+                                                         Color="Black" />
                                     </ResourceDictionary>
                                     <ResourceDictionary x:Key="Dark">
                                         <SolidColorBrush x:Key="BorderBrush"
                                                          Color="#797979" />
+                                        <SolidColorBrush x:Key="OverlayBackgroundBrush"
+                                                         Color="White" />
                                     </ResourceDictionary>
                                 </ResourceDictionary.ThemeDictionaries>
 
@@ -37,7 +41,7 @@
                         </Grid.Resources>
 
                         <Grid Visibility="{Binding IsOpen, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource IsOpenToVisibilityConverter}}">
-                            <Grid Background="Black"
+                            <Grid Background="{ThemeResource OverlayBackgroundBrush}"
                                   Opacity="0.3"
                                   PointerPressed="PopupOverlayBackground_OnPointerPressed" />
 
