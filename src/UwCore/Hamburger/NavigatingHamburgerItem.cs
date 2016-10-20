@@ -10,8 +10,8 @@ namespace UwCore.Hamburger
 {
     public class NavigatingHamburgerItem : HamburgerItem
     {
-        public NavigatingHamburgerItem(string label, Symbol symbol, Type viewModelType, Dictionary<string, object> parameters = null)
-            : base(label, symbol)
+        public NavigatingHamburgerItem(string label, Symbol symbol, Type viewModelType, Dictionary<string, object> parameters = null, object tag = null)
+            : base(label, symbol, tag)
         {
             this.ViewModelType = viewModelType;
             this.Parameters = parameters ?? new Dictionary<string, object>();
