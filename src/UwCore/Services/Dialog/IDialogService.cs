@@ -6,6 +6,6 @@ namespace UwCore.Services.Dialog
 {
     public interface IDialogService
     {
-        Task ShowAsync(string message, string title, IEnumerable<UICommand> commands);
+        Task<IUICommand> ShowAsync(string message, string title, IEnumerable<IUICommand> commands);
     }
 }
