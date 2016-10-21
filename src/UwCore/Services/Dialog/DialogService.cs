@@ -8,7 +8,7 @@ namespace UwCore.Services.Dialog
 {
     public class DialogService : IDialogService
     {
-        public async Task ShowAsync(string message, string title, IEnumerable<UICommand> commands)
+        public async Task<IUICommand> ShowAsync(string message, string title, IEnumerable<IUICommand> commands)
         {
             var dialog = new MessageDialog(message, title ?? string.Empty);
 
@@ -17,7 +17,7 @@ namespace UwCore.Services.Dialog
                 dialog.Commands.Add(command);
             }
 
-            await dialog.ShowAsync();
+            return await dialog.ShowAsync();
         }
     }
 }
