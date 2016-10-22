@@ -11,6 +11,7 @@ using UwCore;
 using UwCore.Application;
 using UwCore.Extensions;
 using UwCore.Logging;
+using UwCore.Services.ApplicationState;
 using UwCore.Services.Loading;
 using INavigationService = UwCore.Services.Navigation.INavigationService;
 
@@ -53,12 +54,14 @@ namespace UwCoreTest.Views.Test
 
         protected override async void OnActivate()
         {
-            this.Log();
+            var stateService = IoC.Get<IApplicationStateService>();
 
-            IoC.Get<IEventAggregator>().PublishOnCurrentThread("holla");
+            var myStateService = stateService
+                .GetStateServiceFor(this.GetType())
+                .GetStateServiceFor(typeof(string));
 
-            await this.Test.ExecuteAsync();
-            this.Log();
+            myStateService.Set("Holla", "Yuhu", ApplicationState.Local);
+            var value = myStateService.Get<string>("Holla", ApplicationState.Local);
         }
 
         private async Task<string> TestImpl(CancellationToken token)

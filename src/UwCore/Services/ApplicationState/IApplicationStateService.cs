@@ -11,6 +11,8 @@ namespace UwCore.Services.ApplicationState
 
         Task SaveStateAsync();
         Task RestoreStateAsync();
+
+        IApplicationStateService GetStateServiceFor(Type type);
     }
 
     public enum ApplicationState

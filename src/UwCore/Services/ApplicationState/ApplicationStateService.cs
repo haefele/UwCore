@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Security.Credentials;
 using Windows.Storage;
 using Newtonsoft.Json;
+using UwCore.Common;
 
 namespace UwCore.Services.ApplicationState
 {
@@ -68,6 +68,13 @@ namespace UwCore.Services.ApplicationState
             await this.RestoreLocalStateAsync();
             await this.RestoreRoamingStateAsync();
             await this.RestoreVaultStateAsync();
+        }
+
+        public IApplicationStateService GetStateServiceFor(Type type)
+        {
+            Guard.NotNull(type, nameof(type));
+
+            return new ForTypeApplicationStateService(this, type, "~");
         }
         #endregion
 
@@ -174,6 +181,57 @@ namespace UwCore.Services.ApplicationState
             {
                 var json = await reader.ReadToEndAsync();
                 return JsonConvert.DeserializeObject<ConcurrentDictionary<string, string>>(json, this._jsonSerializerSettings);
+            }
+        }
+        #endregion
+
+        #region Internal
+        private class ForTypeApplicationStateService : IApplicationStateService
+        {
+            private readonly IApplicationStateService _parent;
+            private readonly Type _forType;
+            private readonly string _additionalPrefix;
+
+            public ForTypeApplicationStateService(IApplicationStateService parent, Type forType, string additionalPrefix = null)
+            {
+                Guard.NotNull(parent, nameof(parent));
+                Guard.NotNull(forType, nameof(forType));
+
+                this._parent = parent;
+                this._forType = forType;
+                this._additionalPrefix = additionalPrefix;
+            }
+
+            public T Get<T>(string key, ApplicationState state)
+            {
+                string fullKey = this.GetFullKey(key);
+                return this._parent.Get<T>(fullKey, state);
+            }
+
+            public void Set<T>(string key, T value, ApplicationState state)
+            {
+                string fullKey = this.GetFullKey(key);
+                this._parent.Set<T>(fullKey, value, state);
+            }
+
+            public Task SaveStateAsync()
+            {
+                return Task.CompletedTask;
+            }
+
+            public Task RestoreStateAsync()
+            {
+                return Task.CompletedTask;
+            }
+
+            public IApplicationStateService GetStateServiceFor(Type type)
+            {
+                return new ForTypeApplicationStateService(this, type);
+            }
+
+            private string GetFullKey(string key)
+            {
+                return $"{this._additionalPrefix}[{this._forType.Name}].{key}";
             }
         }
         #endregion
