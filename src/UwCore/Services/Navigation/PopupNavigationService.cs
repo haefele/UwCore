@@ -15,6 +15,9 @@ namespace UwCore.Services.Navigation
         {
             this._parent = parent;
             this._popupOverlay = popupOverlay;
+
+            this._popupOverlay.Closing += this.PopupOverlayOnClosing;
+            this._popupOverlay.Closed += this.PopupOverlayOnClosed;
         }
 
         public IAdvancedPopupNavigationService Advanced => this;
@@ -46,11 +49,39 @@ namespace UwCore.Services.Navigation
 
         internal void Close()
         {
+            this._popupOverlay.Close();
+        }
+
+        private void PopupOverlayOnClosing(object sender, PopupOverlayClosingEventArgs e)
+        {
+            var content = this._popupOverlay.Content as FrameworkElement;
+            var viewModel = content?.DataContext;
+            var guardClose = viewModel as IGuardClose;
+
+            if (guardClose != null)
+            {
+                var shouldCancel = false;
+                var runningAsync = true;
+            
+                guardClose.CanClose(result => 
+                {
+                    runningAsync = false;
+                    shouldCancel = !result;
+                });
+
+                if (runningAsync)
+                    throw new NotSupportedException("Async CanClose is not supported.");
+                
+                e.Cancel = shouldCancel;
+            }
+        }
+
+        private void PopupOverlayOnClosed(object sender, EventArgs e)
+        {
             var content = this._popupOverlay.Content as FrameworkElement;
             ScreenExtensions.TryDeactivate(content?.DataContext, true);
 
             this._popupOverlay.Content = null;
-            this._popupOverlay.IsOpen = false;
 
             this._parent.UpdateAppViewBackButtonVisibility();
         }

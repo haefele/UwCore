@@ -1,4 +1,5 @@
-﻿using Windows.UI.Xaml;
+﻿using System;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace UwCore.Controls
@@ -14,9 +15,29 @@ namespace UwCore.Controls
             set { SetValue(IsOpenProperty, value); }
         }
 
+        public event EventHandler<PopupOverlayClosingEventArgs> Closing;
+        public event EventHandler Closed;
+
         public PopupOverlay()
         {
             this.DefaultStyleKey = typeof(PopupOverlay);
         }
+
+        public void Close()
+        {
+            var closingEventArgs = new PopupOverlayClosingEventArgs();
+            this.Closing?.Invoke(this, closingEventArgs);
+
+            if (closingEventArgs.Cancel == false)
+            {
+                this.IsOpen = false;
+                this.Closed?.Invoke(this, EventArgs.Empty);
+            }
+        }
+    }
+
+    public class PopupOverlayClosingEventArgs : EventArgs
+    {
+        public bool Cancel { get; set; }
     }
 }

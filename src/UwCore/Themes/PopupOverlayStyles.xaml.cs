@@ -1,15 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
-using Caliburn.Micro;
-using UwCore.Services.Navigation;
-using INavigationService = UwCore.Services.Navigation.INavigationService;
+using UwCore.Common;
+using UwCore.Controls;
 
 namespace UwCore.Themes
 {
@@ -23,8 +17,8 @@ namespace UwCore.Themes
 
         private void PopupOverlayBackground_OnPointerPressed(object sender, PointerRoutedEventArgs e)
         {
-            var popupNavigationService = IoC.Get<INavigationService>().Popup as PopupNavigationService;
-            popupNavigationService?.Close();
+            var popupOverlay = VisualTreeHelperEx.GetParent<PopupOverlay>((DependencyObject) sender);
+            popupOverlay.Close();
         }
 
         private void ContentPresenter_OnLoaded(object sender, RoutedEventArgs e)
