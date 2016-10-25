@@ -12,7 +12,10 @@
     >
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <ScrollViewer Margin="50" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+
+        <TextBox HorizontalAlignment="Left" VerticalAlignment="Top" Width="200" />
+
+        <!--<ScrollViewer Margin="50" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
             
             <Grid Width="1000" Height="1000">
                 <Grid.Background>
@@ -21,8 +24,7 @@
                         <GradientStop Color="White" Offset="1"/>
                     </LinearGradientBrush>
                 </Grid.Background>
-
             </Grid>
-        </ScrollViewer>
+        </ScrollViewer>-->
     </Grid>
 </Page>

@@ -1,4 +1,6 @@
 ﻿using System;
+using Windows.System;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -14,7 +16,6 @@ namespace UwCore.Themes
             this.InitializeComponent();
         }
 
-
         private void PopupOverlayBackground_OnPointerPressed(object sender, PointerRoutedEventArgs e)
         {
             var popupOverlay = VisualTreeHelperEx.GetParent<PopupOverlay>((DependencyObject) sender);
@@ -23,10 +24,28 @@ namespace UwCore.Themes
 
         private void ContentPresenter_OnLoaded(object sender, RoutedEventArgs e)
         {
+            this.AttachToEscapeKeyToClosePopup(sender);
+            this.AttachToContentChangedEventToAdjustMaxWidthAndMaxHeight(sender);
+        }
+
+        private void AttachToContentChangedEventToAdjustMaxWidthAndMaxHeight(object sender)
+        {
             var contentPresenter = (ContentPresenter) sender;
             contentPresenter.RegisterPropertyChangedCallback(ContentPresenter.ContentProperty, this.ContentPresenter_OnContentChanged);
 
             this.ContentPresenter_OnContentChanged(contentPresenter, ContentPresenter.ContentProperty);
+        }
+
+        private void AttachToEscapeKeyToClosePopup(object sender)
+        {
+            var popupOverlay = VisualTreeHelperEx.GetParent<PopupOverlay>((DependencyObject) sender);
+            popupOverlay.Dispatcher.AcceleratorKeyActivated += (s, e) =>
+            {
+                if (e.VirtualKey == VirtualKey.Escape && popupOverlay.IsOpen)
+                {
+                    popupOverlay.Close();
+                }
+            };
         }
 
         private void ContentPresenter_OnContentChanged(DependencyObject sender, DependencyProperty dp)
