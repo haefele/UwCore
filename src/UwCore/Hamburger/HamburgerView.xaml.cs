@@ -1,18 +1,24 @@
-﻿using Windows.UI.Xaml;
+﻿using System;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Animation;
+using Microsoft.Toolkit.Uwp.UI.Animations;
+using PopupOverlayClass = UwCore.Controls.PopupOverlay;
 
 namespace UwCore.Hamburger
 {
     public sealed partial class HamburgerView : Page
     {
+        public HamburgerViewModel ViewModel => this.DataContext as HamburgerViewModel;
+
         public HamburgerView()
         {
             this.InitializeComponent();
-        }
 
-        public HamburgerViewModel ViewModel => this.DataContext as HamburgerViewModel;
+            this.PopupOverlay.RegisterPropertyChangedCallback(PopupOverlayClass.IsOpenProperty, this.OnPopupOverlayIsOpenChanged);
+            this.LoadingOverlay.RegisterPropertyChangedCallback(Controls.LoadingOverlay.IsActiveProperty, this.OnLoadingOverlayIsActiveChanged);
+        }
 
         private void ListView_OnItemClick(object sender, ItemClickEventArgs e)
         {
@@ -42,6 +48,24 @@ namespace UwCore.Hamburger
             {
                 this.Navigation.IsPaneOpen = true;
             }
+        }
+        
+        private void OnLoadingOverlayIsActiveChanged(DependencyObject sender, DependencyProperty dp)
+        {
+            this.UpdateBackgroundBlur();
+        }
+
+        private void OnPopupOverlayIsOpenChanged(DependencyObject sender, DependencyProperty dp)
+        {
+            this.UpdateBackgroundBlur();
+        }
+
+        private void UpdateBackgroundBlur()
+        {
+            bool isBlurActive = this.PopupOverlay.IsOpen || this.LoadingOverlay.IsActive;
+            double blueAmount = isBlurActive ? 8 : 0;
+
+            this.Content.Blur(blueAmount, duration:200).Start();
         }
     }
 }

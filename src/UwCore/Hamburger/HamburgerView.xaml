@@ -6,10 +6,10 @@
     xmlns:controls="using:UwCore.Controls"
     xmlns:hamburger="using:UwCore.Hamburger"
     xmlns:caliburn="using:Caliburn.Micro"
+    xmlns:converter="using:UwCore.Converter"
 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:converter="using:UwCore.Converter"
     mc:Ignorable="d"
     
     RequestedTheme="{x:Bind ViewModel.Theme, Mode=OneWay}"
@@ -55,76 +55,73 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
 
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+        <Grid x:Name="Content">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
 
-        <controls:Header Grid.Row="0"
-                         x:Name="Header"
-                         NavigationButtonClick="Header_OnNavigationButtonClick"
-                         Height="48"
-                         ContentVisibility="{x:Bind ViewModel.HeaderDetailsViewModel, Mode=OneWay, Converter={StaticResource NullToVisibilityConverter}}"
-                         Title="{Binding ElementName=ContentFrame, Path=Content.DataContext.DisplayName}">
-            <ContentControl caliburn:View.Model="{x:Bind ViewModel.HeaderDetailsViewModel}"
-                            HorizontalAlignment="Stretch"
-                            VerticalAlignment="Stretch"
-                            HorizontalContentAlignment="Stretch"
-                            VerticalContentAlignment="Stretch" />
-        </controls:Header>
+            <controls:Header Grid.Row="0"
+                             x:Name="Header"
+                             NavigationButtonClick="Header_OnNavigationButtonClick"
+                             Height="48"
+                             ContentVisibility="{x:Bind ViewModel.HeaderDetailsViewModel, Mode=OneWay, Converter={StaticResource NullToVisibilityConverter}}"
+                             Title="{Binding ElementName=ContentFrame, Path=Content.DataContext.DisplayName}">
+                <ContentControl caliburn:View.Model="{x:Bind ViewModel.HeaderDetailsViewModel}"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                HorizontalContentAlignment="Stretch"
+                                VerticalContentAlignment="Stretch" />
+            </controls:Header>
 
-        <SplitView x:Name="Navigation"
-                   OpenPaneLength="250"
-                   IsPaneOpen="False"
-                   DisplayMode="CompactOverlay"
-                   Grid.Row="1">
-            <SplitView.Pane>
-                <Grid ManipulationMode="TranslateX"
-                      ManipulationCompleted="NavigationPane_OnManipulationCompleted">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
+            <SplitView x:Name="Navigation"
+                       OpenPaneLength="250"
+                       IsPaneOpen="False"
+                       DisplayMode="CompactOverlay"
+                       Grid.Row="1">
+                <SplitView.Pane>
+                    <Grid ManipulationMode="TranslateX"
+                          ManipulationCompleted="NavigationPane_OnManipulationCompleted">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
                     
-                    <ListView Grid.Row="0"
-                              Style="{StaticResource NavigationListViewStyle}"
-                              ItemsSource="{x:Bind ViewModel.Actions, Mode=OneWay}"
-                              SelectedItem="{Binding SelectedAction, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                              ItemClick="ListView_OnItemClick" />
+                        <ListView Grid.Row="0"
+                                  Style="{StaticResource NavigationListViewStyle}"
+                                  ItemsSource="{x:Bind ViewModel.Actions, Mode=OneWay}"
+                                  SelectedItem="{Binding SelectedAction, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                  ItemClick="ListView_OnItemClick" />
 
-                    <ListView Grid.Row="1"
-                              Style="{StaticResource NavigationListViewStyle}"
-                              ItemsSource="{x:Bind ViewModel.SecondaryActions, Mode=OneWay}" 
-                              SelectedItem="{Binding SelectedSecondaryAction, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                              ItemClick="ListView_OnItemClick" />
-                </Grid>
-            </SplitView.Pane>
-            <SplitView.Content>
-                <Frame x:Name="ContentFrame"
-                       x:FieldModifier="public"
-                       DataContext="{x:Null}">
-                    <Frame.ContentTransitions>
-                        <TransitionCollection>
-                            <NavigationThemeTransition>
-                                <NavigationThemeTransition.DefaultNavigationTransitionInfo>
-                                    <EntranceNavigationTransitionInfo />
-                                </NavigationThemeTransition.DefaultNavigationTransitionInfo>
-                            </NavigationThemeTransition>
-                        </TransitionCollection>
-                    </Frame.ContentTransitions>
-                </Frame>
-            </SplitView.Content>
-        </SplitView>
+                        <ListView Grid.Row="1"
+                                  Style="{StaticResource NavigationListViewStyle}"
+                                  ItemsSource="{x:Bind ViewModel.SecondaryActions, Mode=OneWay}" 
+                                  SelectedItem="{Binding SelectedSecondaryAction, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                  ItemClick="ListView_OnItemClick" />
+                    </Grid>
+                </SplitView.Pane>
+                <SplitView.Content>
+                    <Frame x:Name="ContentFrame"
+                           x:FieldModifier="public"
+                           DataContext="{x:Null}">
+                        <Frame.ContentTransitions>
+                            <TransitionCollection>
+                                <NavigationThemeTransition>
+                                    <NavigationThemeTransition.DefaultNavigationTransitionInfo>
+                                        <EntranceNavigationTransitionInfo />
+                                    </NavigationThemeTransition.DefaultNavigationTransitionInfo>
+                                </NavigationThemeTransition>
+                            </TransitionCollection>
+                        </Frame.ContentTransitions>
+                    </Frame>
+                </SplitView.Content>
+            </SplitView>
+        </Grid>
 
         <controls:PopupOverlay x:Name="PopupOverlay"
-                               x:FieldModifier="Public"
-                               Grid.Row="0"
-                               Grid.RowSpan="2"
-                               IsOpen="False" />
+                               x:FieldModifier="Public" />
         
         <controls:LoadingOverlay x:Name="LoadingOverlay" 
-                                 x:FieldModifier="Public" 
-                                 Grid.Row="0"
-                                 Grid.RowSpan="2"/>
+                                 x:FieldModifier="Public" />
     </Grid>
 </Page>
