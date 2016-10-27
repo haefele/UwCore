@@ -37,7 +37,7 @@ namespace UwCore.Services.Navigation
             View.SetContext(this._popupOverlay, context);
             View.SetModel(this._popupOverlay, viewModel);
 
-            this._popupOverlay.IsOpen = true;
+            this._popupOverlay.Show();
 
             this._parent.UpdateAppViewBackButtonVisibility();
         }

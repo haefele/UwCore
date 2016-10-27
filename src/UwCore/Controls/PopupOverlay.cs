@@ -11,33 +11,45 @@ namespace UwCore.Controls
 
         public bool IsOpen
         {
-            get { return (bool) GetValue(IsOpenProperty); }
-            set { SetValue(IsOpenProperty, value); }
+            get { return (bool)this.GetValue(IsOpenProperty); }
+            private set { this.SetValue(IsOpenProperty, value); }
         }
 
         public event EventHandler<PopupOverlayClosingEventArgs> Closing;
         public event EventHandler Closed;
+        public event EventHandler Shown;
 
         public PopupOverlay()
         {
             this.DefaultStyleKey = typeof(PopupOverlay);
         }
 
-        public void Close()
+        public bool Close()
         {
+            if (this.IsOpen == false)
+                return false;
+
             var closingEventArgs = new PopupOverlayClosingEventArgs();
             this.Closing?.Invoke(this, closingEventArgs);
 
-            if (closingEventArgs.Cancel == false)
-            {
-                this.IsOpen = false;
-                this.Closed?.Invoke(this, EventArgs.Empty);
-            }
-        }
-    }
+            if (closingEventArgs.Cancel)
+                return false;
 
-    public class PopupOverlayClosingEventArgs : EventArgs
-    {
-        public bool Cancel { get; set; }
+            this.IsOpen = false;
+            this.Closed?.Invoke(this, EventArgs.Empty);
+
+            return true;
+        }
+
+        public bool Show()
+        {
+            if (this.IsOpen)
+                return false;
+
+            this.IsOpen = true;
+            this.Shown?.Invoke(this, EventArgs.Empty);
+
+            return true;
+        }
     }
 }
