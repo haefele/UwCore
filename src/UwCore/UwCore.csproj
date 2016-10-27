@@ -116,6 +116,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\VisualTreeHelperEx.cs" />
+    <Compile Include="Controls\PopupOverlayClosingEventArgs.cs" />
     <Compile Include="Events\AutoSubscribeEventsAttribute.cs" />
     <Compile Include="Events\AutoSubscribeEventsForScreenAttribute.cs" />
     <Compile Include="Application\ICustomStartupApplicationMode.cs" />
