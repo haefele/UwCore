@@ -63,7 +63,7 @@ namespace UwCore.Hamburger
         private void UpdateBackgroundBlur()
         {
             bool isBlurActive = this.PopupOverlay.IsOpen || this.LoadingOverlay.IsActive;
-            double blueAmount = isBlurActive ? 8 : 0;
+            double blueAmount = isBlurActive ? 3 : 0;
 
             this.Content.Blur(blueAmount, duration:200).Start();
         }
