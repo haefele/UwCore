@@ -116,6 +116,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CaliburnMicroCleaned\AssemblySource.cs" />
+    <Compile Include="Helpers\CaliburnMicroHelper.cs" />
     <Compile Include="CaliburnMicro\NameTransformer.cs" />
     <Compile Include="CaliburnMicro\RegExHelper.cs" />
     <Compile Include="CaliburnMicro\TypeMappingConfiguration.cs" />
@@ -189,12 +190,11 @@
     <Compile Include="Services\Navigation\IAdvancedNavigationService.cs" />
     <Compile Include="Services\Navigation\IAdvancedPopupNavigationService.cs" />
     <Compile Include="Services\Navigation\Stack\INavigationStack.cs" />
-    <Compile Include="Services\Navigation\Stack\INavigationStackStep.cs" />
+    <Compile Include="Services\Navigation\Stack\INavigationStep.cs" />
     <Compile Include="Services\Navigation\IPopupNavigationService.cs" />
     <Compile Include="Services\Navigation\NavigateHelper.cs" />
     <Compile Include="Services\Navigation\NavigationService.cs" />
     <Compile Include="Services\Navigation\INavigationService.cs" />
-    <Compile Include="Services\Navigation\NavigatedEvent.cs" />
     <Compile Include="Services\Navigation\Stack\NavigationStack.cs" />
     <Compile Include="Services\Navigation\PopupNavigationService.cs" />
     <Compile Include="Services\UpdateNotes\IUpdateNotesService.cs" />

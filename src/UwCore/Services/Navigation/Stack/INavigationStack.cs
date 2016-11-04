@@ -1,8 +1,8 @@
-﻿namespace UwCore.Services.Navigation
+﻿namespace UwCore.Services.Navigation.Stack
 {
     public interface INavigationStack
     {
-        void AddStep(INavigationStackStep step);
-        bool RemoveStep(INavigationStackStep step);
+        void AddStep(INavigationStep step);
+        bool RemoveStep(INavigationStep step);
     }
 }

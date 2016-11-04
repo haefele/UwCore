@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using Windows.UI.Core;
 
-namespace UwCore.Services.Navigation
+namespace UwCore.Services.Navigation.Stack
 {
     public class NavigationStack : INavigationStack
     {
-        private readonly IList<INavigationStackStep> _steps;
+        private readonly IList<INavigationStep> _steps;
 
         public NavigationStack()
         {
-            this._steps = new List<INavigationStackStep>();
+            this._steps = new List<INavigationStep>();
 
             var navigationManager = SystemNavigationManager.GetForCurrentView();
             navigationManager.BackRequested += (s, e) =>
@@ -29,14 +29,14 @@ namespace UwCore.Services.Navigation
             };
         }
 
-        public void AddStep(INavigationStackStep step)
+        public void AddStep(INavigationStep step)
         {
             this._steps.Add(step);
 
             step.Changed += this.StepOnChanged;
         }
 
-        public bool RemoveStep(INavigationStackStep step)
+        public bool RemoveStep(INavigationStep step)
         {
             var removed = this._steps.Remove(step);
 
