@@ -4,10 +4,11 @@ using Windows.UI.Xaml;
 using Caliburn.Micro;
 using UwCore.Controls;
 using UwCore.Extensions;
+using UwCore.Services.Navigation.Stack;
 
 namespace UwCore.Services.Navigation
 {
-    public class PopupNavigationService : IPopupNavigationService, IAdvancedPopupNavigationService, INavigationStackStep
+    public class PopupNavigationService : IPopupNavigationService, IAdvancedPopupNavigationService, INavigationStep
     {
         private readonly PopupOverlay _popupOverlay;
 
@@ -37,7 +38,7 @@ namespace UwCore.Services.Navigation
                 View.SetContext(this._popupOverlay, context);
                 View.SetModel(this._popupOverlay, viewModel);
 
-                this.Navigated?.Invoke(this, EventArgs.Empty);
+                this.Changed?.Invoke(this, new NavigationStepChangedEventArgs(viewModel));
             }
         }
 
@@ -72,26 +73,26 @@ namespace UwCore.Services.Navigation
 
             this._popupOverlay.Content = null;
 
-            this.Navigated?.Invoke(this, EventArgs.Empty);
+            this.Changed?.Invoke(this, new NavigationStepChangedEventArgs(null));
         }
 
         #region Implementation of INavigationStackStep
-        bool INavigationStackStep.CanGoBack()
+        bool INavigationStep.CanGoBack()
         {
             return this._popupOverlay.IsOpen;
         }
 
-        void INavigationStackStep.GoBack()
+        void INavigationStep.GoBack()
         {
             this._popupOverlay.Close();
         }
 
-        private event EventHandler Navigated;
+        private event EventHandler<NavigationStepChangedEventArgs> Changed;
 
-        event EventHandler INavigationStackStep.Changed
+        event EventHandler<NavigationStepChangedEventArgs> INavigationStep.Changed
         {
-            add { this.Navigated += value; }
-            remove { this.Navigated -= value; }
+            add { this.Changed += value; }
+            remove { this.Changed -= value; }
         }
         #endregion
     }

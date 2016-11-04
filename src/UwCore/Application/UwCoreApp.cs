@@ -21,6 +21,7 @@ using UwCore.Services.Dialog;
 using UwCore.Services.ExceptionHandler;
 using UwCore.Services.Loading;
 using UwCore.Services.Navigation;
+using UwCore.Services.Navigation.Stack;
 using UwCore.Services.UpdateNotes;
 using INavigationService = UwCore.Services.Navigation.INavigationService;
 
@@ -54,7 +55,7 @@ namespace UwCore.Application
 
             var view = new HamburgerView();
             var popupNavigationService = new PopupNavigationService(view.PopupOverlay);
-            var navigationService = new NavigationService(view.ContentFrame, this._container.GetInstance<IEventAggregator>(), this._container.GetInstance<IHockeyClient>(), popupNavigationService);
+            var navigationService = new NavigationService(view.ContentFrame, this._container.GetInstance<IEventAggregator>(), popupNavigationService);
 
             var stack = new NavigationStack();
             stack.AddStep(navigationService);
@@ -64,7 +65,7 @@ namespace UwCore.Application
             this._container.Instance((INavigationService)navigationService);
             this._container.Instance((ILoadingService)new LoadingService(view.LoadingOverlay));
 
-            var viewModel = new HamburgerViewModel(IoC.Get<INavigationService>(), IoC.Get<IEventAggregator>(), IoC.Get<IHockeyClient>(), IoC.Get<IUpdateNotesService>());
+            var viewModel = new HamburgerViewModel(navigationService, IoC.Get<IEventAggregator>(), IoC.Get<IHockeyClient>(), IoC.Get<IUpdateNotesService>());
             this._container.Instance((IApplication)viewModel);
 
             this.CustomizeApplication(viewModel);

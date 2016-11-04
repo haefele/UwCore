@@ -11,16 +11,15 @@ using UwCore.Application;
 using UwCore.Application.Events;
 using UwCore.Common;
 using UwCore.Extensions;
-using UwCore.Helpers;
 using UwCore.Services.Navigation;
+using UwCore.Services.Navigation.Stack;
 using UwCore.Services.UpdateNotes;
-using INavigationService = UwCore.Services.Navigation.INavigationService;
 
 namespace UwCore.Hamburger
 {
-    public class HamburgerViewModel : ReactiveScreen, IApplication, IHandle<NavigatedEvent>
+    public class HamburgerViewModel : ReactiveScreen, IApplication
     {
-        private readonly INavigationService _navigationService;
+        private readonly NavigationService _navigationService;
         private readonly IEventAggregator _eventAggregator;
         private readonly IHockeyClient _hockeyClient;
         private readonly IUpdateNotesService _updateNotesService;
@@ -77,7 +76,7 @@ namespace UwCore.Hamburger
 
                 this._hockeyClient.TrackEvent("ApplicationModeChanged", new Dictionary<string, string> { ["ApplicationMode"] = this._currentMode.GetType().Name });
                 
-                ((NavigationService)this._navigationService).ClearBackStack();
+                this._navigationService.ClearBackStack();
 
                 this.RaisePropertyChanged();
             }
@@ -104,7 +103,7 @@ namespace UwCore.Hamburger
             }
         }
 
-        public HamburgerViewModel(INavigationService navigationService, IEventAggregator eventAggregator, IHockeyClient hockeyClient, IUpdateNotesService updateNotesService)
+        public HamburgerViewModel(NavigationService navigationService, IEventAggregator eventAggregator, IHockeyClient hockeyClient, IUpdateNotesService updateNotesService)
         {
             Guard.NotNull(navigationService, nameof(navigationService));
             Guard.NotNull(eventAggregator, nameof(eventAggregator));
@@ -117,6 +116,8 @@ namespace UwCore.Hamburger
 
             this.Theme = ElementTheme.Default;
 
+            ((INavigationStep)this._navigationService).Changed += this.OnChanged;
+
             this.Actions = new ReactiveObservableCollection<HamburgerItem>();
             this.SecondaryActions = new ReactiveObservableCollection<HamburgerItem>();
 
@@ -124,8 +125,14 @@ namespace UwCore.Hamburger
             //Because it might happen, that we navigate to some view-model and then after that update the actions
             this.Actions.Changed.Subscribe(_ => this.UpdateSelectedAction());
             this.SecondaryActions.Changed.Subscribe(_ => this.UpdateSelectedAction());
+        }
 
-            eventAggregator.Subscribe(this);
+        private void OnChanged(object sender, NavigationStepChangedEventArgs eventArgs)
+        {
+            if (eventArgs.ViewModel != null)
+                this._latestViewModel = eventArgs.ViewModel;
+
+            this.UpdateSelectedAction();
         }
 
         protected override void OnActivate()
@@ -141,7 +148,7 @@ namespace UwCore.Hamburger
             }
         }
 
-        private void UpdateSelectedAction()
+        internal void UpdateSelectedAction()
         {
             var selectedAction = this.Actions
                 .OfType<NavigatingHamburgerItem>()
@@ -156,12 +163,6 @@ namespace UwCore.Hamburger
                 this.SelectedAction = selectedAction;
                 this.SelectedSecondaryAction = selectedSecondaryAction;
             }
-        }
-        
-        void IHandle<NavigatedEvent>.Handle(NavigatedEvent message)
-        {
-            this._latestViewModel = message.ViewModel;
-            this.UpdateSelectedAction();
         }
     }
 }

@@ -6,24 +6,24 @@ using Windows.UI.Xaml.Navigation;
 using Caliburn.Micro;
 using Microsoft.HockeyApp;
 using UwCore.Extensions;
+using UwCore.Helpers;
+using UwCore.Services.Navigation.Stack;
 
 namespace UwCore.Services.Navigation
 {
-    public class NavigationService : INavigationService, IAdvancedNavigationService, INavigationStackStep
+    public class NavigationService : INavigationService, IAdvancedNavigationService, INavigationStep
     {
         private readonly Frame _frame;
 
         private readonly IEventAggregator _eventAggregator;
-        private readonly IHockeyClient _hockeyClient;
         
-        public NavigationService(Frame frame, IEventAggregator eventAggregator, IHockeyClient hockeyClient, PopupNavigationService popupNavigationService)
+        public NavigationService(Frame frame, IEventAggregator eventAggregator, PopupNavigationService popupNavigationService)
         {
             this._frame = frame;
             this._frame.Navigating += this.FrameOnNavigating;
             this._frame.Navigated += this.FrameOnNavigated;
             
             this._eventAggregator = eventAggregator;
-            this._hockeyClient = hockeyClient;
 
             this.Popup = popupNavigationService;
         }
@@ -40,7 +40,7 @@ namespace UwCore.Services.Navigation
         {
             this._frame.BackStack.Clear();
 
-            this.Navigated?.Invoke(this, EventArgs.Empty);
+            this.Changed?.Invoke(this, new NavigationStepChangedEventArgs(null));
         }
 
         public void Navigate(Type viewModelType, Dictionary<string, object> parameter, string context)
@@ -60,28 +60,13 @@ namespace UwCore.Services.Navigation
             if (view == null)
                 return;
 
-            var guard = view.DataContext as IGuardClose;
-
-            if (guard != null)
+            bool cancel = CaliburnMicroHelper.TryGuardClose(view.DataContext);
+            if (cancel)
             {
-                var shouldCancel = false;
-                var runningAsync = true;
-
-                guard.CanClose(result =>
-                {
-                    runningAsync = false;
-                    shouldCancel = !result;
-                });
-
-                if (runningAsync)
-                    throw new NotSupportedException("Async CanClose is not supported.");
-
-                e.Cancel = shouldCancel;
-
-                if (e.Cancel)
-                    return;
+                e.Cancel = true;
+                return; 
             }
-            
+
             ScreenExtensions.TryDeactivate(view.DataContext, false);
         }
 
@@ -96,32 +81,29 @@ namespace UwCore.Services.Navigation
 
             viewModel.InjectValues(e.Parameter as IDictionary<string, object>);
             ViewModelBinder.Bind(viewModel, e.Content as DependencyObject, null);
-
+            
             ScreenExtensions.TryActivate(viewModel);
             
-            var frameworkElement = (FrameworkElement)e.Content;
-            this._eventAggregator.PublishOnCurrentThread(new NavigatedEvent(frameworkElement.DataContext));
-
-            this.Navigated?.Invoke(this, EventArgs.Empty);
+            this.Changed?.Invoke(this, new NavigationStepChangedEventArgs(viewModel));
         }
 
         #region Implementation of INavigationStackStep
-        bool INavigationStackStep.CanGoBack()
+        bool INavigationStep.CanGoBack()
         {
             return this._frame.CanGoBack;
         }
 
-        void INavigationStackStep.GoBack()
+        void INavigationStep.GoBack()
         {
             this._frame.GoBack();
         }
 
-        private event EventHandler Navigated;
+        private event EventHandler<NavigationStepChangedEventArgs> Changed;
 
-        event EventHandler INavigationStackStep.Changed
+        event EventHandler<NavigationStepChangedEventArgs> INavigationStep.Changed
         {
-            add { this.Navigated += value; }
-            remove { this.Navigated -= value; }
+            add { this.Changed += value; }
+            remove { this.Changed -= value; }
         }
         #endregion
     }
