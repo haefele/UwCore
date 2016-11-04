@@ -295,27 +295,7 @@ namespace Caliburn.Micro
         {
             AddSubNamespaceMapping(nsSource, new[] { nsTarget }, viewSuffix);
         }
-
-        /// <summary>
-        ///   Makes a type name into an interface name.
-        /// </summary>
-        /// <param name = "typeName">The part.</param>
-        /// <returns></returns>
-        public static string MakeInterface(string typeName)
-        {
-            var suffix = string.Empty;
-            if (typeName.Contains("[["))
-            {
-                //generic type
-                var genericParStart = typeName.IndexOf("[[");
-                suffix = typeName.Substring(genericParStart);
-                typeName = typeName.Remove(genericParStart);
-            }
-
-            var index = typeName.LastIndexOf(".");
-            return typeName.Insert(index + 1, "I") + suffix;
-        }
-
+        
         /// <summary>
         /// Transforms a View type name into all of its possible ViewModel type names. Accepts a flag
         /// to include or exclude interface types.

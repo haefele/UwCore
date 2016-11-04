@@ -1,46 +1,19 @@
-﻿namespace Caliburn.Micro {
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.Specialized;
-    using System.ComponentModel;
-    using System.Linq;
-    using System.Reflection;
-#if !WinRT
-    using System.Windows;
-#else
-    using Windows.UI.Xaml;
-#endif
+using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Linq;
+using System.Reflection;
+using Windows.UI.Xaml;
 
-    /// <summary>
-    /// A source of assemblies that are inspectable by the framework.
-    /// </summary>
-    public static class AssemblySource {
-        /// <summary>
-        /// The singleton instance of the AssemblySource used by the framework.
-        /// </summary>
-        public static readonly IObservableCollection<Assembly> Instance = new BindableCollection<Assembly>();
-
-        /// <summary>
-        /// Finds a type which matches one of the elements in the sequence of names.
-        /// </summary>
-        public static Func<IEnumerable<string>, Type> FindTypeByNames = names => {
-            if (names == null) {
-                return null;
-            }
-
-            var type = names
-                .Join(Instance.SelectMany(a => a.GetExportedTypes()), n => n, t => t.FullName, (n, t) => t)
-                .FirstOrDefault();
-            return type;
-        };
-    }
-
+namespace Caliburn.Micro
+{
     /// <summary>
     /// A caching subsystem for <see cref="AssemblySource"/>.
     /// </summary>
     public static class AssemblySourceCache {
         static bool isInstalled;
-        static readonly IDictionary<String, Type> TypeNameCache = new Dictionary<string, Type>();
+        static readonly IDictionary<string, Type> TypeNameCache = new Dictionary<string, Type>();
 
         /// <summary>
         /// Extracts the types from the spezified assembly for storing in the cache.
@@ -48,9 +21,7 @@
         public static Func<Assembly, IEnumerable<Type>> ExtractTypes = assembly =>
             assembly.GetExportedTypes()
                 .Where(t =>
-#if !CORE
                     typeof(UIElement).IsAssignableFrom(t) ||
-#endif
                     typeof(INotifyPropertyChanged).IsAssignableFrom(t));
 
         /// <summary>
