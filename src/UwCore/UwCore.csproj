@@ -117,19 +117,13 @@
   <ItemGroup>
     <Compile Include="CaliburnMicroCleaned\AssemblySource.cs" />
     <Compile Include="CaliburnMicroCleaned\AssemblySourceCache.cs" />
-    <Compile Include="CaliburnMicro\CachingFrameAdapter.cs" />
     <Compile Include="CaliburnMicro\CaliburnApplication.cs" />
-    <Compile Include="CaliburnMicro\DependencyPropertyHelper.cs" />
     <Compile Include="CaliburnMicro\ExtensionMethods.cs" />
     <Compile Include="CaliburnMicro\INavigationService.cs" />
     <Compile Include="CaliburnMicro\MessageBinder.cs" />
     <Compile Include="CaliburnMicro\NameTransformer.cs" />
-    <Compile Include="CaliburnMicro\NavigateHelper.cs" />
     <Compile Include="CaliburnMicro\NavigationExtensions.cs" />
     <Compile Include="CaliburnMicro\RegExHelper.cs" />
-    <Compile Include="CaliburnMicro\StringSplitter.cs" />
-    <Compile Include="CaliburnMicro\TriggerAction.cs" />
-    <Compile Include="CaliburnMicro\TypeDescriptor.cs" />
     <Compile Include="CaliburnMicro\TypeMappingConfiguration.cs" />
     <Compile Include="CaliburnMicro\View.cs" />
     <Compile Include="CaliburnMicro\ViewLocator.cs" />

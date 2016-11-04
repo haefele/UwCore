@@ -1,109 +1,39 @@
-﻿#if XFORMS
-namespace Caliburn.Micro.Xamarin.Forms
-#else
+﻿using System;
+using System.Reflection;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Markup;
+using Windows.UI.Xaml.Media;
+
 namespace Caliburn.Micro
-#endif 
 {
-    using System;
-    using System.Linq;
-#if WinRT
-    using System.Reflection;
-    using Windows.ApplicationModel;
-    using Windows.UI.Xaml;
-    using Windows.UI.Xaml.Controls;
-    using Windows.UI.Xaml.Markup;
-    using Windows.UI.Xaml.Media;
-#elif XFORMS
-    using System.Reflection;
-    using global::Xamarin.Forms;
-    using UIElement = global::Xamarin.Forms.Element;
-    using FrameworkElement = global::Xamarin.Forms.VisualElement;
-    using DependencyProperty = global::Xamarin.Forms.BindableProperty;
-    using DependencyObject = global::Xamarin.Forms.BindableObject;
-    using ContentControl = global::Xamarin.Forms.ContentView;
-#else
-    using System.ComponentModel;
-    using System.Windows;
-    using System.Windows.Controls;
-    using System.Windows.Markup;
-#endif
 
     /// <summary>
     /// Hosts attached properties related to view models.
     /// </summary>
     public static class View {
-        static readonly ILog Log = LogManager.GetLog(typeof(View));
-#if WinRT || XFORMS
-        const string DefaultContentPropertyName = "Content";
-#else
-        static readonly ContentPropertyAttribute DefaultContentProperty = new ContentPropertyAttribute("Content");
-#endif
+        private static readonly ILog Log = LogManager.GetLog(typeof(View));
 
         /// <summary>
         /// A dependency property which allows the framework to track whether a certain element has already been loaded in certain scenarios.
         /// </summary>
         public static readonly DependencyProperty IsLoadedProperty =
-            DependencyPropertyHelper.RegisterAttached(
+            DependencyProperty.RegisterAttached(
                 "IsLoaded",
                 typeof(bool),
                 typeof(View),
-                false
+                new PropertyMetadata(false)
                 );
-
-        /// <summary>
-        /// A dependency property which marks an element as a name scope root.
-        /// </summary>
-        public static readonly DependencyProperty IsScopeRootProperty =
-            DependencyPropertyHelper.RegisterAttached(
-                "IsScopeRoot",
-                typeof(bool),
-                typeof(View),
-                false
-                );
-
-        /// <summary>
-        /// A dependency property which allows the override of convention application behavior.
-        /// </summary>
-        public static readonly DependencyProperty ApplyConventionsProperty =
-            DependencyPropertyHelper.RegisterAttached(
-                "ApplyConventions",
-                typeof(bool?),
-                typeof(View)
-                );
-
-        /// <summary>
-        /// A dependency property for assigning a context to a particular portion of the UI.
-        /// </summary>
-        public static readonly DependencyProperty ContextProperty =
-            DependencyPropertyHelper.RegisterAttached(
-                "Context",
-                typeof(object),
-                typeof(View),
-                null, 
-                OnContextChanged
-                );
-
-        /// <summary>
-        /// A dependency property for attaching a model to the UI.
-        /// </summary>
-        public static DependencyProperty ModelProperty =
-            DependencyPropertyHelper.RegisterAttached(
-                "Model",
-                typeof(object),
-                typeof(View),
-                null, 
-                OnModelChanged
-                );
-
+        
         /// <summary>
         /// Used by the framework to indicate that this element was generated.
         /// </summary>
         public static readonly DependencyProperty IsGeneratedProperty =
-            DependencyPropertyHelper.RegisterAttached(
+            DependencyProperty.RegisterAttached(
                 "IsGenerated",
                 typeof(bool),
                 typeof(View),
-                false
+                new PropertyMetadata(false)
                 );
 
         /// <summary>
@@ -114,7 +44,8 @@ namespace Caliburn.Micro
         /// <returns>true if the handler was executed immediately; false otherwise</returns>
         public static bool ExecuteOnLoad(FrameworkElement element, RoutedEventHandler handler)
         {
-            if (IsElementLoaded(element)) {
+            if (IsElementLoaded(element))
+            {
                 handler(element, new RoutedEventArgs());
                 return true;
             }
@@ -132,8 +63,7 @@ namespace Caliburn.Micro
         /// Determines whether the specified <paramref name="element"/> is loaded.
         /// </summary>
         /// <param name="element">The element.</param>
-        /// <returns>true if the element is loaded; otherwise, false.
-        /// </returns>
+        /// <returns>true if the element is loaded; otherwise, false. </returns>
         public static bool IsElementLoaded(FrameworkElement element) {
             try
             {
@@ -206,140 +136,148 @@ namespace Caliburn.Micro
             return dependencyObject;
         };
 
-        /// Sets the model.
+        #region Model Attached Property
+        /// <summary>
+        /// A dependency property for attaching a model to the UI.
         /// </summary>
-        /// <param name="d">The element to attach the model to.</param>
-        /// <param name="value">The model.</param>
-        public static void SetModel(DependencyObject d, object value) {
-            d.SetValue(ModelProperty, value);
-        }
+        public static readonly DependencyProperty ModelProperty = DependencyProperty.RegisterAttached(
+            "Model", 
+            typeof(object), 
+            typeof(View), 
+            new PropertyMetadata(null, OnModelChanged));
 
         /// <summary>
         /// Gets the model.
         /// </summary>
         /// <param name="d">The element the model is attached to.</param>
         /// <returns>The model.</returns>
-        public static object GetModel(DependencyObject d) {
+        public static object GetModel(DependencyObject d)
+        {
             return d.GetValue(ModelProperty);
         }
+        /// <summary>
+        /// Sets the model.
+        /// </summary>
+        /// <param name="d">The element to attach the model to.</param>
+        /// <param name="value">The model.</param>
+        public static void SetModel(DependencyObject d, object value)
+        {
+            d.SetValue(ModelProperty, value);
+        }
+        
+        /// <summary>
+        /// Executed when the <see cref="ModelProperty"/> changed.
+        /// </summary>
+        /// <param name="dependencyObject">The <see cref="DependencyObject"/> whose <see cref="ModelProperty"/> changed.</param>
+        /// <param name="e">The event args.</param>
+        private static void OnModelChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
+        {
+            if (e.OldValue == e.NewValue)
+                return;
+
+            UpdateViewModel(dependencyObject);
+        }
+        #endregion
+
+        #region Context Attached Property
+        /// <summary>
+        /// A dependency property for assigning a context to a particular portion of the UI.
+        /// </summary>
+        public static readonly DependencyProperty ContextProperty = DependencyProperty.RegisterAttached(
+            "Context",
+            typeof(object),
+            typeof(View),
+            new PropertyMetadata(null, OnContextChanged));
 
         /// <summary>
         /// Gets the context.
         /// </summary>
-        /// <param name="d">The element the context is attached to.</param>
+        /// <param name="dependencyObject">The element the context is attached to.</param>
         /// <returns>The context.</returns>
-        public static object GetContext(DependencyObject d) {
-            return d.GetValue(ContextProperty);
+        public static object GetContext(DependencyObject dependencyObject)
+        {
+            return dependencyObject.GetValue(ContextProperty);
         }
-
         /// <summary>
         /// Sets the context.
         /// </summary>
-        /// <param name="d">The element to attach the context to.</param>
+        /// <param name="dependencyObject">The element to attach the context to.</param>
         /// <param name="value">The context.</param>
-        public static void SetContext(DependencyObject d, object value) {
-            d.SetValue(ContextProperty, value);
+        public static void SetContext(DependencyObject dependencyObject, object value)
+        {
+            dependencyObject.SetValue(ContextProperty, value);
         }
 
-        static void OnModelChanged(DependencyObject targetLocation, DependencyPropertyChangedEventArgs args) {
-            if (args.OldValue == args.NewValue) {
+        /// <summary>
+        /// Executed when the <see cref="ContextProperty"/> changed.
+        /// </summary>
+        /// <param name="dependencyObject">The <see cref="DependencyObject"/> whose <see cref="ContextProperty"/> was changed.</param>
+        /// <param name="e">The event args.</param>
+        private static void OnContextChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
+        {
+            if (e.OldValue == e.NewValue)
                 return;
-            }
 
-            if (args.NewValue != null)
+            UpdateViewModel(dependencyObject);
+        }
+        #endregion
+
+        #region Model and Context Methods
+        private static void UpdateViewModel(DependencyObject dependencyObject)
+        {
+            var model = GetModel(dependencyObject);
+            var context = GetContext(dependencyObject);
+
+            var view = ViewLocator.LocateForModel(model, dependencyObject, context);
+            SetContentProperty(dependencyObject, view);
+
+            ViewModelBinder.Bind(model, view, context);
+        }
+        #endregion
+
+        #region Content Property
+        private static bool SetContentProperty(object targetLocation, object view)
+        {
+            Func<object, object, bool> setContentCore = (object currentTargetLocation, object currentView) =>
             {
-                var context = GetContext(targetLocation);
-                var view = ViewLocator.LocateForModel(args.NewValue, targetLocation, context);
-                
-                if (!SetContentProperty(targetLocation, view)) {
+                try
+                {
+                    var type = currentTargetLocation.GetType();
+                    var contentPropertyName = GetContentPropertyName(type);
 
-                    Log.Warn("SetContentProperty failed for ViewLocator.LocateForModel, falling back to LocateForModelType");
+                    type.GetRuntimeProperty(contentPropertyName)
+                        .SetValue(currentTargetLocation, currentView, null);
 
-                    view = ViewLocator.LocateForModelType(args.NewValue.GetType(), targetLocation, context);
-
-                    SetContentProperty(targetLocation, view);
+                    return true;
                 }
+                catch (Exception e)
+                {
+                    Log.Error(e);
 
-                ViewModelBinder.Bind(args.NewValue, view, context);
-            }
-            else {
-                SetContentProperty(targetLocation, args.NewValue);
-            }
-        }
+                    return false;
+                }
+            };
 
-        static void OnContextChanged(DependencyObject targetLocation, DependencyPropertyChangedEventArgs e) {
-            if (e.OldValue == e.NewValue) {
-                return;
-            }
-
-            var model = GetModel(targetLocation);
-            if (model == null) {
-                return;
+            var frameworkElement = view as FrameworkElement;
+            if (frameworkElement?.Parent != null)
+            {
+                //First remove it from it's current parent
+                setContentCore(frameworkElement.Parent, null);
             }
 
-            var view = ViewLocator.LocateForModel(model, targetLocation, e.NewValue);
-
-            if (!SetContentProperty(targetLocation, view)) {
-
-                Log.Warn("SetContentProperty failed for ViewLocator.LocateForModel, falling back to LocateForModelType");
-
-                view = ViewLocator.LocateForModelType(model.GetType(), targetLocation, e.NewValue);
-
-                SetContentProperty(targetLocation, view);
-            }
-
-            ViewModelBinder.Bind(model, view, e.NewValue);
-        }
-
-        static bool SetContentProperty(object targetLocation, object view) {
-            var fe = view as FrameworkElement;
-            if (fe != null && fe.Parent != null) {
-                SetContentPropertyCore(fe.Parent, null);
-            }
-
-            return SetContentPropertyCore(targetLocation, view);
+            //Then add it to it's new parent
+            return setContentCore(targetLocation, view);
         }
         
-        static bool SetContentPropertyCore(object targetLocation, object view) {
-            try {
-                var type = targetLocation.GetType();
-                var contentPropertyName = GetContentPropertyName(type);
-
-                type.GetRuntimeProperty(contentPropertyName)
-                    .SetValue(targetLocation, view, null);
-
-                return true;
-            }
-            catch (Exception e) {
-                Log.Error(e);
-
-                return false;
-            }
-        }
-
-        private static string GetContentPropertyName(Type type) {
+        private static string GetContentPropertyName(Type type)
+        {
             var typeInfo = type.GetTypeInfo();
             var contentProperty = typeInfo.GetCustomAttribute<ContentPropertyAttribute>();
 
-            return contentProperty == null ? DefaultContentPropertyName : contentProperty.Name;
+            return contentProperty == null 
+                ? "Content" 
+                : contentProperty.Name;
         }
-
-
-        private static bool? inDesignMode;
-        /// <summary>
-        /// Gets a value that indicates whether the process is running in design mode.
-        /// </summary>
-        public static bool InDesignMode
-        {
-            get
-            {
-                if (inDesignMode == null)
-                {
-                    inDesignMode = DesignMode.DesignModeEnabled;
-                }
-
-                return inDesignMode.GetValueOrDefault(false);
-            }
-        }
+        #endregion
     }
 }

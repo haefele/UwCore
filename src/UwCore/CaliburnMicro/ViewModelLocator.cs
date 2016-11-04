@@ -1,35 +1,17 @@
-﻿#if XFORMS
-namespace Caliburn.Micro.Xamarin.Forms
-#else
-namespace Caliburn.Micro
-#endif
+﻿namespace Caliburn.Micro
 {
     using System;
     using System.Linq;
     using System.Text.RegularExpressions;
     using System.Windows;
     using System.Collections.Generic;
-
-#if WinRT
     using Windows.UI.Xaml;
-#endif
-
-#if XFORMS
-    using UIElement = global::Xamarin.Forms.Element;
-#endif
-
     /// <summary>
     ///   A strategy for determining which view model to use for a given view.
     /// </summary>
     public static class ViewModelLocator
     {
-#if ANDROID
-        const string DefaultViewSuffix = "Activity";
-#elif IOS
-        const string DefaultViewSuffix = "ViewController";
-#else
         const string DefaultViewSuffix = "View";
-#endif
 
         static readonly ILog Log = LogManager.GetLog(typeof(ViewModelLocator));
         //These fields are used for configuring the default type mappings. They can be changed using ConfigureTypeMappings().
@@ -53,17 +35,6 @@ namespace Caliburn.Micro
 
         static ViewModelLocator() {
             var configuration = new TypeMappingConfiguration();
-
-#if ANDROID
-            configuration.DefaultSubNamespaceForViews = "Activities";
-            configuration.ViewSuffixList.Add("Activity");
-            configuration.IncludeViewSuffixInViewModelNames = false;
-#elif IOS
-            configuration.DefaultSubNamespaceForViews = "ViewControllers";
-            configuration.ViewSuffixList.Add("ViewController");
-            configuration.IncludeViewSuffixInViewModelNames = false;
-#endif
-
             ConfigureTypeMappings(configuration);
         }
 
@@ -379,30 +350,23 @@ namespace Caliburn.Micro
         /// </remarks>
         public static Func<object, object> LocateForView = view =>
         {
+            //Return null
             if (view == null)
-            {
                 return null;
-            }
-
-#if ANDROID || IOS
-             return LocateForViewType(view.GetType());
-#elif XFORMS
-            var frameworkElement = view as UIElement;
-            if (frameworkElement != null && frameworkElement.BindingContext != null)
-            {
-                return frameworkElement.BindingContext;
-            }
-
-            return LocateForViewType(view.GetType());
-#else
+            
+            //Return existing view model
             var frameworkElement = view as FrameworkElement;
             if (frameworkElement != null && frameworkElement.DataContext != null)
             {
                 return frameworkElement.DataContext;
             }
 
+            //Create new view model
+            var viewType = view.GetType();
+
+
+
             return LocateForViewType(view.GetType());
-#endif
         };
     }
 }
