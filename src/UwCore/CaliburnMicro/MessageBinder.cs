@@ -51,25 +51,8 @@ namespace Caliburn.Micro
 
             try
             {
-#if !WinRT && !XFORMS
-                var converter = TypeDescriptor.GetConverter(destinationType);
-
-                if (converter.CanConvertFrom(providedType)) {
-                    return converter.ConvertFrom(providedValue);
-                }
-
-                converter = TypeDescriptor.GetConverter(providedType);
-
-                if (converter.CanConvertTo(destinationType)) {
-                    return converter.ConvertTo(providedValue, destinationType);
-                }
-#endif
-#if WinRT || XFORMS
                 if (destinationType.GetTypeInfo().IsEnum)
                 {
-#else
-                if (destinationType.IsEnum) {
-#endif
                     var stringValue = providedValue as string;
                     if (stringValue != null)
                     {
@@ -111,12 +94,11 @@ namespace Caliburn.Micro
         /// <returns>The default value.</returns>
         public static object GetDefaultValue(Type type)
         {
-#if WinRT || XFORMS
             var typeInfo = type.GetTypeInfo();
-            return typeInfo.IsClass || typeInfo.IsInterface ? null : System.Activator.CreateInstance(type);
-#else
-            return type.IsClass || type.IsInterface ? null : Activator.CreateInstance(type);
-#endif
+
+            return typeInfo.IsClass || typeInfo.IsInterface 
+                ? null
+                : Activator.CreateInstance(type);
         }
     }
 }

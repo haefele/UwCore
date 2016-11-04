@@ -1,4 +1,6 @@
-﻿namespace Caliburn.Micro {
+﻿using Windows.ApplicationModel;
+
+namespace Caliburn.Micro {
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
@@ -22,7 +24,7 @@
         /// Indicates whether or not the framework is in design-time mode.
         /// </summary>
         public bool InDesignMode {
-            get { return View.InDesignMode; }
+            get { return DesignMode.DesignModeEnabled; }
         }
 
         private void ValidateDispatcher() {

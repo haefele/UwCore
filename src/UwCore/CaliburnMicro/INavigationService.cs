@@ -237,12 +237,11 @@ namespace Caliburn.Micro {
         /// Binds the view model.
         /// </summary>
         /// <param name="view">The view.</param>
-        /// <param name="viewModel">The view model.</param>
-        protected virtual void BindViewModel(DependencyObject view, object viewModel = null)
+        protected virtual void BindViewModel(DependencyObject view)
         {
             ViewLocator.InitializeComponent(view);
 
-            viewModel = viewModel ?? ViewModelLocator.LocateForView(view);
+            var viewModel = ViewModelLocator.LocateForView(view);
 
             if (viewModel == null)
                 return;

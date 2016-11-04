@@ -1,30 +1,13 @@
-﻿#if XFORMS
-namespace Caliburn.Micro.Xamarin.Forms
-#else
-namespace Caliburn.Micro
-#endif
-{
-    using System;
-    using System.Linq;
-    using System.Reflection;
-    using System.Text.RegularExpressions;
-    using System.Collections.Generic;
-#if XFORMS
-    using global::Xamarin.Forms;
-    using UIElement = global::Xamarin.Forms.Element;
-    using TextBlock = global::Xamarin.Forms.Label;
-    using DependencyObject = global::Xamarin.Forms.BindableObject;
-#elif !WinRT
-    using System.Windows;
-    using System.Windows.Controls;
-#else
-    using Windows.UI.Xaml;
-    using Windows.UI.Xaml.Controls;
-#endif
+﻿using System;
+using System.Linq;
+using System.Reflection;
+using System.Text.RegularExpressions;
+using System.Collections.Generic;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
-#if !SILVERLIGHT && !WinRT && !XFORMS
-    using System.Windows.Interop;
-#endif
+namespace Caliburn.Micro
+{
 
     /// <summary>
     ///   A strategy for determining which view to use for a given model.
@@ -268,17 +251,12 @@ namespace Caliburn.Micro
                 InitializeComponent(view);
                 return view;
             }
-
-#if !WinRT && !XFORMS
-            if(viewType.IsInterface || viewType.IsAbstract || !typeof(UIElement).IsAssignableFrom(viewType))
-                return new TextBlock { Text = string.Format("Cannot create {0}.", viewType.FullName) };
-#else
+            
             var viewTypeInfo = viewType.GetTypeInfo();
             var uiElementInfo = typeof(UIElement).GetTypeInfo();
 
             if (viewTypeInfo.IsInterface || viewTypeInfo.IsAbstract || !uiElementInfo.IsAssignableFrom(viewTypeInfo))
                 return new TextBlock { Text = string.Format("Cannot create {0}.", viewType.FullName) };
-#endif
 
             view = (UIElement)System.Activator.CreateInstance(viewType);
 
@@ -349,7 +327,7 @@ namespace Caliburn.Micro
         public static Func<Type, DependencyObject, object, Type> LocateTypeForModelType = (modelType, displayLocation, context) => {
             var viewTypeName = modelType.FullName;
 
-            if (View.InDesignMode) {
+            if (PlatformProvider.Current.InDesignMode) {
                 viewTypeName = ModifyModelTypeAtDesignTime(viewTypeName);
             }
 
@@ -406,48 +384,16 @@ namespace Caliburn.Micro
         };
 
         /// <summary>
-        /// Transforms a view type into a pack uri.
-        /// </summary>
-        public static Func<Type, Type, string> DeterminePackUriFromType = (viewModelType, viewType) => {
-#if !WinRT && !XFORMS
-            var assemblyName = viewType.Assembly.GetAssemblyName();
-            var applicationAssemblyName = Application.Current.GetType().Assembly.GetAssemblyName();
-#else
-            var assemblyName = viewType.GetTypeInfo().Assembly.GetAssemblyName();
-            var applicationAssemblyName = Application.Current.GetType().GetTypeInfo().Assembly.GetAssemblyName();
-#endif
-            var viewTypeName = viewType.FullName;
-
-            if (viewTypeName.StartsWith(assemblyName))
-                viewTypeName = viewTypeName.Substring(assemblyName.Length);
-
-            var uri = viewTypeName.Replace(".", "/") + ".xaml";
-
-            if(!applicationAssemblyName.Equals(assemblyName)) {
-                return "/" + assemblyName + ";component" + uri;
-            }
-
-            return uri;
-        };
-
-        /// <summary>
         ///   When a view does not contain a code-behind file, we need to automatically call InitializeCompoent.
         /// </summary>
         /// <param name = "element">The element to initialize</param>
-        public static void InitializeComponent(object element) {
-#if !WinRT && !XFORMS
-            var method = element.GetType()
-                .GetMethod("InitializeComponent", BindingFlags.Public | BindingFlags.Instance);
-#else
+        public static void InitializeComponent(object element)
+        {
             var method = element.GetType().GetTypeInfo()
                 .GetDeclaredMethods("InitializeComponent")
                 .SingleOrDefault(m => m.GetParameters().Length == 0);
-#endif
 
-            if (method == null)
-                return;
-
-            method.Invoke(element, null);
+            method?.Invoke(element, null);
         }
     }
 }
