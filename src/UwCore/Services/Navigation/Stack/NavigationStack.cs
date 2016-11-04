@@ -22,6 +22,8 @@ namespace UwCore.Services.Navigation.Stack
                     {
                         step.GoBack();
 
+                        this.StepOnChanged(this, EventArgs.Empty);
+
                         e.Handled = true;
                         return;
                     }

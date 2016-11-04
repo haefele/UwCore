@@ -4,6 +4,7 @@ using Windows.UI.Xaml;
 using Caliburn.Micro;
 using UwCore.Controls;
 using UwCore.Extensions;
+using UwCore.Helpers;
 using UwCore.Services.Navigation.Stack;
 
 namespace UwCore.Services.Navigation
@@ -46,24 +47,9 @@ namespace UwCore.Services.Navigation
         {
             var content = this._popupOverlay.Content as FrameworkElement;
             var viewModel = content?.DataContext;
-            var guardClose = viewModel as IGuardClose;
 
-            if (guardClose != null)
-            {
-                var shouldCancel = false;
-                var runningAsync = true;
-            
-                guardClose.CanClose(result => 
-                {
-                    runningAsync = false;
-                    shouldCancel = !result;
-                });
-
-                if (runningAsync)
-                    throw new NotSupportedException("Async CanClose is not supported.");
-                
-                e.Cancel = shouldCancel;
-            }
+            var cancel = CaliburnMicroHelper.TryGuardClose(viewModel);
+            e.Cancel = cancel;
         }
 
         private void PopupOverlayOnClosed(object sender, EventArgs e)
