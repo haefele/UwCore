@@ -53,7 +53,15 @@ namespace UwCore.Application
             await this.Initialize();
 
             var view = new HamburgerView();
-            this._container.Instance((INavigationService)new NavigationService(view.ContentFrame, view.PopupOverlay, this._container.GetInstance<IEventAggregator>(), this._container.GetInstance<IHockeyClient>()));
+            var popupNavigationService = new PopupNavigationService(view.PopupOverlay);
+            var navigationService = new NavigationService(view.ContentFrame, this._container.GetInstance<IEventAggregator>(), this._container.GetInstance<IHockeyClient>(), popupNavigationService);
+
+            var stack = new NavigationStack();
+            stack.AddStep(navigationService);
+            stack.AddStep(popupNavigationService);
+
+            this._container.Instance((INavigationStack)stack);
+            this._container.Instance((INavigationService)navigationService);
             this._container.Instance((ILoadingService)new LoadingService(view.LoadingOverlay));
 
             var viewModel = new HamburgerViewModel(IoC.Get<INavigationService>(), IoC.Get<IEventAggregator>(), IoC.Get<IHockeyClient>(), IoC.Get<IUpdateNotesService>());
@@ -107,7 +115,7 @@ namespace UwCore.Application
         #region Private Methods
         private async Task Initialize()
         {
-            //Only once
+            //Initialize only once
             if (this._isInitialized)
                 return;
 

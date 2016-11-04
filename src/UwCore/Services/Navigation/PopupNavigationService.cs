@@ -7,16 +7,13 @@ using UwCore.Extensions;
 
 namespace UwCore.Services.Navigation
 {
-    public class PopupNavigationService : IPopupNavigationService, IAdvancedPopupNavigationService
+    public class PopupNavigationService : IPopupNavigationService, IAdvancedPopupNavigationService, INavigationStackStep
     {
-        private readonly NavigationService _parent;
         private readonly PopupOverlay _popupOverlay;
 
-        public PopupNavigationService(NavigationService parent, PopupOverlay popupOverlay)
+        public PopupNavigationService(PopupOverlay popupOverlay)
         {
-            this._parent = parent;
             this._popupOverlay = popupOverlay;
-
             this._popupOverlay.Closing += this.PopupOverlayOnClosing;
             this._popupOverlay.Closed += this.PopupOverlayOnClosed;
         }
@@ -33,24 +30,15 @@ namespace UwCore.Services.Navigation
             var viewModel = IoC.GetInstance(viewModelType, null);
             viewModel.InjectValues(parameter);
             
-            ScreenExtensions.TryActivate(viewModel);
+            if (this._popupOverlay.Show())
+            {
+                ScreenExtensions.TryActivate(viewModel);
             
-            View.SetContext(this._popupOverlay, context);
-            View.SetModel(this._popupOverlay, viewModel);
+                View.SetContext(this._popupOverlay, context);
+                View.SetModel(this._popupOverlay, viewModel);
 
-            this._popupOverlay.Show();
-
-            this._parent.UpdateAppViewBackButtonVisibility();
-        }
-
-        internal bool IsOpen()
-        {
-            return this._popupOverlay.IsOpen;
-        }
-
-        internal void Close()
-        {
-            this._popupOverlay.Close();
+                this.Navigated?.Invoke(this, EventArgs.Empty);
+            }
         }
 
         private void PopupOverlayOnClosing(object sender, PopupOverlayClosingEventArgs e)
@@ -84,7 +72,27 @@ namespace UwCore.Services.Navigation
 
             this._popupOverlay.Content = null;
 
-            this._parent.UpdateAppViewBackButtonVisibility();
+            this.Navigated?.Invoke(this, EventArgs.Empty);
         }
+
+        #region Implementation of INavigationStackStep
+        bool INavigationStackStep.CanGoBack()
+        {
+            return this._popupOverlay.IsOpen;
+        }
+
+        void INavigationStackStep.GoBack()
+        {
+            this._popupOverlay.Close();
+        }
+
+        private event EventHandler Navigated;
+
+        event EventHandler INavigationStackStep.Changed
+        {
+            add { this.Navigated += value; }
+            remove { this.Navigated -= value; }
+        }
+        #endregion
     }
 }

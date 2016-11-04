@@ -188,11 +188,14 @@
     <Compile Include="Services\Loading\LoadingService.cs" />
     <Compile Include="Services\Navigation\IAdvancedNavigationService.cs" />
     <Compile Include="Services\Navigation\IAdvancedPopupNavigationService.cs" />
+    <Compile Include="Services\Navigation\Stack\INavigationStack.cs" />
+    <Compile Include="Services\Navigation\Stack\INavigationStackStep.cs" />
     <Compile Include="Services\Navigation\IPopupNavigationService.cs" />
     <Compile Include="Services\Navigation\NavigateHelper.cs" />
     <Compile Include="Services\Navigation\NavigationService.cs" />
     <Compile Include="Services\Navigation\INavigationService.cs" />
     <Compile Include="Services\Navigation\NavigatedEvent.cs" />
+    <Compile Include="Services\Navigation\Stack\NavigationStack.cs" />
     <Compile Include="Services\Navigation\PopupNavigationService.cs" />
     <Compile Include="Services\UpdateNotes\IUpdateNotesService.cs" />
     <Compile Include="Services\UpdateNotes\UpdateNotesService.cs" />
