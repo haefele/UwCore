@@ -116,7 +116,6 @@ namespace UwCore.Application
 
         private void ConfigureCaliburnMicro()
         {
-            ViewModelBinder.ApplyConventionsByDefault = false;
             LogManager.GetLog = type => new CaliburnMicroLoggingAdapter(LoggerFactory.GetLogger(type));
             MessageBinder.CustomConverters[typeof(DateTimeOffset)] = (value, context) =>
             {

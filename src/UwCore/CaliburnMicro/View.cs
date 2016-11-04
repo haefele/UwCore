@@ -112,18 +112,9 @@ namespace Caliburn.Micro
         /// <param name="element">The element.</param>
         /// <param name="handler">The handler.</param>
         /// <returns>true if the handler was executed immediately; false otherwise</returns>
-        public static bool ExecuteOnLoad(FrameworkElement element, RoutedEventHandler handler) {
-#if XFORMS
-            handler(element, new RoutedEventArgs());
-            return true;
-#else
-#if SILVERLIGHT
-            if ((bool)element.GetValue(IsLoadedProperty)) {
-#elif WinRT
+        public static bool ExecuteOnLoad(FrameworkElement element, RoutedEventHandler handler)
+        {
             if (IsElementLoaded(element)) {
-#else
-            if(element.IsLoaded) {
-#endif
                 handler(element, new RoutedEventArgs());
                 return true;
             }
@@ -131,34 +122,12 @@ namespace Caliburn.Micro
             RoutedEventHandler loaded = null;
             loaded = (s, e) => {
                 element.Loaded -= loaded;
-#if SILVERLIGHT
-                element.SetValue(IsLoadedProperty, true);
-#endif
                 handler(s, e);
             };
             element.Loaded += loaded;
             return false;
-#endif
-
         }
-
-        /// <summary>
-        /// Executes the handler when the element is unloaded.
-        /// </summary>
-        /// <param name="element">The element.</param>
-        /// <param name="handler">The handler.</param>
-        public static void ExecuteOnUnload(FrameworkElement element, RoutedEventHandler handler) {
-#if !XFORMS
-            RoutedEventHandler unloaded = null;
-            unloaded = (s, e) => {
-                element.Unloaded -= unloaded;
-                handler(s, e);
-            };
-            element.Unloaded += unloaded;
-#endif
-        }
-
-#if WinRT
+        
         /// <summary>
         /// Determines whether the specified <paramref name="element"/> is loaded.
         /// </summary>
@@ -188,27 +157,19 @@ namespace Caliburn.Micro
                 return false;
             }
         }
-#endif
 
         /// <summary>
         /// Executes the handler the next time the elements's LayoutUpdated event fires.
         /// </summary>
         /// <param name="element">The element.</param>
         /// <param name="handler">The handler.</param>
-#if WinRT
         public static void ExecuteOnLayoutUpdated(FrameworkElement element, EventHandler<object> handler) {
             EventHandler<object> onLayoutUpdate = null;
-#else
-        public static void ExecuteOnLayoutUpdated(FrameworkElement element, EventHandler handler) {
-            EventHandler onLayoutUpdate = null;
-#endif
-#if !XFORMS
             onLayoutUpdate = (s, e) => {
                 element.LayoutUpdated -= onLayoutUpdate;
                 handler(element, e);
             };
             element.LayoutUpdated += onLayoutUpdate;
-#endif
         }
 
         /// <summary>
@@ -223,52 +184,28 @@ namespace Caliburn.Micro
         /// </remarks>
         public static Func<object, object> GetFirstNonGeneratedView = view => {
             var dependencyObject = view as DependencyObject;
-            if (dependencyObject == null) {
+            if (dependencyObject == null)
+            {
                 return view;
             }
 
-            if ((bool)dependencyObject.GetValue(IsGeneratedProperty)) {
-                if (dependencyObject is ContentControl) {
+            if ((bool)dependencyObject.GetValue(IsGeneratedProperty))
+            {
+                if (dependencyObject is ContentControl)
+                {
                     return ((ContentControl)dependencyObject).Content;
                 }
-#if WinRT || XFORMS
+
                 var type = dependencyObject.GetType();
                 var contentPropertyName = GetContentPropertyName(type);
 
                 return type.GetRuntimeProperty(contentPropertyName)
                     .GetValue(dependencyObject, null);
-#else
-                var type = dependencyObject.GetType();
-                var contentProperty = type.GetAttributes<ContentPropertyAttribute>(true)
-                                          .FirstOrDefault() ?? DefaultContentProperty;
-
-                return type.GetProperty(contentProperty.Name)
-                    .GetValue(dependencyObject, null);
-#endif
             }
 
             return dependencyObject;
         };
 
-        /// <summary>
-        /// Gets the convention application behavior.
-        /// </summary>
-        /// <param name="d">The element the property is attached to.</param>
-        /// <returns>Whether or not to apply conventions.</returns>
-        public static bool? GetApplyConventions(DependencyObject d) {
-            return (bool?)d.GetValue(ApplyConventionsProperty);
-        }
-
-        /// <summary>
-        /// Sets the convention application behavior.
-        /// </summary>
-        /// <param name="d">The element to attach the property to.</param>
-        /// <param name="value">Whether or not to apply conventions.</param>
-        public static void SetApplyConventions(DependencyObject d, bool? value) {
-            d.SetValue(ApplyConventionsProperty, value);
-        }
-
-        /// <summary>
         /// Sets the model.
         /// </summary>
         /// <param name="d">The element to attach the model to.</param>
@@ -309,14 +246,11 @@ namespace Caliburn.Micro
                 return;
             }
 
-            if (args.NewValue != null) {
+            if (args.NewValue != null)
+            {
                 var context = GetContext(targetLocation);
-                
                 var view = ViewLocator.LocateForModel(args.NewValue, targetLocation, context);
-                // Trialing binding before setting content in Xamarin Forms
-#if XFORMS
-                ViewModelBinder.Bind(args.NewValue, view, context);
-#endif
+                
                 if (!SetContentProperty(targetLocation, view)) {
 
                     Log.Warn("SetContentProperty failed for ViewLocator.LocateForModel, falling back to LocateForModelType");
@@ -325,9 +259,8 @@ namespace Caliburn.Micro
 
                     SetContentProperty(targetLocation, view);
                 }
-#if !XFORMS
+
                 ViewModelBinder.Bind(args.NewValue, view, context);
-#endif
             }
             else {
                 SetContentProperty(targetLocation, args.NewValue);
@@ -366,8 +299,7 @@ namespace Caliburn.Micro
 
             return SetContentPropertyCore(targetLocation, view);
         }
-
-#if WinRT || XFORMS
+        
         static bool SetContentPropertyCore(object targetLocation, object view) {
             try {
                 var type = targetLocation.GetType();
@@ -391,28 +323,9 @@ namespace Caliburn.Micro
 
             return contentProperty == null ? DefaultContentPropertyName : contentProperty.Name;
         }
-#else
-        static bool SetContentPropertyCore(object targetLocation, object view) {
-            try {
-                var type = targetLocation.GetType();
-                var contentProperty = type.GetAttributes<ContentPropertyAttribute>(true)
-                                          .FirstOrDefault() ?? DefaultContentProperty;
 
-                type.GetProperty(contentProperty.Name)
-                    .SetValue(targetLocation, view, null);
-
-                return true;
-            }
-            catch(Exception e) {
-                Log.Error(e);
-
-                return false;
-            }
-        }
-#endif
 
         private static bool? inDesignMode;
-
         /// <summary>
         /// Gets a value that indicates whether the process is running in design mode.
         /// </summary>
@@ -422,16 +335,7 @@ namespace Caliburn.Micro
             {
                 if (inDesignMode == null)
                 {
-#if XFORMS
-                    inDesignMode = false;
-#elif WinRT
                     inDesignMode = DesignMode.DesignModeEnabled;
-#elif SILVERLIGHT
-                    inDesignMode = DesignerProperties.IsInDesignTool;
-#else
-                    var descriptor = DependencyPropertyDescriptor.FromProperty(DesignerProperties.IsInDesignModeProperty, typeof(FrameworkElement));
-                    inDesignMode = (bool)descriptor.Metadata.DefaultValue;
-#endif
                 }
 
                 return inDesignMode.GetValueOrDefault(false);

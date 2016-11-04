@@ -32,89 +32,9 @@ namespace Caliburn.Micro
     /// Binds a view to a view model.
     /// </summary>
     public static class ViewModelBinder {
-        const string AsyncSuffix = "Async";
 
         static readonly ILog Log = LogManager.GetLog(typeof(ViewModelBinder));
-
-        /// <summary>
-        /// Gets or sets a value indicating whether to apply conventions by default.
-        /// </summary>
-        /// <value>
-        /// 	<c>true</c> if conventions should be applied by default; otherwise, <c>false</c>.
-        /// </value>
-        public static bool ApplyConventionsByDefault = true;
-
-        /// <summary>
-        /// Indicates whether or not the conventions have already been applied to the view.
-        /// </summary>
-        public static readonly DependencyProperty ConventionsAppliedProperty =
-            DependencyPropertyHelper.RegisterAttached(
-                "ConventionsApplied",
-                typeof(bool),
-                typeof(ViewModelBinder),
-                false
-                );
-
-
-        /// <summary>
-        /// Determines whether a view should have conventions applied to it.
-        /// </summary>
-        /// <param name="view">The view to check.</param>
-        /// <returns>Whether or not conventions should be applied to the view.</returns>
-        public static bool ShouldApplyConventions(FrameworkElement view) {
-            var overriden = View.GetApplyConventions(view);
-            return overriden.GetValueOrDefault(ApplyConventionsByDefault);
-        }
-
-        /// <summary>
-        /// Creates data bindings on the view's controls based on the provided properties.
-        /// </summary>
-        /// <remarks>Parameters include named Elements to search through and the type of view model to determine conventions for. Returns unmatched elements.</remarks>
-        public static Func<IEnumerable<FrameworkElement>, Type, IEnumerable<FrameworkElement>> BindProperties = (namedElements, viewModelType) => {
-
-            var unmatchedElements = new List<FrameworkElement>();
-#if !XFORMS
-            foreach (var element in namedElements) {
-                var cleanName = element.Name.Trim('_');
-                var parts = cleanName.Split(new[] { '_' }, StringSplitOptions.RemoveEmptyEntries);
-
-                var property = viewModelType.GetPropertyCaseInsensitive(parts[0]);
-                var interpretedViewModelType = viewModelType;
-
-                for (int i = 1; i < parts.Length && property != null; i++) {
-                    interpretedViewModelType = property.PropertyType;
-                    property = interpretedViewModelType.GetPropertyCaseInsensitive(parts[i]);
-                }
-
-                if (property == null) {
-                    unmatchedElements.Add(element);
-                    Log.Info("Binding Convention Not Applied: Element {0} did not match a property.", element.Name);
-                    continue;
-                }
-            }
-#endif
-            return unmatchedElements;
-
-        };
-
-        /// <summary>
-        /// Attaches instances of <see cref="ActionMessage"/> to the view's controls based on the provided methods.
-        /// </summary>
-        /// <remarks>Parameters include the named elements to search through and the type of view model to determine conventions for. Returns unmatched elements.</remarks>
-        public static Func<IEnumerable<FrameworkElement>, Type, IEnumerable<FrameworkElement>> BindActions = (namedElements, viewModelType) => {
-            return namedElements;
-        };
-
-        static bool IsAsyncMethod(MethodInfo method) {
-            return typeof(Task).IsAssignableFrom(method.ReturnType) &&
-                   method.Name.EndsWith(AsyncSuffix, StringComparison.OrdinalIgnoreCase);
-        }
-
-        /// <summary>
-        /// Allows the developer to add custom handling of named elements which were not matched by any default conventions.
-        /// </summary>
-        public static Action<IEnumerable<FrameworkElement>, Type> HandleUnmatchedElements = (elements, viewModelType) => { };
-
+        
         /// <summary>
         /// Binds the specified viewModel to the view.
         /// </summary>
@@ -122,21 +42,10 @@ namespace Caliburn.Micro
         public static Action<object, DependencyObject, object> Bind = (viewModel, view, context) => {
             Log.Info("Binding {0} and {1}.", view, viewModel);
             
-            var noContext = Caliburn.Micro.Bind.NoContextProperty;
-
             var viewAware = viewModel as IViewAware;
             if (viewAware != null) {
                 Log.Info("Attaching {0} to {1}.", view, viewAware);
                 viewAware.AttachView(view, context);
-            }
-
-            if ((bool)view.GetValue(ConventionsAppliedProperty)) {
-                return;
-            }
-
-            var element = View.GetFirstNonGeneratedView(view) as FrameworkElement;
-            if (element == null) {
-                return;
             }
 
             var frameworkElement = view as FrameworkElement;
@@ -144,66 +53,6 @@ namespace Caliburn.Micro
             {
                 frameworkElement.DataContext = viewModel;
             }
-
-            if (!ShouldApplyConventions(element)) {
-                Log.Info("Skipping conventions for {0} and {1}.", element, viewModel);
-                return;
-            }
-
-            var viewModelType = viewModel.GetType();
-            var namedElements = BindingScope.GetNamedElements(element);
-            namedElements = BindActions(namedElements, viewModelType);
-            namedElements = BindProperties(namedElements, viewModelType);
-            HandleUnmatchedElements(namedElements, viewModelType);
-
-            view.SetValue(ConventionsAppliedProperty, true);
         };
-
-#if WINDOWS_PHONE
-        static void BindAppBar(DependencyObject view) {
-            var page = view as PhoneApplicationPage;
-            if (page == null || page.ApplicationBar == null) {
-                return;
-            }
-
-            var triggers = Interaction.GetTriggers(view);
-
-            foreach(var item in page.ApplicationBar.Buttons) {
-                var button = item as IAppBarActionMessage;
-                if (button == null || string.IsNullOrEmpty(button.Message)) {
-                    continue;
-                }
-
-                var parsedTrigger = Parser.Parse(view, button.Message).First();
-                var trigger = new AppBarItemTrigger(button);
-                var actionMessages = parsedTrigger.Actions.OfType<ActionMessage>().ToList();
-                actionMessages.Apply(x => {
-                    x.applicationBarSource = button;
-                    parsedTrigger.Actions.Remove(x);
-                    trigger.Actions.Add(x);
-                });
-                
-                triggers.Add(trigger);
-            }
-
-            foreach (var item in page.ApplicationBar.MenuItems) {
-                var menuItem = item as IAppBarActionMessage;
-                if (menuItem == null || string.IsNullOrEmpty(menuItem.Message)) {
-					continue;
-                }
-
-                var parsedTrigger = Parser.Parse(view, menuItem.Message).First();
-                var trigger = new AppBarItemTrigger(menuItem);
-                var actionMessages = parsedTrigger.Actions.OfType<ActionMessage>().ToList();
-                actionMessages.Apply(x => {
-                    x.applicationBarSource = menuItem;
-                    parsedTrigger.Actions.Remove(x);
-                    trigger.Actions.Add(x);
-                });
-
-                triggers.Add(trigger);
-            }
-        }
-#endif
     }
 }
