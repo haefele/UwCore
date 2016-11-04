@@ -152,6 +152,9 @@ namespace UwCore.Application
         {
             foreach (object instance in instances)
             {
+                if (instance == null)
+                    continue;
+
                 TypeInfo typeInfo = instance.GetType().GetTypeInfo();
 
                 if (typeInfo.IsDefined(typeof(AutoSubscribeEventsAttribute)))
