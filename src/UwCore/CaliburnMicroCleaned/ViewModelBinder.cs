@@ -6,7 +6,8 @@ namespace Caliburn.Micro
     /// <summary>
     /// Binds a view to a view model.
     /// </summary>
-    public static class ViewModelBinder {
+    public static class ViewModelBinder
+    {
 
         private static readonly ILog Log = LogManager.GetLog(typeof(ViewModelBinder));
 

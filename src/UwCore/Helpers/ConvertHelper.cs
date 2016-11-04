@@ -1,28 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using Caliburn.Micro;
 using System.Reflection;
 
-namespace Caliburn.Micro
+namespace UwCore.Helpers
 {
-    public class MessageBinder
+    public static class ConvertHelper
     {
-
         /// <summary>
         /// Custom converters used by the framework registered by destination type for which they will be selected.
         /// The converter is passed the existing value to convert and a "context" object.
         /// </summary>
-        public static readonly Dictionary<Type, Func<object, object, object>> CustomConverters =
-            new Dictionary<Type, Func<object, object, object>>
+        public static readonly Dictionary<Type, Func<object, object>> CustomConverters = new Dictionary<Type, Func<object, object>>
+        {
+            [typeof (DateTime)] = (value) =>
             {
-                {
-                    typeof (DateTime), (value, context) => {
-                        DateTime result;
-                        DateTime.TryParse(value.ToString(), out result);
-                        return result;
-                    }
-                }
-            };
+                DateTime result;
+                DateTime.TryParse(value.ToString(), out result);
+                return result;
+            },
+            [typeof(DateTimeOffset)] = (value) =>
+            {
+                DateTimeOffset result;
+                DateTimeOffset.TryParse(value.ToString(), out result);
+                return result;
+            },
+        };
 
         /// <summary>
         /// Coerces the provided value to the destination type.
@@ -31,7 +35,7 @@ namespace Caliburn.Micro
         /// <param name="providedValue">The provided value.</param>
         /// <param name="context">An optional context value which can be used during conversion.</param>
         /// <returns>The coerced value.</returns>
-        public static object CoerceValue(Type destinationType, object providedValue, object context)
+        public static object ConvertValue(Type destinationType, object providedValue)
         {
             if (providedValue == null)
             {
@@ -46,7 +50,7 @@ namespace Caliburn.Micro
 
             if (CustomConverters.ContainsKey(destinationType))
             {
-                return CustomConverters[destinationType](providedValue, context);
+                return CustomConverters[destinationType](providedValue);
             }
 
             try
@@ -96,7 +100,7 @@ namespace Caliburn.Micro
         {
             var typeInfo = type.GetTypeInfo();
 
-            return typeInfo.IsClass || typeInfo.IsInterface 
+            return typeInfo.IsClass || typeInfo.IsInterface
                 ? null
                 : Activator.CreateInstance(type);
         }

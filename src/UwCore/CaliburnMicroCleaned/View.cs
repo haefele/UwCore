@@ -3,8 +3,6 @@ using System.Reflection;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Markup;
-using Windows.UI.Xaml.Media;
-using UwCore.Extensions;
 
 namespace Caliburn.Micro
 {

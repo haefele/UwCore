@@ -6,6 +6,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Core;
+using UwCore.Extensions;
 
 namespace Caliburn.Micro {
     
@@ -129,49 +130,10 @@ namespace Caliburn.Micro {
         /// </summary>
         /// <param name="viewModel"> The view model.</param>
         /// <param name="parameter"> The parameter.</param>
-        protected virtual void TryInjectParameters(object viewModel, object parameter) {
-            var viewModelType = viewModel.GetType();
-
-            var stringParameter = parameter as string;
+        protected virtual void TryInjectParameters(object viewModel, object parameter)
+        {
             var dictionaryParameter = parameter as IDictionary<string, object>;
-
-            if (stringParameter != null && stringParameter.StartsWith("caliburn://")) {
-                var uri = new Uri(stringParameter);
-
-                if (!String.IsNullOrEmpty(uri.Query)) {
-                    var decorder = new WwwFormUrlDecoder(uri.Query);
-
-                    foreach (var pair in decorder) {
-                        var property = viewModelType.GetPropertyCaseInsensitive(pair.Name);
-
-                        if (property == null) {
-                            continue;
-                        }
-
-                        property.SetValue(viewModel, MessageBinder.CoerceValue(property.PropertyType, pair.Value, null));
-                    }
-                }
-            }
-            else if (dictionaryParameter != null) {
-                foreach (var pair in dictionaryParameter) {
-                    var property = viewModelType.GetPropertyCaseInsensitive(pair.Key);
-
-                    if (property == null)
-                    {
-                        continue;
-                    }
-
-                    property.SetValue(viewModel, MessageBinder.CoerceValue(property.PropertyType, pair.Value, null));
-                }
-            }
-            else {
-                var property = viewModelType.GetPropertyCaseInsensitive("Parameter");
-
-                if (property == null)
-                    return;
-
-                property.SetValue(viewModel, MessageBinder.CoerceValue(property.PropertyType, parameter, null));
-            }
+            viewModel.InjectValues(dictionaryParameter);
         }
 
         /// <summary>

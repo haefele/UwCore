@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Windows.UI.Xaml;
 using Caliburn.Micro;
 using UwCore.Controls;
+using UwCore.Extensions;
 
 namespace UwCore.Services.Navigation
 {
@@ -30,7 +31,7 @@ namespace UwCore.Services.Navigation
         public void Navigate(Type viewModelType, Dictionary<string, object> parameter = null, string context = null)
         {
             var viewModel = IoC.GetInstance(viewModelType, null);
-            this.InjectParameters(viewModel, parameter);
+            viewModel.InjectValues(parameter);
             
             ScreenExtensions.TryActivate(viewModel);
             
@@ -84,18 +85,6 @@ namespace UwCore.Services.Navigation
             this._popupOverlay.Content = null;
 
             this._parent.UpdateAppViewBackButtonVisibility();
-        }
-
-        private void InjectParameters(object viewModel, Dictionary<string, object> parameter)
-        {
-            if (parameter == null)
-                return;
-
-            foreach (var pair in parameter)
-            {
-                var property = viewModel.GetType().GetPropertyCaseInsensitive(pair.Key);
-                property?.SetValue(viewModel, MessageBinder.CoerceValue(property.PropertyType, pair.Value, null));
-            }
         }
     }
 }

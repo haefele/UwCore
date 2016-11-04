@@ -117,17 +117,15 @@
   <ItemGroup>
     <Compile Include="CaliburnMicroCleaned\AssemblySource.cs" />
     <Compile Include="CaliburnMicro\CaliburnApplication.cs" />
-    <Compile Include="CaliburnMicro\ExtensionMethods.cs" />
     <Compile Include="CaliburnMicro\INavigationService.cs" />
-    <Compile Include="CaliburnMicro\MessageBinder.cs" />
     <Compile Include="CaliburnMicro\NameTransformer.cs" />
     <Compile Include="CaliburnMicro\RegExHelper.cs" />
     <Compile Include="CaliburnMicro\TypeMappingConfiguration.cs" />
-    <Compile Include="CaliburnMicro\View.cs" />
+    <Compile Include="CaliburnMicroCleaned\View.cs" />
     <Compile Include="CaliburnMicro\ViewLocator.cs" />
-    <Compile Include="CaliburnMicro\ViewModelBinder.cs" />
+    <Compile Include="CaliburnMicroCleaned\ViewModelBinder.cs" />
     <Compile Include="CaliburnMicro\ViewModelLocator.cs" />
-    <Compile Include="CaliburnMicro\XamlPlatformProvider.cs" />
+    <Compile Include="CaliburnMicroCleaned\UwCorePlatformProvider.cs" />
     <Compile Include="Common\VisualTreeHelperEx.cs" />
     <Compile Include="Controls\PopupOverlayClosingEventArgs.cs" />
     <Compile Include="Events\AutoSubscribeEventsAttribute.cs" />
@@ -158,14 +156,17 @@
     <Compile Include="Extensions\ByteArrayExtensions.cs" />
     <Compile Include="Extensions\DateTimeOffsetExtensions.cs" />
     <Compile Include="Extensions\DialogServiceExtensions.cs" />
+    <Compile Include="Extensions\DictionaryExtensions.cs" />
     <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="Extensions\EventAggregatorExtensions.cs" />
     <Compile Include="Extensions\ExceptionExtensions.cs" />
     <Compile Include="Extensions\FrameworkElementExtensions.cs" />
+    <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Extensions\PackageVersionExtensions.cs" />
     <Compile Include="Extensions\StreamExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\TimeSpanExtensions.cs" />
+    <Compile Include="Extensions\TypeExtensions.cs" />
     <Compile Include="Hamburger\ClickableHamburgerItem.cs" />
     <Compile Include="Hamburger\HamburgerItem.cs" />
     <Compile Include="Hamburger\NavigatingHamburgerItem.cs" />
@@ -173,6 +174,7 @@
       <DependentUpon>HamburgerView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Hamburger\HamburgerViewModel.cs" />
+    <Compile Include="Helpers\ConvertHelper.cs" />
     <Compile Include="Logging\CaliburnMicroLoggingAdapter.cs" />
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="Logging\LoggerExtensions.cs" />
