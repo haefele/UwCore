@@ -9,6 +9,5 @@ namespace UwCore.Services.Navigation
         IPopupNavigationService Popup { get; }
 
         NavigateHelper<T> For<T>();
-        void ClearBackStack();
     }
 }

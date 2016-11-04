@@ -77,7 +77,7 @@ namespace UwCore.Hamburger
 
                 this._hockeyClient.TrackEvent("ApplicationModeChanged", new Dictionary<string, string> { ["ApplicationMode"] = this._currentMode.GetType().Name });
                 
-                this._navigationService.ClearBackStack();
+                ((NavigationService)this._navigationService).ClearBackStack();
 
                 this.RaisePropertyChanged();
             }
