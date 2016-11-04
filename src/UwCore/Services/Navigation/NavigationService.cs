@@ -1,55 +1,35 @@
 using System;
 using System.Collections.Generic;
-using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Caliburn.Micro;
 using Microsoft.HockeyApp;
-using UwCore.Controls;
 using UwCore.Extensions;
 
 namespace UwCore.Services.Navigation
 {
-    public class NavigationService : INavigationService, IAdvancedNavigationService
+    public class NavigationService : INavigationService, IAdvancedNavigationService, INavigationStackStep
     {
         private readonly Frame _frame;
 
         private readonly IEventAggregator _eventAggregator;
         private readonly IHockeyClient _hockeyClient;
-
-        private readonly PopupNavigationService _popupNavigationService;
-
-        public NavigationService(Frame frame, PopupOverlay popupOverlay, IEventAggregator eventAggregator, IHockeyClient hockeyClient)
+        
+        public NavigationService(Frame frame, IEventAggregator eventAggregator, IHockeyClient hockeyClient, PopupNavigationService popupNavigationService)
         {
             this._frame = frame;
             this._frame.Navigating += this.FrameOnNavigating;
             this._frame.Navigated += this.FrameOnNavigated;
-
-
-            var navigationManager = SystemNavigationManager.GetForCurrentView();
-            navigationManager.BackRequested += (s, e) =>
-            {
-                this.OnBackRequested(e);
-
-                if (e.Handled)
-                    return;
-
-                if (this._frame.CanGoBack)
-                {
-                    e.Handled = true;
-                    this._frame.GoBack();
-                }
-            };
-
+            
             this._eventAggregator = eventAggregator;
             this._hockeyClient = hockeyClient;
 
-            this._popupNavigationService = new PopupNavigationService(this, popupOverlay);
+            this.Popup = popupNavigationService;
         }
 
         public IAdvancedNavigationService Advanced => this;
-        public IPopupNavigationService Popup => this._popupNavigationService;
+        public IPopupNavigationService Popup { get; }
 
         public NavigateHelper<T> For<T>()
         {
@@ -59,7 +39,8 @@ namespace UwCore.Services.Navigation
         internal void ClearBackStack()
         {
             this._frame.BackStack.Clear();
-            this.UpdateAppViewBackButtonVisibility();
+
+            this.Navigated?.Invoke(this, EventArgs.Empty);
         }
 
         public void Navigate(Type viewModelType, Dictionary<string, object> parameter, string context)
@@ -117,33 +98,31 @@ namespace UwCore.Services.Navigation
             ViewModelBinder.Bind(viewModel, e.Content as DependencyObject, null);
 
             ScreenExtensions.TryActivate(viewModel);
-
-            this.UpdateAppViewBackButtonVisibility();
-
-            if (this._popupNavigationService.IsOpen())
-            {
-                this._popupNavigationService.Close();
-            }
-
+            
             var frameworkElement = (FrameworkElement)e.Content;
             this._eventAggregator.PublishOnCurrentThread(new NavigatedEvent(frameworkElement.DataContext));
 
-            this._hockeyClient.TrackEvent("Navigated", new Dictionary<string, string> { ["ViewModel"] = frameworkElement.DataContext.GetType().Name });
+            this.Navigated?.Invoke(this, EventArgs.Empty);
         }
 
-        private void OnBackRequested(BackRequestedEventArgs e)
+        #region Implementation of INavigationStackStep
+        bool INavigationStackStep.CanGoBack()
         {
-            if (this._popupNavigationService.IsOpen())
-            {
-                this._popupNavigationService.Close();
-                e.Handled = true;
-            }
+            return this._frame.CanGoBack;
         }
 
-        internal void UpdateAppViewBackButtonVisibility()
+        void INavigationStackStep.GoBack()
         {
-            var systemNavigationManager = SystemNavigationManager.GetForCurrentView();
-            systemNavigationManager.AppViewBackButtonVisibility = this._frame.CanGoBack || this._popupNavigationService.IsOpen() ? AppViewBackButtonVisibility.Visible : AppViewBackButtonVisibility.Collapsed;
+            this._frame.GoBack();
         }
+
+        private event EventHandler Navigated;
+
+        event EventHandler INavigationStackStep.Changed
+        {
+            add { this.Navigated += value; }
+            remove { this.Navigated -= value; }
+        }
+        #endregion
     }
 }
