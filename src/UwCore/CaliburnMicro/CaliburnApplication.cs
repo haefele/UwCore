@@ -71,7 +71,7 @@
 
             isInitialized = true;
 
-            PlatformProvider.Current = new XamlPlatformProvider();
+            PlatformProvider.Current = new UwCorePlatformProvider();
 
             if (Execute.InDesignMode) {
                 try {
@@ -99,7 +99,7 @@
             // scenarios when the app has multiple windows open (though contract 
             // activation, this keeps Excute up to date with the currently activated window
 
-            args.Window.Activated += (s, e) => PlatformProvider.Current = new XamlPlatformProvider();
+            args.Window.Activated += (s, e) => PlatformProvider.Current = new UwCorePlatformProvider();
         }
 
         /// <summary>

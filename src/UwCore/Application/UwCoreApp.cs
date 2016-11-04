@@ -122,12 +122,6 @@ namespace UwCore.Application
         private void ConfigureCaliburnMicro()
         {
             LogManager.GetLog = type => new CaliburnMicroLoggingAdapter(LoggerFactory.GetLogger(type));
-            MessageBinder.CustomConverters[typeof(DateTimeOffset)] = (value, context) =>
-            {
-                DateTimeOffset result;
-                DateTimeOffset.TryParse(value.ToString(), out result);
-                return result;
-            };
         }
         #endregion
 

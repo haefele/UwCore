@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using Windows.Foundation;
 using Caliburn.Micro;
+using UwCore.Extensions;
 
 namespace UwCore.Application
 {
@@ -25,12 +26,7 @@ namespace UwCore.Application
 
             var result = new T();
             var decoder = new WwwFormUrlDecoder(queryString);
-
-            foreach (var pair in decoder)
-            {
-                var property = typeof(T).GetPropertyCaseInsensitive(pair.Name);
-                property?.SetValue(result, MessageBinder.CoerceValue(property.PropertyType, pair.Value, null));
-            }
+            result.InjectValues(decoder.ToDictionary(f => f.Name, f => (object)f.Value));
 
             return result;
         }

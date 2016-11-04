@@ -1,49 +1,48 @@
 ﻿using Windows.ApplicationModel;
 using UwCore.Extensions;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Reflection;
+using Windows.UI.Core;
+using Windows.UI.Xaml;
 
-namespace Caliburn.Micro {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using System.Reflection;
-    using Windows.UI.Core;
-    using Windows.UI.Xaml;
+namespace Caliburn.Micro
+{
 
     /// <summary>
     /// A <see cref="IPlatformProvider"/> implementation for the XAML platfrom.
     /// </summary>
-    public class XamlPlatformProvider : IPlatformProvider {
-        private CoreDispatcher dispatcher;
-        /// <summary>
-        /// Initializes a new instance of the <see cref="XamlPlatformProvider"/> class.
-        /// </summary>
-        public XamlPlatformProvider() {
-            dispatcher = Window.Current.Dispatcher;
-        }
+    internal class UwCorePlatformProvider : IPlatformProvider
+    {
+        #region Fields
+        private readonly CoreDispatcher _dispatcher;
+        #endregion
 
+        #region Constructors
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UwCorePlatformProvider"/> class.
+        /// </summary>
+        public UwCorePlatformProvider()
+        {
+            this._dispatcher = Window.Current.Dispatcher;
+        }
+        #endregion
+
+        #region Implementation of IPlatformProvider
         /// <summary>
         /// Indicates whether or not the framework is in design-time mode.
         /// </summary>
-        public bool InDesignMode {
-            get { return DesignMode.DesignModeEnabled; }
-        }
-
-        private void ValidateDispatcher() {
-            if (dispatcher == null)
-                throw new InvalidOperationException("Not initialized with dispatcher.");
-        }
-
-        private bool CheckAccess() {
-            return dispatcher == null || Window.Current != null;
-        }
+        bool IPlatformProvider.InDesignMode => DesignMode.DesignModeEnabled;
 
         /// <summary>
         /// Executes the action on the UI thread asynchronously.
         /// </summary>
         /// <param name="action">The action to execute.</param>
-        public void BeginOnUIThread(System.Action action) {
-            ValidateDispatcher();
-            var dummy = dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action());
+        async void IPlatformProvider.BeginOnUIThread(Action action)
+        {
+            this.ValidateDispatcher();
+            await this._dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action());
         }
 
         /// <summary>
@@ -51,9 +50,11 @@ namespace Caliburn.Micro {
         /// </summary>
         /// <param name="action">The action to execute.</param>
         /// <returns></returns>
-        public Task OnUIThreadAsync(System.Action action) {
-            ValidateDispatcher();
-            return dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action()).AsTask();
+        Task IPlatformProvider.OnUIThreadAsync(Action action)
+        {
+            this.ValidateDispatcher();
+
+            return this._dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action()).AsTask();
         }
 
         /// <summary>
@@ -61,12 +62,15 @@ namespace Caliburn.Micro {
         /// </summary>
         /// <param name="action">The action to execute.</param>
         /// <exception cref="System.NotImplementedException"></exception>
-        public void OnUIThread(System.Action action) {
-            if (CheckAccess())
+        void IPlatformProvider.OnUIThread(Action action)
+        {
+            if (this.CheckAccess())
+            {   
                 action();
+            }
             else
             {
-                dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action()).AsTask().Wait();
+                this._dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action()).AsTask().Wait();
             }
         }
 
@@ -83,7 +87,7 @@ namespace Caliburn.Micro {
         /// The WindowManager marks that element as a framework-created element so that it can determine what it created vs. what was intended by the developer.
         /// Calling GetFirstNonGeneratedView allows the framework to discover what the original element was.
         /// </remarks>
-        public object GetFirstNonGeneratedView(object view)
+        object IPlatformProvider.GetFirstNonGeneratedView(object view)
         {
             return View.GetFirstNonGeneratedView(view);
         }
@@ -93,7 +97,7 @@ namespace Caliburn.Micro {
         /// </summary>
         /// <param name="view">The view.</param>
         /// <param name="handler">The handler.</param>
-        public void ExecuteOnFirstLoad(object view, Action<object> handler)
+        void IPlatformProvider.ExecuteOnFirstLoad(object view, Action<object> handler)
         {
             var frameworkElement = view as FrameworkElement;
 
@@ -115,12 +119,13 @@ namespace Caliburn.Micro {
 
             frameworkElement.Loaded += loaded;
         }
+
         /// <summary>
         /// Executes the handler the next time the view's LayoutUpdated event fires.
         /// </summary>
         /// <param name="view">The view.</param>
         /// <param name="handler">The handler.</param>
-        public void ExecuteOnLayoutUpdated(object view, Action<object> handler)
+        void IPlatformProvider.ExecuteOnLayoutUpdated(object view, Action<object> handler)
         {
             var frameworkElement = view as FrameworkElement;
 
@@ -147,31 +152,54 @@ namespace Caliburn.Micro {
         /// An <see cref="Action" /> to close the view model.
         /// </returns>
         /// <exception cref="System.NotImplementedException"></exception>
-        public System.Action GetViewCloseAction(object viewModel, ICollection<object> views, bool? dialogResult) {
+        Action IPlatformProvider.GetViewCloseAction(object viewModel, ICollection<object> views, bool? dialogResult)
+        {
             var child = viewModel as IChild;
-            if (child != null) {
-                var conductor = child.Parent as IConductor;
-                if (conductor != null) {
-                    return () => conductor.CloseItem(viewModel);
-                }
+
+            var conductor = child?.Parent as IConductor;
+            if (conductor != null)
+            {
+                return () => conductor.CloseItem(viewModel);
             }
 
-            foreach (var contextualView in views) {
+            foreach (var contextualView in views)
+            {
                 var viewType = contextualView.GetType();
                 var closeMethod = viewType.GetRuntimeMethod("Close", new Type[0]);
 
                 if (closeMethod != null)
-                    return () => {
+                    return () => 
+                    {
                         closeMethod.Invoke(contextualView, null);
                     };
                 
                 var isOpenProperty = viewType.GetRuntimeProperty("IsOpen");
-                if (isOpenProperty != null) {
+                if (isOpenProperty != null)
+                {
                     return () => isOpenProperty.SetValue(contextualView, false, null);
                 }
             }
 
             return () => LogManager.GetLog(typeof(Screen)).Info("TryClose requires a parent IConductor or a view with a Close method or IsOpen property.");
         }
+        #endregion
+
+        #region Private Methods
+        /// <summary>
+        /// Makes sure that there is a <see cref="_dispatcher"/>.
+        /// </summary>
+        private void ValidateDispatcher()
+        {
+            if (this._dispatcher == null)
+                throw new InvalidOperationException("Not initialized with dispatcher.");
+        }
+        /// <summary>
+        /// Checks
+        /// </summary>
+        private bool CheckAccess()
+        {
+            return this._dispatcher == null || Window.Current != null;
+        }
+        #endregion
     }
 }

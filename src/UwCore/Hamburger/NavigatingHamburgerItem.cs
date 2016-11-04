@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 using Windows.UI.Xaml.Controls;
 using Caliburn.Micro;
+using UwCore.Helpers;
 using INavigationService = UwCore.Services.Navigation.INavigationService;
 
 namespace UwCore.Hamburger
@@ -37,7 +38,7 @@ namespace UwCore.Hamburger
             if (value is T)
                 return (T)value;
 
-            return (T)MessageBinder.CoerceValue(typeof(T), value, null);
+            return (T)ConvertHelper.ConvertValue(typeof(T), value);
         }
 
         public override void Execute()
