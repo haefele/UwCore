@@ -4,6 +4,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Markup;
 using Windows.UI.Xaml.Media;
+using UwCore.Extensions;
 
 namespace Caliburn.Micro
 {
@@ -11,97 +12,30 @@ namespace Caliburn.Micro
     /// <summary>
     /// Hosts attached properties related to view models.
     /// </summary>
-    public static class View {
+    public static class View
+    {
+        #region Log
         private static readonly ILog Log = LogManager.GetLog(typeof(View));
+        #endregion
 
-        /// <summary>
-        /// A dependency property which allows the framework to track whether a certain element has already been loaded in certain scenarios.
-        /// </summary>
-        public static readonly DependencyProperty IsLoadedProperty =
-            DependencyProperty.RegisterAttached(
-                "IsLoaded",
-                typeof(bool),
-                typeof(View),
-                new PropertyMetadata(false)
-                );
-        
+        #region IsGenerated Attached Property
         /// <summary>
         /// Used by the framework to indicate that this element was generated.
         /// </summary>
-        public static readonly DependencyProperty IsGeneratedProperty =
-            DependencyProperty.RegisterAttached(
-                "IsGenerated",
-                typeof(bool),
-                typeof(View),
-                new PropertyMetadata(false)
-                );
+        public static readonly DependencyProperty IsGeneratedProperty = DependencyProperty.RegisterAttached(
+            "IsGenerated", 
+            typeof(bool), 
+            typeof(View), 
+            new PropertyMetadata(false));
 
-        /// <summary>
-        /// Executes the handler immediately if the element is loaded, otherwise wires it to the Loaded event.
-        /// </summary>
-        /// <param name="element">The element.</param>
-        /// <param name="handler">The handler.</param>
-        /// <returns>true if the handler was executed immediately; false otherwise</returns>
-        public static bool ExecuteOnLoad(FrameworkElement element, RoutedEventHandler handler)
+        public static void SetIsGenerated(DependencyObject element, bool value)
         {
-            if (IsElementLoaded(element))
-            {
-                handler(element, new RoutedEventArgs());
-                return true;
-            }
-
-            RoutedEventHandler loaded = null;
-            loaded = (s, e) => {
-                element.Loaded -= loaded;
-                handler(s, e);
-            };
-            element.Loaded += loaded;
-            return false;
+            element.SetValue(IsGeneratedProperty, value);
         }
-        
-        /// <summary>
-        /// Determines whether the specified <paramref name="element"/> is loaded.
-        /// </summary>
-        /// <param name="element">The element.</param>
-        /// <returns>true if the element is loaded; otherwise, false. </returns>
-        public static bool IsElementLoaded(FrameworkElement element) {
-            try
-            {
-                if ((element.Parent ?? VisualTreeHelper.GetParent(element)) != null)
-                {
-                    return true;
-                }
-
-                var rootVisual = Window.Current.Content;
-
-                if (rootVisual != null)
-                {
-                    return element == rootVisual;
-                }
-
-                return false;
-
-            }
-            catch
-            {
-                return false;
-            }
+        public static bool GetIsGenerated(DependencyObject element)
+        {
+            return (bool) element.GetValue(IsGeneratedProperty);
         }
-
-        /// <summary>
-        /// Executes the handler the next time the elements's LayoutUpdated event fires.
-        /// </summary>
-        /// <param name="element">The element.</param>
-        /// <param name="handler">The handler.</param>
-        public static void ExecuteOnLayoutUpdated(FrameworkElement element, EventHandler<object> handler) {
-            EventHandler<object> onLayoutUpdate = null;
-            onLayoutUpdate = (s, e) => {
-                element.LayoutUpdated -= onLayoutUpdate;
-                handler(element, e);
-            };
-            element.LayoutUpdated += onLayoutUpdate;
-        }
-
         /// <summary>
         /// Used to retrieve the root, non-framework-created view.
         /// </summary>
@@ -112,29 +46,30 @@ namespace Caliburn.Micro
         /// The WindowManager marks that element as a framework-created element so that it can determine what it created vs. what was intended by the developer.
         /// Calling GetFirstNonGeneratedView allows the framework to discover what the original element was. 
         /// </remarks>
-        public static Func<object, object> GetFirstNonGeneratedView = view => {
+        public static object GetFirstNonGeneratedView(object view)
+        {
             var dependencyObject = view as DependencyObject;
+
             if (dependencyObject == null)
-            {
                 return view;
-            }
 
-            if ((bool)dependencyObject.GetValue(IsGeneratedProperty))
+            if (GetIsGenerated(dependencyObject) == false)
+                return dependencyObject;
+            
+            var contentControl = dependencyObject as ContentControl;
+            if (contentControl != null)
             {
-                if (dependencyObject is ContentControl)
-                {
-                    return ((ContentControl)dependencyObject).Content;
-                }
-
-                var type = dependencyObject.GetType();
-                var contentPropertyName = GetContentPropertyName(type);
-
-                return type.GetRuntimeProperty(contentPropertyName)
-                    .GetValue(dependencyObject, null);
+                return contentControl.Content;
             }
 
-            return dependencyObject;
-        };
+            var type = dependencyObject.GetType();
+            var contentPropertyName = GetContentPropertyName(type);
+
+            return type
+                .GetRuntimeProperty(contentPropertyName)
+                .GetValue(dependencyObject, null);
+        }
+        #endregion
 
         #region Model Attached Property
         /// <summary>

@@ -33,7 +33,7 @@ namespace UwCore.Application
         #endregion
 
         #region Fields
-        private WinRTContainer _container;
+        private SimpleContainer _container;
         #endregion
 
         #region Properties
@@ -61,8 +61,13 @@ namespace UwCore.Application
 
         private void ConfigureContainer()
         {
-            this._container = new WinRTContainer();
-            this._container.RegisterWinRTServices();
+            this._container = new SimpleContainer();
+
+            //Container itself
+            this._container.Instance(this._container);
+
+            //Event aggregator
+            this._container.Singleton<IEventAggregator, EventAggregator>();
 
             //HockeyApp
             this._container.Instance(HockeyClient.Current);
@@ -234,7 +239,7 @@ namespace UwCore.Application
             yield break;
         }
 
-        public virtual void ConfigureContainer(WinRTContainer container)
+        public virtual void ConfigureContainer(SimpleContainer container)
         {
             
         }
