@@ -116,20 +116,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CaliburnMicroCleaned\AssemblySource.cs" />
-    <Compile Include="CaliburnMicroCleaned\AssemblySourceCache.cs" />
     <Compile Include="CaliburnMicro\CaliburnApplication.cs" />
     <Compile Include="CaliburnMicro\ExtensionMethods.cs" />
     <Compile Include="CaliburnMicro\INavigationService.cs" />
     <Compile Include="CaliburnMicro\MessageBinder.cs" />
     <Compile Include="CaliburnMicro\NameTransformer.cs" />
-    <Compile Include="CaliburnMicro\NavigationExtensions.cs" />
     <Compile Include="CaliburnMicro\RegExHelper.cs" />
     <Compile Include="CaliburnMicro\TypeMappingConfiguration.cs" />
     <Compile Include="CaliburnMicro\View.cs" />
     <Compile Include="CaliburnMicro\ViewLocator.cs" />
     <Compile Include="CaliburnMicro\ViewModelBinder.cs" />
     <Compile Include="CaliburnMicro\ViewModelLocator.cs" />
-    <Compile Include="CaliburnMicro\WinRTContainer.cs" />
     <Compile Include="CaliburnMicro\XamlPlatformProvider.cs" />
     <Compile Include="Common\VisualTreeHelperEx.cs" />
     <Compile Include="Controls\PopupOverlayClosingEventArgs.cs" />
@@ -164,6 +161,7 @@
     <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="Extensions\EventAggregatorExtensions.cs" />
     <Compile Include="Extensions\ExceptionExtensions.cs" />
+    <Compile Include="Extensions\FrameworkElementExtensions.cs" />
     <Compile Include="Extensions\PackageVersionExtensions.cs" />
     <Compile Include="Extensions\StreamExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />

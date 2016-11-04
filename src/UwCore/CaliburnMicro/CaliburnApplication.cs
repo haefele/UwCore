@@ -50,8 +50,7 @@
                     Coroutine.BeginExecute(coroutine.GetEnumerator(), context);
                 }
             };
-
-            AssemblySourceCache.Install();
+            
             AssemblySource.Instance.AddRange(SelectAssemblies());
 
             PrepareApplication();
@@ -73,20 +72,6 @@
             isInitialized = true;
 
             PlatformProvider.Current = new XamlPlatformProvider();
-
-            var baseExtractTypes = AssemblySourceCache.ExtractTypes;
-
-            AssemblySourceCache.ExtractTypes = assembly =>
-            {
-                var baseTypes = baseExtractTypes(assembly);
-                var elementTypes = assembly.GetExportedTypes()
-                    .Where(t => typeof(UIElement).IsAssignableFrom(t));
-
-                return baseTypes.Union(elementTypes);
-            };
-
-            AssemblySource.Instance.Refresh();
-
 
             if (Execute.InDesignMode) {
                 try {

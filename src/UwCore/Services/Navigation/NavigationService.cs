@@ -17,8 +17,8 @@ namespace UwCore.Services.Navigation
 
         private readonly PopupNavigationService _popupNavigationService;
 
-        public NavigationService(Frame frame, PopupOverlay popupOverlay, IEventAggregator eventAggregator, IHockeyClient hockeyClient, bool treatViewAsLoaded = false)
-            : base(frame, treatViewAsLoaded)
+        public NavigationService(Frame frame, PopupOverlay popupOverlay, IEventAggregator eventAggregator, IHockeyClient hockeyClient)
+            : base(frame)
         {
             this._eventAggregator = eventAggregator;
             this._hockeyClient = hockeyClient;

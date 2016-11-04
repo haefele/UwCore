@@ -1,4 +1,5 @@
 ﻿using Windows.ApplicationModel;
+using UwCore.Extensions;
 
 namespace Caliburn.Micro {
     using System;
@@ -82,40 +83,58 @@ namespace Caliburn.Micro {
         /// The WindowManager marks that element as a framework-created element so that it can determine what it created vs. what was intended by the developer.
         /// Calling GetFirstNonGeneratedView allows the framework to discover what the original element was.
         /// </remarks>
-        public object GetFirstNonGeneratedView(object view) {
+        public object GetFirstNonGeneratedView(object view)
+        {
             return View.GetFirstNonGeneratedView(view);
         }
-
-        private static readonly DependencyProperty PreviouslyAttachedProperty = DependencyProperty.RegisterAttached(
-            "PreviouslyAttached",
-            typeof (bool),
-            typeof (XamlPlatformProvider),
-            null
-            );
 
         /// <summary>
         /// Executes the handler the fist time the view is loaded.
         /// </summary>
         /// <param name="view">The view.</param>
         /// <param name="handler">The handler.</param>
-        public void ExecuteOnFirstLoad(object view, Action<object> handler) {
-            var element = view as FrameworkElement;
-            if (element != null && !(bool) element.GetValue(PreviouslyAttachedProperty)) {
-                element.SetValue(PreviouslyAttachedProperty, true);
-                View.ExecuteOnLoad(element, (s, e) => handler(s));
-            }
-        }
+        public void ExecuteOnFirstLoad(object view, Action<object> handler)
+        {
+            var frameworkElement = view as FrameworkElement;
 
+            if (frameworkElement == null)
+                return;
+
+            if (frameworkElement.IsLoaded())
+            {
+                handler(frameworkElement);
+                return;
+            }
+
+            RoutedEventHandler loaded = null;
+            loaded = (s, e) => 
+            {
+                frameworkElement.Loaded -= loaded;
+                handler(s);
+            };
+
+            frameworkElement.Loaded += loaded;
+        }
         /// <summary>
         /// Executes the handler the next time the view's LayoutUpdated event fires.
         /// </summary>
         /// <param name="view">The view.</param>
         /// <param name="handler">The handler.</param>
-        public void ExecuteOnLayoutUpdated(object view, Action<object> handler) {
-            var element = view as FrameworkElement;
-            if (element != null) {
-                View.ExecuteOnLayoutUpdated(element, (s, e) => handler(s));
-            }
+        public void ExecuteOnLayoutUpdated(object view, Action<object> handler)
+        {
+            var frameworkElement = view as FrameworkElement;
+
+            if (frameworkElement == null)
+                return;
+
+            EventHandler<object> onLayoutUpdate = null;
+            onLayoutUpdate = (s, e) => 
+            {
+                frameworkElement.LayoutUpdated -= onLayoutUpdate;
+                handler(frameworkElement);
+            };
+
+            frameworkElement.LayoutUpdated += onLayoutUpdate;
         }
 
         /// <summary>
