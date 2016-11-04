@@ -13,7 +13,7 @@ namespace Caliburn.Micro
         /// <summary>
         /// The singleton instance of the AssemblySource used by the framework.
         /// </summary>
-        public static readonly IObservableCollection<Assembly> Instance = new BindableCollection<Assembly>();
+        public static readonly IObservableCollection<Assembly> Assemblies = new BindableCollection<Assembly>();
 
         /// <summary>
         /// Finds a type which matches one of the elements in the sequence of names.
@@ -21,7 +21,7 @@ namespace Caliburn.Micro
         public static Type FindTypeByNames(IEnumerable<string> names)
         {
             return names?
-                .Join(Instance.SelectMany(a => a.GetExportedTypes()), name => name, exportedType => exportedType.FullName, (name, exportedType) => exportedType)
+                .Join(Assemblies.SelectMany(a => a.GetExportedTypes()), name => name, exportedType => exportedType.FullName, (name, exportedType) => exportedType)
                 .FirstOrDefault();
         }
     }

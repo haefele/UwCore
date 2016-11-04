@@ -76,7 +76,7 @@ namespace UwCoreTest
             application.HeaderDetailsViewModel = IoC.Get<HeaderDetailsViewModel>();
         }
         
-        public override void CustomConfiguration()
+        public override void Configure()
         {
             ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(360, 500));
         }

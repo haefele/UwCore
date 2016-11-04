@@ -116,7 +116,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CaliburnMicroCleaned\AssemblySource.cs" />
-    <Compile Include="CaliburnMicro\CaliburnApplication.cs" />
     <Compile Include="CaliburnMicro\INavigationService.cs" />
     <Compile Include="CaliburnMicro\NameTransformer.cs" />
     <Compile Include="CaliburnMicro\RegExHelper.cs" />
