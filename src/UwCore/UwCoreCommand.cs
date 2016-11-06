@@ -4,7 +4,6 @@ using System.Reactive;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Caliburn.Micro.ReactiveUI;
 using ReactiveUI;
 using UwCore.Common;
 
@@ -88,7 +87,7 @@ namespace UwCore
         }
     }
 
-    public class UwCoreCommand<T> : ReactivePropertyChangedBase, ICommand
+    public class UwCoreCommand<T> : UwCorePropertyChangedBase, ICommand
     {
         private readonly ReactiveCommand<T> _innerCommand;
         private bool _isExecuting;

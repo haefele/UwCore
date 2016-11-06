@@ -1,6 +1,6 @@
 using Windows.UI.Xaml;
 using Caliburn.Micro;
-using Caliburn.Micro.ReactiveUI;
+using ReactiveUI;
 using UwCore.Hamburger;
 
 namespace UwCore.Application
@@ -13,7 +13,7 @@ namespace UwCore.Application
 
         ApplicationMode CurrentMode { get; set; }
 
-        ReactiveObservableCollection<HamburgerItem> Actions { get; }
-        ReactiveObservableCollection<HamburgerItem> SecondaryActions { get; } 
+        ReactiveList<HamburgerItem> Actions { get; }
+        ReactiveList<HamburgerItem> SecondaryActions { get; } 
     }
 }

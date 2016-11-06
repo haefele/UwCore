@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 using Windows.UI.Xaml;
 using Caliburn.Micro;
-using Caliburn.Micro.ReactiveUI;
 using Microsoft.HockeyApp;
 using ReactiveUI;
 using UwCore.Application;
@@ -17,7 +16,7 @@ using UwCore.Services.UpdateNotes;
 
 namespace UwCore.Hamburger
 {
-    public class HamburgerViewModel : ReactiveScreen, IApplication
+    public class HamburgerViewModel : UwCoreScreen, IApplication
     {
         private readonly NavigationService _navigationService;
         private readonly IEventAggregator _eventAggregator;
@@ -32,7 +31,7 @@ namespace UwCore.Hamburger
 
         private object _latestViewModel;
 
-        public ReactiveObservableCollection<HamburgerItem> Actions { get; }
+        public ReactiveList<HamburgerItem> Actions { get; }
 
         public HamburgerItem SelectedAction
         {
@@ -40,7 +39,7 @@ namespace UwCore.Hamburger
             set { this.RaiseAndSetIfChanged(ref this._selectedAction, value); }
         }
 
-        public ReactiveObservableCollection<HamburgerItem> SecondaryActions { get; }
+        public ReactiveList<HamburgerItem> SecondaryActions { get; }
 
         public HamburgerItem SelectedSecondaryAction
         {
@@ -118,8 +117,8 @@ namespace UwCore.Hamburger
 
             ((INavigationStep)this._navigationService).Changed += this.OnChanged;
 
-            this.Actions = new ReactiveObservableCollection<HamburgerItem>();
-            this.SecondaryActions = new ReactiveObservableCollection<HamburgerItem>();
+            this.Actions = new ReactiveList<HamburgerItem>();
+            this.SecondaryActions = new ReactiveList<HamburgerItem>();
 
             //Just make sure the selected action is always correct
             //Because it might happen, that we navigate to some view-model and then after that update the actions

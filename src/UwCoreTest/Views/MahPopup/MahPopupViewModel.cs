@@ -1,9 +1,9 @@
 ﻿using System;
-using Caliburn.Micro.ReactiveUI;
+using UwCore;
 
 namespace UwCoreTest.Views.MahPopup
 {
-    public class MahPopupViewModel : ReactiveScreen
+    public class MahPopupViewModel : UwCoreScreen
     {
     }
 }

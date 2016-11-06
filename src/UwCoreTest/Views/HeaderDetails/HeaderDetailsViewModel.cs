@@ -1,8 +1,8 @@
-﻿using Caliburn.Micro.ReactiveUI;
+﻿using UwCore;
 
 namespace UwCoreTest.Views.HeaderDetails
 {
-    public class HeaderDetailsViewModel : ReactiveScreen
+    public class HeaderDetailsViewModel : UwCoreScreen
     {
         protected override void OnInitialize()
         {
