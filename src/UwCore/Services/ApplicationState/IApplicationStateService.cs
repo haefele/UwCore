@@ -20,5 +20,6 @@ namespace UwCore.Services.ApplicationState
         Local,
         Roaming,
         Vault,
+        Temp,
     }
 }
