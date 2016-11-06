@@ -161,6 +161,12 @@ namespace Caliburn.Micro
             var model = GetModel(dependencyObject);
             var context = GetContext(dependencyObject);
 
+            if (model == null)
+            {
+                SetContentProperty(dependencyObject, null);
+                return;
+            }
+
             var view = ViewLocator.LocateForModel(model, dependencyObject, context);
             SetContentProperty(dependencyObject, view);
 
