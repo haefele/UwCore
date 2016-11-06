@@ -16,6 +16,7 @@ namespace UwCore.Services.ApplicationState
         private ConcurrentDictionary<string, string> _localState;
         private ConcurrentDictionary<string, string> _roamingState;
         private ConcurrentDictionary<string, string> _vaultState;
+        private ConcurrentDictionary<string, string> _tempState;
 
         private readonly JsonSerializerSettings _jsonSerializerSettings;
         #endregion
@@ -26,6 +27,7 @@ namespace UwCore.Services.ApplicationState
             this._localState = new ConcurrentDictionary<string, string>();
             this._roamingState = new ConcurrentDictionary<string, string>();
             this._vaultState = new ConcurrentDictionary<string, string>();
+            this._tempState = new ConcurrentDictionary<string, string>();
 
             this._jsonSerializerSettings = new JsonSerializerSettings
             {
@@ -89,6 +91,8 @@ namespace UwCore.Services.ApplicationState
                     return this._roamingState;
                 case ApplicationState.Vault:
                     return this._vaultState;
+                case ApplicationState.Temp:
+                    return this._tempState;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(state), state, null);
             }
