@@ -116,6 +116,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CaliburnMicroCleaned\AssemblySource.cs" />
+    <Compile Include="CaliburnMicro\WeakValueDictionary.cs" />
     <Compile Include="Helpers\CaliburnMicroHelper.cs" />
     <Compile Include="CaliburnMicro\NameTransformer.cs" />
     <Compile Include="CaliburnMicro\RegExHelper.cs" />
@@ -213,6 +214,14 @@
     </Compile>
     <Compile Include="UwCoreCommand.cs" />
     <Compile Include="UwCoreCommandBuilder.cs" />
+    <Compile Include="UwCoreConductor.Collection.AllActive.cs" />
+    <Compile Include="UwCoreConductor.Collection.OneActive.cs" />
+    <Compile Include="UwCoreConductor.cs" />
+    <Compile Include="UwCoreConductorBase.cs" />
+    <Compile Include="UwCoreConductorBaseWithActiveItem.cs" />
+    <Compile Include="UwCorePropertyChangedBase.cs" />
+    <Compile Include="UwCoreScreen.cs" />
+    <Compile Include="UwCoreViewAware.cs" />
     <EmbeddedResource Include="Properties\UwCore.rd.xml" />
   </ItemGroup>
   <ItemGroup>

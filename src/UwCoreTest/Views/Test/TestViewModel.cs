@@ -5,7 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Caliburn.Micro;
-using Caliburn.Micro.ReactiveUI;
 using ReactiveUI;
 using UwCore;
 using UwCore.Application;
@@ -13,11 +12,11 @@ using UwCore.Extensions;
 using UwCore.Logging;
 using UwCore.Services.ApplicationState;
 using UwCore.Services.Loading;
-using INavigationService = UwCore.Services.Navigation.INavigationService;
+using UwCore.Services.Navigation;
 
 namespace UwCoreTest.Views.Test
 {
-    public class TestViewModel : ReactiveScreen
+    public class TestViewModel : UwCoreScreen
     {
         private readonly ILoadingService _loadingService;
         private readonly INavigationService _navigationService;
@@ -50,6 +49,20 @@ namespace UwCoreTest.Views.Test
         private void Log()
         {
             LoggerFactory.GetLogger<TestViewModel>().Debug($"IsExecuting: {this.Test.IsExecuting}, CanExecute: {this.Test.CanExecute}");
+        }
+
+        protected override void RestoreState(IApplicationStateService applicationStateService)
+        {
+            base.RestoreState(applicationStateService);
+
+            int thingy = applicationStateService.Get<int>("Thingy", ApplicationState.Local);
+        }
+
+        protected override void SaveState(IApplicationStateService applicationStateService)
+        {
+            base.SaveState(applicationStateService);
+
+            applicationStateService.Set("Thingy", 123, ApplicationState.Local);
         }
 
         protected override async void OnActivate()
