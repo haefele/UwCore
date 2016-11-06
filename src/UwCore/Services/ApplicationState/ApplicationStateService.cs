@@ -58,6 +58,12 @@ namespace UwCore.Services.ApplicationState
             stateValues.AddOrUpdate(key, valueAsString, (_, __) => valueAsString);
         }
 
+        public bool HasValueFor(string key, ApplicationState state)
+        {
+            var stateValues = this.GetStateValues(state);
+            return stateValues.ContainsKey(key);
+        }
+
         public async Task SaveStateAsync()
         {
             await this.SaveLocalStateAsync();
@@ -216,6 +222,12 @@ namespace UwCore.Services.ApplicationState
             {
                 string fullKey = this.GetFullKey(key);
                 this._parent.Set<T>(fullKey, value, state);
+            }
+
+            public bool HasValueFor(string key, ApplicationState state)
+            {
+                string fullKey = this.GetFullKey(key);
+                return this._parent.HasValueFor(fullKey, state);
             }
 
             public Task SaveStateAsync()
