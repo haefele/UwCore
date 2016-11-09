@@ -115,17 +115,17 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CaliburnMicroCleaned\AssemblySource.cs" />
+    <Compile Include="CaliburnMicro\AssemblySource.cs" />
     <Compile Include="CaliburnMicro\WeakValueDictionary.cs" />
     <Compile Include="Helpers\CaliburnMicroHelper.cs" />
     <Compile Include="CaliburnMicro\NameTransformer.cs" />
     <Compile Include="CaliburnMicro\RegExHelper.cs" />
     <Compile Include="CaliburnMicro\TypeMappingConfiguration.cs" />
-    <Compile Include="CaliburnMicroCleaned\View.cs" />
+    <Compile Include="CaliburnMicro\View.cs" />
     <Compile Include="CaliburnMicro\ViewLocator.cs" />
-    <Compile Include="CaliburnMicroCleaned\ViewModelBinder.cs" />
+    <Compile Include="CaliburnMicro\ViewModelBinder.cs" />
     <Compile Include="CaliburnMicro\ViewModelLocator.cs" />
-    <Compile Include="CaliburnMicroCleaned\UwCorePlatformProvider.cs" />
+    <Compile Include="CaliburnMicro\UwCorePlatformProvider.cs" />
     <Compile Include="Common\VisualTreeHelperEx.cs" />
     <Compile Include="Controls\PopupOverlayClosingEventArgs.cs" />
     <Compile Include="Events\AutoSubscribeEventsAttribute.cs" />
