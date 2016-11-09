@@ -30,7 +30,7 @@ namespace UwCore.Services.Navigation
         public void Navigate(Type viewModelType, Dictionary<string, object> parameter = null, string context = null)
         {
             var viewModel = IoC.GetInstance(viewModelType, null);
-            viewModel.InjectValues(parameter);
+            ParametersHelper.InjectParameter(viewModel, parameter);
             
             if (this._popupOverlay.Show())
             {

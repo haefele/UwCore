@@ -191,6 +191,7 @@
     <Compile Include="Services\Loading\LoadingService.cs" />
     <Compile Include="Services\Navigation\IAdvancedNavigationService.cs" />
     <Compile Include="Services\Navigation\IAdvancedPopupNavigationService.cs" />
+    <Compile Include="Services\Navigation\ParametersHelper.cs" />
     <Compile Include="Services\Navigation\Stack\INavigationStack.cs" />
     <Compile Include="Services\Navigation\Stack\INavigationStep.cs" />
     <Compile Include="Services\Navigation\IPopupNavigationService.cs" />

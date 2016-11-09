@@ -147,15 +147,15 @@ namespace UwCore.Hamburger
             }
         }
 
-        internal void UpdateSelectedAction()
+        private void UpdateSelectedAction()
         {
             var selectedAction = this.Actions
                 .OfType<NavigatingHamburgerItem>()
-                .FirstOrDefault(f => f.ViewModelType.IsInstanceOfType(this._latestViewModel) && this._latestViewModel.AreValuesInjected(f.Parameters));
+                .FirstOrDefault(f => f.ViewModelType.IsInstanceOfType(this._latestViewModel) && ParametersHelper.AreParameterInjected(this._latestViewModel, f.Parameters));
 
             var selectedSecondaryAction = this.SecondaryActions
                 .OfType<NavigatingHamburgerItem>()
-                .FirstOrDefault(f => f.ViewModelType.IsInstanceOfType(this._latestViewModel) && this._latestViewModel.AreValuesInjected(f.Parameters));
+                .FirstOrDefault(f => f.ViewModelType.IsInstanceOfType(this._latestViewModel) && ParametersHelper.AreParameterInjected(this._latestViewModel, f.Parameters));
 
             if (selectedAction != null || selectedSecondaryAction != null)
             {
