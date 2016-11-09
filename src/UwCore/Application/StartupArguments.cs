@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Windows.Foundation;
-using Caliburn.Micro;
 using UwCore.Extensions;
 
 namespace UwCore.Application

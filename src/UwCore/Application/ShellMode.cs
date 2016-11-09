@@ -2,9 +2,9 @@
 
 namespace UwCore.Application
 {
-    public abstract class ApplicationMode
+    public abstract class ShellMode
     {
-        public IApplication Application { get; set; }
+        public IShell Shell { get; set; }
 
         internal async Task Enter()
         {

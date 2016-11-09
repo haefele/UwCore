@@ -66,13 +66,13 @@ namespace UwCore.Application
             this._container.Instance((ILoadingService)new LoadingService(view.LoadingOverlay));
 
             var viewModel = new HamburgerViewModel(navigationService, IoC.Get<IEventAggregator>(), IoC.Get<IHockeyClient>(), IoC.Get<IUpdateNotesService>());
-            this._container.Instance((IApplication)viewModel);
+            this._container.Instance((IShell)viewModel);
 
-            this.CustomizeApplication(viewModel);
+            this.CustomizeShell(viewModel);
 
             viewModel.CurrentMode = this.GetCurrentMode();
 
-            var customStartup = viewModel.CurrentMode as ICustomStartupApplicationMode;
+            var customStartup = viewModel.CurrentMode as ICustomStartupShellMode;
             customStartup?.HandleCustomStartup(args.TileId, args.Arguments);
 
             ViewModelBinder.Bind(viewModel, view, null);
@@ -299,7 +299,7 @@ namespace UwCore.Application
             
         }
 
-        public virtual void CustomizeApplication(IApplication application)
+        public virtual void CustomizeShell(IShell shell)
         {
             
         }
@@ -330,7 +330,7 @@ namespace UwCore.Application
             yield return this.GetType().GetTypeInfo().Assembly;
         }
 
-        public abstract ApplicationMode GetCurrentMode();
+        public abstract ShellMode GetCurrentMode();
         public abstract string GetErrorTitle();
         public abstract string GetErrorMessage();
         public abstract Type GetCommonExceptionType();
