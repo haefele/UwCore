@@ -54,7 +54,7 @@ namespace UwCoreTest
 
         public override IEnumerable<Type> GetApplicationModeTypes()
         {
-            yield return typeof(NormalApplicationMode);
+            yield return typeof(NormalShellMode);
         }
 
         public override IEnumerable<Type> GetServiceTypes()
@@ -63,17 +63,17 @@ namespace UwCoreTest
             yield return typeof(MyService);
         }
 
-        public override ApplicationMode GetCurrentMode()
+        public override ShellMode GetCurrentMode()
         {
-            return IoC.Get<NormalApplicationMode>();
+            return IoC.Get<NormalShellMode>();
         }
 
-        public override void CustomizeApplication(IApplication application)
+        public override void CustomizeShell(IShell shell)
         {
-            base.CustomizeApplication(application);
+            base.CustomizeShell(shell);
             
-            application.Theme = ElementTheme.Light;
-            application.HeaderDetailsViewModel = IoC.Get<HeaderDetailsViewModel>();
+            shell.Theme = ElementTheme.Light;
+            shell.HeaderDetailsViewModel = IoC.Get<HeaderDetailsViewModel>();
         }
         
         public override void Configure()

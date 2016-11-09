@@ -1,6 +1,6 @@
 ﻿namespace UwCore.Application
 {
-    public interface ICustomStartupApplicationMode
+    public interface ICustomStartupShellMode
     {
         void HandleCustomStartup(string tileId, string arguments);
     }

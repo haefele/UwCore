@@ -5,13 +5,13 @@ using UwCore.Hamburger;
 
 namespace UwCore.Application
 {
-    public interface IApplication
+    public interface IShell
     {
         object HeaderDetailsViewModel { get; set; }
 
         ElementTheme Theme { get; set; }
 
-        ApplicationMode CurrentMode { get; set; }
+        ShellMode CurrentMode { get; set; }
 
         ReactiveList<HamburgerItem> Actions { get; }
         ReactiveList<HamburgerItem> SecondaryActions { get; } 

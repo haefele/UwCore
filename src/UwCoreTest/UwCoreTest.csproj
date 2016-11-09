@@ -95,7 +95,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ApplicationModes\NormalApplicationMode.cs" />
+    <Compile Include="ApplicationModes\NormalShellMode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Views\HeaderDetails\HeaderDetailsView.xaml.cs">
       <DependentUpon>HeaderDetailsView.xaml</DependentUpon>

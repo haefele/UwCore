@@ -26,7 +26,7 @@ namespace UwCoreTest.Views.Test
 
         private readonly ILoadingService _loadingService;
         private readonly INavigationService _navigationService;
-        private readonly IApplication _application;
+        private readonly IShell _shell;
 
         private readonly ObservableAsPropertyHelper<string> _someUnitHelper;
         
@@ -36,11 +36,11 @@ namespace UwCoreTest.Views.Test
 
         public UwCoreCommand<string> Test { get; }
 
-        public TestViewModel(ILoadingService loadingService, INavigationService navigationService, IApplication application)
+        public TestViewModel(ILoadingService loadingService, INavigationService navigationService, IShell shell)
         {
             this._loadingService = loadingService;
             this._navigationService = navigationService;
-            this._application = application;
+            this._shell = shell;
 
             this.DisplayName = "Statistics from 9/1/2016 to 9/30/2016";
             
@@ -87,17 +87,17 @@ namespace UwCoreTest.Views.Test
         {
             await Task.Delay(TimeSpan.FromSeconds(2), token);
 
-            if (this._application.Theme == ElementTheme.Default)
+            if (this._shell.Theme == ElementTheme.Default)
             {
-                this._application.Theme = ElementTheme.Dark;
+                this._shell.Theme = ElementTheme.Dark;
             }
-            else if (this._application.Theme == ElementTheme.Dark)
+            else if (this._shell.Theme == ElementTheme.Dark)
             {
-                this._application.Theme = ElementTheme.Light;
+                this._shell.Theme = ElementTheme.Light;
             }
-            else if (this._application.Theme == ElementTheme.Light)
+            else if (this._shell.Theme == ElementTheme.Light)
             {
-                this._application.Theme = ElementTheme.Default;
+                this._shell.Theme = ElementTheme.Default;
             }
 
             return string.Empty;

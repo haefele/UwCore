@@ -12,12 +12,12 @@ using UwCoreTest.Views.Test;
 namespace UwCoreTest.ApplicationModes
 {
     [AutoSubscribeEvents]
-    public class NormalApplicationMode : ApplicationMode, ICustomStartupApplicationMode, IHandle<string>
+    public class NormalShellMode : ShellMode, ICustomStartupShellMode, IHandle<string>
     {
         private readonly NavigatingHamburgerItem _testHamburgerItem;
         private readonly NavigatingHamburgerItem _test2HamburgerItem;
 
-        public NormalApplicationMode()
+        public NormalShellMode()
         {
             this._testHamburgerItem = new NavigatingHamburgerItem("Test", Symbol.Contact, typeof(TestViewModel));
             this._testHamburgerItem.AddParameter<TestViewModelParams>(f => f.SomeId, 15);
@@ -37,16 +37,16 @@ namespace UwCoreTest.ApplicationModes
         {
             await base.AddActions();
 
-            this.Application.Actions.Add(this._testHamburgerItem);
-            this.Application.Actions.Add(this._test2HamburgerItem);
+            this.Shell.Actions.Add(this._testHamburgerItem);
+            this.Shell.Actions.Add(this._test2HamburgerItem);
         }
 
         protected override async Task RemoveActions()
         {
             await base.RemoveActions();
 
-            this.Application.Actions.Remove(this._testHamburgerItem);
-            this.Application.Actions.Remove(this._test2HamburgerItem);
+            this.Shell.Actions.Remove(this._testHamburgerItem);
+            this.Shell.Actions.Remove(this._test2HamburgerItem);
         }
 
         public void HandleCustomStartup(string tileId, string arguments)

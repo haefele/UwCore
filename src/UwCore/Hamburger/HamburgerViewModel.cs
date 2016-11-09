@@ -16,7 +16,7 @@ using UwCore.Services.UpdateNotes;
 
 namespace UwCore.Hamburger
 {
-    public class HamburgerViewModel : UwCoreScreen, IApplication
+    public class HamburgerViewModel : UwCoreScreen, IShell
     {
         private readonly NavigationService _navigationService;
         private readonly IEventAggregator _eventAggregator;
@@ -26,7 +26,7 @@ namespace UwCore.Hamburger
         private HamburgerItem _selectedAction;
         private HamburgerItem _selectedSecondaryAction;
         private ElementTheme _theme;
-        private ApplicationMode _currentMode;
+        private ShellMode _currentMode;
         private object _headerDetailsViewModel;
 
         private object _latestViewModel;
@@ -53,7 +53,7 @@ namespace UwCore.Hamburger
             set { this.RaiseAndSetIfChanged(ref this._theme, value); }
         }
 
-        public ApplicationMode CurrentMode
+        public ShellMode CurrentMode
         {
             get { return this._currentMode; }
             set
@@ -64,16 +64,16 @@ namespace UwCore.Hamburger
                 if (this._currentMode != null)
                 {
                     this._currentMode.Leave().Wait();
-                    this._eventAggregator.PublishOnCurrentThread(new ApplicationModeLeft(this._currentMode));
+                    this._eventAggregator.PublishOnCurrentThread(new ShellModeLeft(this._currentMode));
                 }
 
                 this._currentMode = value;
-                this._currentMode.Application = this;
+                this._currentMode.Shell = this;
 
                 this._currentMode.Enter().Wait();
-                this._eventAggregator.PublishOnCurrentThread(new ApplicationModeEntered(this._currentMode));
+                this._eventAggregator.PublishOnCurrentThread(new ShellModeEntered(this._currentMode));
 
-                this._hockeyClient.TrackEvent("ApplicationModeChanged", new Dictionary<string, string> { ["ApplicationMode"] = this._currentMode.GetType().Name });
+                this._hockeyClient.TrackEvent("ShellModeChanged", new Dictionary<string, string> { ["ShellMode"] = this._currentMode.GetType().Name });
                 
                 this._navigationService.ClearBackStack();
 
