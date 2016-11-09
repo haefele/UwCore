@@ -16,17 +16,23 @@ using UwCore.Services.Navigation;
 
 namespace UwCoreTest.Views.Test
 {
+    public class TestViewModelParams
+    {
+        public int SomeId { get; set; }
+    }
+
     public class TestViewModel : UwCoreScreen
     {
+
         private readonly ILoadingService _loadingService;
         private readonly INavigationService _navigationService;
         private readonly IApplication _application;
 
         private readonly ObservableAsPropertyHelper<string> _someUnitHelper;
-
-        public int SomeId { get; set; }
-
+        
         public string SomeUnit => this._someUnitHelper.Value;
+
+        public TestViewModelParams Parameters { get; set; }
 
         public UwCoreCommand<string> Test { get; }
 

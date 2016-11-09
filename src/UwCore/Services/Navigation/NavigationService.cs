@@ -79,7 +79,7 @@ namespace UwCore.Services.Navigation
             if (viewModel == null)
                 return;
 
-            viewModel.InjectValues(e.Parameter as IDictionary<string, object>);
+            ParametersHelper.InjectParameter(viewModel, e.Parameter as IDictionary<string, object>);
             ViewModelBinder.Bind(viewModel, e.Content as DependencyObject, null);
             
             ScreenExtensions.TryActivate(viewModel);
