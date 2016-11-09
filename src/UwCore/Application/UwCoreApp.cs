@@ -249,7 +249,7 @@ namespace UwCore.Application
             }
 
             //ApplicationModes
-            var applicationModeTypes = this.GetApplicationModeTypes();
+            var applicationModeTypes = this.GetShellModeTypes();
             foreach (var applicationModeType in applicationModeTypes)
             {
                 this._container.RegisterPerRequest(applicationModeType, null, applicationModeType);
@@ -284,7 +284,7 @@ namespace UwCore.Application
             yield break;
         }
 
-        public virtual IEnumerable<Type> GetApplicationModeTypes()
+        public virtual IEnumerable<Type> GetShellModeTypes()
         {
             yield break;
         }
