@@ -52,7 +52,7 @@ namespace UwCoreTest
             yield return typeof(MahPopupViewModel);
         }
 
-        public override IEnumerable<Type> GetApplicationModeTypes()
+        public override IEnumerable<Type> GetShellModeTypes()
         {
             yield return typeof(NormalShellMode);
         }
