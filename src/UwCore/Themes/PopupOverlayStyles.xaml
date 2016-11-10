@@ -25,7 +25,7 @@
                                         <SolidColorBrush x:Key="BorderBrush"
                                                          Color="#797979" />
                                         <SolidColorBrush x:Key="OverlayBackgroundBrush"
-                                                         Color="White" />
+                                                         Color="Gray" />
                                     </ResourceDictionary>
                                 </ResourceDictionary.ThemeDictionaries>
 

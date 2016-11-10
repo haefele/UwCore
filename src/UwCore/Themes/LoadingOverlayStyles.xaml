@@ -17,7 +17,7 @@
                                         <SolidColorBrush x:Key="OverlayBackgroundBrush" Color="Black" />
                                     </ResourceDictionary>
                                     <ResourceDictionary x:Key="Dark">
-                                        <SolidColorBrush x:Key="OverlayBackgroundBrush" Color="White" />
+                                        <SolidColorBrush x:Key="OverlayBackgroundBrush" Color="Gray" />
                                     </ResourceDictionary>
                                 </ResourceDictionary.ThemeDictionaries>
                             
