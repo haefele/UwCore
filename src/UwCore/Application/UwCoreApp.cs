@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -9,6 +10,7 @@ using Windows.ApplicationModel.VoiceCommands;
 using Windows.Storage;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
+using Autofac;
 using Caliburn.Micro;
 using Microsoft.HockeyApp;
 using UwCore.Application.Events;
@@ -31,7 +33,7 @@ namespace UwCore.Application
     {
         #region Fields
         private bool _isInitialized;
-        private SimpleContainer _container;
+        private IContainer _container;
         #endregion
 
         #region Properties
@@ -49,20 +51,32 @@ namespace UwCore.Application
             
             await this.Initialize();
 
+            var builder = new ContainerBuilder();
+
             var view = new HamburgerView();
             var popupNavigationService = new PopupNavigationService(view.PopupOverlay);
-            var navigationService = new NavigationService(view.ContentFrame, this._container.GetInstance<IEventAggregator>(), popupNavigationService);
+            var navigationService = new NavigationService(view.ContentFrame, this._container.Resolve<IEventAggregator>(), popupNavigationService);
 
             var stack = new NavigationStack();
             stack.AddStep(navigationService);
             stack.AddStep(popupNavigationService);
 
-            this._container.Instance((INavigationStack)stack);
-            this._container.Instance((INavigationService)navigationService);
-            this._container.Instance((ILoadingService)new LoadingService(view.LoadingOverlay));
+            builder.RegisterInstance(stack)
+                .As<INavigationStack>()
+                .SingleInstance();
+            builder.RegisterInstance(navigationService)
+                .As<INavigationService>()
+                .SingleInstance();
+            builder.RegisterInstance(new LoadingService(view.LoadingOverlay))
+                .As<ILoadingService>()
+                .SingleInstance();
 
             var viewModel = new HamburgerViewModel(navigationService, IoC.Get<IEventAggregator>(), IoC.Get<IHockeyClient>(), IoC.Get<IUpdateNotesService>());
-            this._container.Instance((IShell)viewModel);
+            builder.RegisterInstance(viewModel)
+                .As<IShell>()
+                .SingleInstance();
+
+            builder.Update(this._container);
 
             this.CustomizeShell(viewModel);
 
@@ -157,43 +171,14 @@ namespace UwCore.Application
             this.Configure();
 
             //Setup IoC
-            IoC.GetInstance = (service, key) =>
-            {
-                var instance = this._container.GetInstance(service, key);
-                this.TryAutoSubscribeToEventAggregator(instance);
-                return instance;
-            };
-            IoC.GetAllInstances = service =>
-            {
-                var instances = this._container.GetAllInstances(service).ToList();
-                this.TryAutoSubscribeToEventAggregator(instances);
-                return instances;
-            };
-            IoC.BuildUp = instance =>
-            {
-                this._container.BuildUp(instance);
-                this.TryAutoSubscribeToEventAggregator(instance);
-            };
+            IoC.GetInstance = (service, key) => this._container.IsRegistered(service) 
+                ? this._container.Resolve(service) 
+                : Activator.CreateInstance(service);
+            IoC.GetAllInstances = service => ((IEnumerable) this._container.Resolve(typeof(IEnumerable<>).MakeGenericType(service))).OfType<object>();
+            IoC.BuildUp = instance => this._container.InjectUnsetProperties(instance);
             
             //Restore state
             await IoC.Get<IApplicationStateService>().RestoreStateAsync();
-        }
-
-        private void TryAutoSubscribeToEventAggregator(params object[] instances)
-        {
-            foreach (object instance in instances)
-            {
-                if (instance == null)
-                    continue;
-
-                TypeInfo typeInfo = instance.GetType().GetTypeInfo();
-
-                if (typeInfo.IsDefined(typeof(AutoSubscribeEventsAttribute)))
-                    this._container.GetInstance<IEventAggregator>().Subscribe(instance);
-
-                if (instance is IScreen && typeInfo.IsDefined(typeof(AutoSubscribeEventsForScreenAttribute)))
-                    this._container.GetInstance<IEventAggregator>().SubscribeScreen((IScreen)instance);
-            }
         }
         #endregion
         
@@ -212,45 +197,79 @@ namespace UwCore.Application
 
         private void ConfigureContainer()
         {
-            this._container = new SimpleContainer();
+            var builder = new ContainerBuilder();
+            builder.RegisterCallback(x =>
+            {
+                x.Registered += (s, e) =>
+                {
+                    e.ComponentRegistration.Activated += (ss, ee) =>
+                    {
+                        if (ee.Instance == null)
+                            return;
+
+                        TypeInfo typeInfo = ee.Instance.GetType().GetTypeInfo();
+
+                        if (typeInfo.IsDefined(typeof(AutoSubscribeEventsAttribute)))
+                            this._container.Resolve<IEventAggregator>().Subscribe(ee.Instance);
+
+                        if (ee.Instance is IScreen && typeInfo.IsDefined(typeof(AutoSubscribeEventsForScreenAttribute)))
+                            this._container.Resolve<IEventAggregator>().SubscribeScreen((IScreen)ee.Instance);
+                    };
+                };
+            });
 
             //Container itself
-            this._container.Instance(this._container);
+            builder.Register(cc => this._container)
+                .As<IContainer>()
+                .SingleInstance();
 
             //Event aggregator
-            this._container.Singleton<IEventAggregator, EventAggregator>();
+            builder.RegisterType<EventAggregator>()
+                .As<IEventAggregator>()
+                .SingleInstance();
 
             //HockeyApp
-            this._container.Instance(HockeyClient.Current);
+            builder.RegisterInstance(HockeyClient.Current)
+                .As<IHockeyClient>()
+                .SingleInstance();
 
             //Dialog
-            this._container.Singleton<IDialogService, DialogService>();
+            builder.RegisterType<DialogService>()
+                .As<IDialogService>()
+                .SingleInstance();
 
             //Exception
-            var dialogService = this._container.GetInstance<IDialogService>();
-            var commonExceptionType = this.GetCommonExceptionType();
-            var errorMessage = this.GetErrorMessage();
-            var errorTitle = this.GetErrorTitle();
-            this._container.Instance((IExceptionHandler)new ExceptionHandler(dialogService, this._container.GetInstance<IHockeyClient>(), commonExceptionType, errorMessage, errorTitle));
+            builder.Register(cc => new ExceptionHandler(
+                                       cc.Resolve<IDialogService>(), 
+                                       cc.Resolve<IHockeyClient>(), 
+                                       this.GetCommonExceptionType(), 
+                                       this.GetErrorMessage(), 
+                                       this.GetErrorTitle()))
+                .As<IExceptionHandler>()
+                .SingleInstance();
 
             //ApplicationState
-            this._container.Singleton<IApplicationStateService, ApplicationStateService>();
+            builder.RegisterType<ApplicationStateService>()
+                .As<IApplicationStateService>()
+                .SingleInstance();
 
             //UpdateNotes
-            this._container.Singleton<IUpdateNotesService, UpdateNotesService>();
+            builder.RegisterType<UpdateNotesService>()
+                .As<IUpdateNotesService>()
+                .SingleInstance();
 
             //ViewModels
             var viewModelTypes = this.GetViewModelTypes();
             foreach (var viewModelType in viewModelTypes)
             {
-                this._container.RegisterPerRequest(viewModelType, null, viewModelType);
+                builder.RegisterType(viewModelType);
             }
 
             //ApplicationModes
             var applicationModeTypes = this.GetShellModeTypes();
             foreach (var applicationModeType in applicationModeTypes)
             {
-                this._container.RegisterPerRequest(applicationModeType, null, applicationModeType);
+                builder.RegisterType(applicationModeType);
             }
 
             //Services
@@ -263,11 +282,15 @@ namespace UwCore.Application
                 var serviceType = serviceTypes[i];
                 var implementationType = serviceTypes[i + 1];
 
-                this._container.RegisterSingleton(serviceType, null, implementationType);
+                builder.RegisterType(implementationType)
+                    .As(serviceType)
+                    .SingleInstance();
             }
 
             //Other
-            this.ConfigureContainer(this._container);
+            this.ConfigureContainer(builder);
+
+            this._container = builder.Build();
         }
 
         private void ConfigureCaliburnMicro()
@@ -293,7 +316,7 @@ namespace UwCore.Application
             yield break;
         }
 
-        public virtual void ConfigureContainer(SimpleContainer container)
+        public virtual void ConfigureContainer(ContainerBuilder builder)
         {
             
         }
