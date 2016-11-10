@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Reflection;
 using System.Threading.Tasks;
+using Caliburn.Micro;
 using Microsoft.HockeyApp;
 using UwCore.Extensions;
-using UwCore.Logging;
 using UwCore.Services.Dialog;
 
 namespace UwCore.Services.ExceptionHandler
 {
     public class ExceptionHandler : IExceptionHandler
     {
-        private static readonly Logger Logger = LoggerFactory.GetLogger<ExceptionHandler>();
+        private static readonly Caliburn.Micro.ILog Logger = LogManager.GetLog(typeof(ExceptionHandler));
 
         private readonly IDialogService _dialogService;
         private readonly IHockeyClient _hockeyClient;
@@ -35,7 +35,7 @@ namespace UwCore.Services.ExceptionHandler
             }
             else
             {
-                Logger.Error(exception, "Handled exception occurred.");
+                Logger.Error(exception);
                 this._hockeyClient.TrackException(exception);
 
                 await this._dialogService.ShowAsync(this._errorMessage, this._errorTitle);

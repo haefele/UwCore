@@ -54,7 +54,7 @@ namespace UwCoreTest.Views.Test
         
         private void Log()
         {
-            LoggerFactory.GetLogger<TestViewModel>().Debug($"IsExecuting: {this.Test.IsExecuting}, CanExecute: {this.Test.CanExecute}");
+            LogManager.GetLog(typeof(TestViewModel)).Info($"IsExecuting: {this.Test.IsExecuting}, CanExecute: {this.Test.CanExecute}");
         }
 
         protected override void RestoreState(IApplicationStateService applicationStateService)
