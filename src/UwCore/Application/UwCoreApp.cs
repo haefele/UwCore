@@ -29,10 +29,6 @@ namespace UwCore.Application
 {
     public abstract class UwCoreApp : Windows.UI.Xaml.Application
     {
-        #region Logger
-        private static readonly Logger Logger = LoggerFactory.GetLogger<UwCoreApp>();
-        #endregion
-
         #region Fields
         private bool _isInitialized;
         private SimpleContainer _container;
@@ -109,7 +105,7 @@ namespace UwCore.Application
 
         private void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            Logger.Error(e.Exception, "Unhandled exception occured.");
+            LogManager.GetLog(typeof(UwCoreApp)).Error(e.Exception);
         }
         #endregion
 
@@ -208,7 +204,9 @@ namespace UwCore.Application
 
             if (string.IsNullOrWhiteSpace(appId) == false && this.IsHockeyAppEnabled())
             {
-                HockeyClient.Current.Configure(appId);
+                HockeyClient.Current
+                    .Configure(appId)
+                    .SetExceptionDescriptionLoader(f => string.Join(Environment.NewLine, InMemoryLogMessages.GetLogs()));
             }
         }
 
@@ -274,7 +272,8 @@ namespace UwCore.Application
 
         private void ConfigureCaliburnMicro()
         {
-            LogManager.GetLog = type => new CaliburnMicroLoggingAdapter(LoggerFactory.GetLogger(type));
+            HockeyLogManager.GetLog = type => new LogAdapter(type);
+            LogManager.GetLog = type => new LogAdapter(type);
         }
         #endregion
 

@@ -2,7 +2,6 @@
   "dependencies": {
     "Caliburn.Micro.Core": "3.0.1",
     "HockeySDK.UWP": "4.1.5",
-    "MetroLog": "1.0.1",
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.2.2",
     "Microsoft.Toolkit.Uwp.UI.Animations": "1.1.0",
     "Newtonsoft.Json": "9.0.1",

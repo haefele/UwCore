@@ -175,10 +175,8 @@
     </Compile>
     <Compile Include="Hamburger\HamburgerViewModel.cs" />
     <Compile Include="Helpers\ConvertHelper.cs" />
-    <Compile Include="Logging\CaliburnMicroLoggingAdapter.cs" />
-    <Compile Include="Logging\Logger.cs" />
-    <Compile Include="Logging\LoggerExtensions.cs" />
-    <Compile Include="Logging\LoggerFactory.cs" />
+    <Compile Include="Logging\InMemoryLogMessages.cs" />
+    <Compile Include="Logging\LogAdapter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ApplicationState\ApplicationState.cs" />
     <Compile Include="Services\ApplicationState\ApplicationStateService.cs" />
