@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using UwCore.Extensions;
 
@@ -25,6 +26,9 @@ namespace UwCore.Services.Navigation
 
         public static void InjectParameter(object self, IDictionary<string, object> values)
         {
+            if (values.Any() == false)
+                return;
+
             var parametersProperty = GetParametersProperty(self);
             if (parametersProperty != null)
             {
@@ -41,6 +45,9 @@ namespace UwCore.Services.Navigation
 
         public static bool AreParameterInjected(object self, IDictionary<string, object> values)
         {
+            if (values.Any() == false)
+                return false;
+
             var parametersProperty = GetParametersProperty(self);
 
             if (parametersProperty != null)
