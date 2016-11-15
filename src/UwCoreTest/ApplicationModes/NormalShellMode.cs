@@ -20,7 +20,7 @@ namespace UwCoreTest.ApplicationModes
         public NormalShellMode()
         {
             this._testHamburgerItem = new NavigatingHamburgerItem("Test", Symbol.Contact, typeof(TestViewModel));
-            this._testHamburgerItem.AddParameter<TestViewModelParams>(f => f.SomeId, 15);
+            this._testHamburgerItem.AddParameter<TestViewModel>(f => f.Parameters.SomeId, 15);
 
             this._test2HamburgerItem = new NavigatingHamburgerItem("Test", Symbol.Contact, typeof(TestViewModel));
             this._test2HamburgerItem.AddParameter<TestViewModelParams>(f => f.SomeId, 13);
