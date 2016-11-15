@@ -26,7 +26,7 @@ namespace UwCore.Services.Navigation
 
         public static void InjectParameter(object self, IDictionary<string, object> values)
         {
-            if (values.Any() == false)
+            if (values == null || values.Any() == false)
                 return;
 
             var parametersProperty = GetParametersProperty(self);
@@ -45,8 +45,8 @@ namespace UwCore.Services.Navigation
 
         public static bool AreParameterInjected(object self, IDictionary<string, object> values)
         {
-            if (values.Any() == false)
-                return false;
+            if (values == null || values.Any() == false)
+                return true;
 
             var parametersProperty = GetParametersProperty(self);
 
