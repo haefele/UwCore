@@ -64,8 +64,8 @@ namespace UwCore.Hamburger
         {
             bool isBlurActive = this.PopupOverlay.IsOpen || this.LoadingOverlay.IsActive;
             double blueAmount = isBlurActive ? 3 : 0;
-
-            this.Content.Blur(blueAmount, duration:200).Start();
+            
+            this.Content.Blur(blueAmount, duration:200)?.Start();
         }
     }
 }
