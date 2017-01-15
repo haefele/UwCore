@@ -62,12 +62,12 @@ namespace UwCore
             return this;
         }
 
-        protected ReactiveCommand<T> CreateInnerCommand()
+        protected ReactiveCommand<object, T> CreateInnerCommand()
         {
-            ReactiveCommand<T> innerCommand = ReactiveCommand.CreateAsyncTask(
-                this._canExecute ?? Observable.Return(true),
-                async (_, token) => await this._execute(token));
-            
+            ReactiveCommand<object, T> innerCommand = ReactiveCommand.CreateFromTask(
+                async (object _, CancellationToken token) => await this._execute(token),
+                this._canExecute ?? Observable.Return(true));
+
             if (this._loadingServiceMessage != null)
                 AttachLoadingService(innerCommand, this._loadingServiceMessage);
 
@@ -86,7 +86,7 @@ namespace UwCore
             return new UwCoreCommand<T>(innerCommand);
         }
 
-        private static void AttachLoadingService(IReactiveCommand innerCommand, Func<string> message)
+        private static void AttachLoadingService(ReactiveCommand innerCommand, Func<string> message)
         {
             Guard.NotNull(innerCommand, nameof(innerCommand));
             Guard.NotNull(message, nameof(message));
@@ -105,7 +105,7 @@ namespace UwCore
             });
         }
 
-        private static void AttachExceptionHandler(IReactiveCommand innerCommand)
+        private static void AttachExceptionHandler(ReactiveCommand innerCommand)
         {
             Guard.NotNull(innerCommand, nameof(innerCommand));
 
@@ -113,7 +113,7 @@ namespace UwCore
             innerCommand.ThrownExceptions.Subscribe(async e => await exceptionHandler.HandleAsync(e));
         }
 
-        private static void TrackEvent(IReactiveCommand innerCommand, string eventName)
+        private static void TrackEvent(ReactiveCommand innerCommand, string eventName)
         {
             Guard.NotNull(innerCommand, nameof(innerCommand));
             Guard.NotNullOrWhiteSpace(eventName, nameof(eventName));
