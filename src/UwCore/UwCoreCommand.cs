@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 using System.Reactive;
+using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -89,17 +90,17 @@ namespace UwCore
 
     public class UwCoreCommand<T> : UwCorePropertyChangedBase, ICommand
     {
-        private readonly ReactiveCommand<T> _innerCommand;
+        private readonly ReactiveCommand<object, T> _innerCommand;
         private bool _isExecuting;
         private bool _canExecute;
 
-        internal UwCoreCommand(ReactiveCommand<T> innerCommand)
+        internal UwCoreCommand(ReactiveCommand<object, T> innerCommand)
         {
             Guard.NotNull(innerCommand, nameof(innerCommand));
 
             this._innerCommand = innerCommand;
             this._innerCommand.IsExecuting.Subscribe(isExecuting => this.IsExecuting = isExecuting);
-            this._innerCommand.CanExecuteObservable.Subscribe(canExecute => this.CanExecute = canExecute);
+            this._innerCommand.CanExecute.Subscribe(canExecute => this.CanExecute = canExecute);
         }
 
         public bool IsExecuting
@@ -118,7 +119,7 @@ namespace UwCore
         {
             try
             {
-                return await this._innerCommand.ExecuteAsyncTask();
+                return await this._innerCommand.Execute();
             }
             catch
             {
