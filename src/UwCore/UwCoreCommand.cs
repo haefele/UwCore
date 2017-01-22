@@ -91,28 +91,26 @@ namespace UwCore
     public class UwCoreCommand<T> : UwCorePropertyChangedBase, ICommand
     {
         private readonly ReactiveCommand<object, T> _innerCommand;
-        private bool _isExecuting;
-        private bool _canExecute;
+        private readonly ObservableAsPropertyHelper<bool> _isExecutingHelper;
+        private readonly ObservableAsPropertyHelper<bool> _canExecuteHelper;
 
         internal UwCoreCommand(ReactiveCommand<object, T> innerCommand)
         {
             Guard.NotNull(innerCommand, nameof(innerCommand));
 
             this._innerCommand = innerCommand;
-            this._innerCommand.IsExecuting.Subscribe(isExecuting => this.IsExecuting = isExecuting);
-            this._innerCommand.CanExecute.Subscribe(canExecute => this.CanExecute = canExecute);
+            this._innerCommand.IsExecuting.ToProperty(this, f => f.IsExecuting, out this._isExecutingHelper);
+            this._innerCommand.CanExecute.ToProperty(this, f => f.CanExecute, out this._canExecuteHelper);
         }
 
         public bool IsExecuting
         {
-            get { return this._isExecuting; }
-            private set { this.RaiseAndSetIfChanged(ref this._isExecuting, value); }
+            get { return this._isExecutingHelper.Value ; }
         }
 
         public bool CanExecute
         {
-            get { return this._canExecute; }
-            private set { this.RaiseAndSetIfChanged(ref this._canExecute, value); }
+            get { return this._canExecuteHelper.Value; }
         }
 
         public async Task<T> ExecuteAsync()
@@ -134,10 +132,6 @@ namespace UwCore
             Guard.NotNull(property, nameof(property));
 
             this._innerCommand.ToProperty(source, property, out result);
-            
-            //Make sure the property is loaded
-            source.WhenAnyValue(property)
-                .Subscribe(_ => { });
         }
 
         #region Implementation of ICommand
