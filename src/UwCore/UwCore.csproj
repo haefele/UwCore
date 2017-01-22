@@ -129,7 +129,6 @@
     <Compile Include="CaliburnMicro\ViewModelBinder.cs" />
     <Compile Include="CaliburnMicro\ViewModelLocator.cs" />
     <Compile Include="CaliburnMicro\UwCorePlatformProvider.cs" />
-    <Compile Include="Common\VisualTreeHelperEx.cs" />
     <Compile Include="Controls\PopupOverlayClosingEventArgs.cs" />
     <Compile Include="Events\AutoSubscribeEventsAttribute.cs" />
     <Compile Include="Events\AutoSubscribeEventsForScreenAttribute.cs" />
