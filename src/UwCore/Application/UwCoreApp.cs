@@ -47,7 +47,14 @@ namespace UwCore.Application
 
             if (args.PreviousExecutionState == ApplicationExecutionState.Running ||
                 args.PreviousExecutionState == ApplicationExecutionState.Suspended)
+            {
+                var hamburgerView = (HamburgerView)Window.Current.Content;
+
+                var custom = hamburgerView.ViewModel.CurrentMode as ICustomStartupShellMode;
+                custom?.HandleCustomStartup(args.TileId, args.Arguments);
+
                 return;
+            }
             
             await this.Initialize();
 
@@ -97,8 +104,8 @@ namespace UwCore.Application
             base.OnWindowCreated(args);
 
             // Because dispatchers are tied to windows Execute will fail in 
-            // scenarios when the app has multiple windows open (though contract 
-            // activation, this keeps Excute up to date with the currently activated window
+            // scenarios when the app has multiple windows open (though contract activation) 
+            // this keeps Excute up to date with the currently activated window
             args.Window.Activated += (s, e) => PlatformProvider.Current = new UwCorePlatformProvider();
         }
 
@@ -167,7 +174,7 @@ namespace UwCore.Application
             //Configure
             this.ConfigureHockeyApp();
             this.ConfigureContainer();
-            this.ConfigureCaliburnMicro();
+            this.ConfigureLogging();
             this.Configure();
 
             //Setup IoC
@@ -293,7 +300,7 @@ namespace UwCore.Application
             this._container = builder.Build();
         }
 
-        private void ConfigureCaliburnMicro()
+        private void ConfigureLogging()
         {
             HockeyLogManager.GetLog = type => new LogAdapter(type);
             LogManager.GetLog = type => new LogAdapter(type);
