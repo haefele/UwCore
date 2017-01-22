@@ -10,6 +10,9 @@
         <themes:PopupOverlayStyles />
         <themes:HeaderStyles />
         <themes:LoadingOverlayStyles />
+        <themes:SettingsControlStyles />
+        <themes:SettingsGroupStyles />
+        <themes:SettingsItemStyles />
     </ResourceDictionary.MergedDictionaries>
     
 </ResourceDictionary>
