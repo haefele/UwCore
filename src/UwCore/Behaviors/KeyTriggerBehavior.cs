@@ -6,7 +6,7 @@ using Microsoft.Xaml.Interactivity;
 
 namespace UwCore.Behaviors
 {
-    [ContentProperty(Name = "Actions")]
+    [ContentProperty(Name = nameof(Actions))]
     public class KeyTriggerBehavior : Behavior<UIElement>
     {
         #region Properties
