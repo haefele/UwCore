@@ -8,10 +8,8 @@
     xmlns:behaviors="using:UwCore.Behaviors"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:controls="using:UwCore.Controls"
     mc:Ignorable="d"
-    
-    Width="600"
-    Height="1000"
     >
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
@@ -30,6 +28,35 @@
                 </behaviors:KeyTriggerBehavior>
             </interactivity:Interaction.Behaviors>    
         </TextBox>
+
+        <controls:SettingsControl Margin="0, 300, 0, 0">
+            <controls:SettingsGroup Header="Change privacy options">
+                <controls:SettingsItem Description="Let apps use my advertising ID for experiences across apps (turning this off will reset your ID)">
+                    <ToggleSwitch />
+                </controls:SettingsItem>
+                <controls:SettingsItem Description="Turn on SmartScreen Filter to check web content (URLs) that Windows Store apps use">
+                    <ToggleSwitch />
+                </controls:SettingsItem>
+                <controls:SettingsItem Description="Send Microsoft info about how I write to help us improve typing and writing in the future">
+                    <ToggleSwitch />
+                </controls:SettingsItem>
+                <controls:SettingsItem Description="Let websites provide locally relevant content by accessing my language list">
+                    <ToggleSwitch />
+                </controls:SettingsItem>
+                <controls:SettingsItem Description="Let apps on my other devices open apps and continue experiences on this device">
+                    <ToggleSwitch />
+                </controls:SettingsItem>
+                <controls:SettingsItem Description="Let apps on my other devices use Bluetooth to open apps and continue experiences on this device">
+                    <ToggleSwitch />
+                </controls:SettingsItem>
+                <controls:SettingsItem>
+                    <HyperlinkButton Content="Manage my Microsoft advertising and other personalization info" />
+                </controls:SettingsItem>
+                <controls:SettingsItem>
+                    <HyperlinkButton Content="Privacy Statement" />
+                </controls:SettingsItem>
+            </controls:SettingsGroup>
+        </controls:SettingsControl>
 
     </Grid>
 </Page>

@@ -117,6 +117,9 @@
   <ItemGroup>
     <Compile Include="CaliburnMicro\AssemblySource.cs" />
     <Compile Include="CaliburnMicro\WeakValueDictionary.cs" />
+    <Compile Include="Controls\SettingsControl.cs" />
+    <Compile Include="Controls\SettingsGroup.cs" />
+    <Compile Include="Controls\SettingsItem.cs" />
     <Compile Include="Helpers\CaliburnMicroHelper.cs" />
     <Compile Include="CaliburnMicro\NameTransformer.cs" />
     <Compile Include="CaliburnMicro\RegExHelper.cs" />
@@ -212,6 +215,15 @@
     <Compile Include="Themes\PopupOverlayStyles.xaml.cs">
       <DependentUpon>PopupOverlayStyles.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Themes\SettingsControlStyles.xaml.cs">
+      <DependentUpon>SettingsControlStyles.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Themes\SettingsGroupStyles.xaml.cs">
+      <DependentUpon>SettingsGroupStyles.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Themes\SettingsItemStyles.xaml.cs">
+      <DependentUpon>SettingsItemStyles.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UwCoreCommand.cs" />
     <Compile Include="UwCoreCommandBuilder.cs" />
     <Compile Include="UwCoreConductor.Collection.AllActive.cs" />
@@ -245,6 +257,21 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Page>
     <Page Include="Themes\PopupOverlayStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
+    <Page Include="Themes\SettingsControlStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
+    <Page Include="Themes\SettingsGroupStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
+    <Page Include="Themes\SettingsItemStyles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
