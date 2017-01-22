@@ -62,7 +62,7 @@ namespace UwCore
             return this;
         }
 
-        protected ReactiveCommand<object, T> CreateInnerCommand()
+        private ReactiveCommand<object, T> CreateInnerCommand()
         {
             ReactiveCommand<object, T> innerCommand = ReactiveCommand.CreateFromTask(
                 async (object _, CancellationToken token) => await this._execute(token),
