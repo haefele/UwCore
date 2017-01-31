@@ -28,7 +28,7 @@
                                 FontSize="20"
                                 Width="48"
                                 Height="48"
-                                Background="{ThemeResource SystemListAccentLowColor}"
+                                Background="Transparent"
                                 FontFamily="{ThemeResource SymbolThemeFontFamily}" />
 
                         <Viewbox Grid.Column="1"
