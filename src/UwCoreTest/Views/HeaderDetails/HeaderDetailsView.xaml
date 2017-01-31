@@ -10,7 +10,7 @@
     
     Width="48"
     >
-    <Button Background="{ThemeResource SystemListAccentLowColor}"
+    <Button Background="Transparent"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
             Click="ButtonBase_OnClick"
