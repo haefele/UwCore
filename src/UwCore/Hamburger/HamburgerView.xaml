@@ -17,7 +17,8 @@
     
     <Page.Resources>
         <converter:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
-        
+        <converter:IntegerToVisibilityConverter x:Key="IntegerToVisibilityConverter" />
+
         <DataTemplate x:Key="NavigationItemTemplate"
                       x:DataType="hamburger:HamburgerItem">
             <StackPanel Orientation="Horizontal" Margin="2, 0, 0, 0">
@@ -85,6 +86,7 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*" />
                             <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                     
                         <ListView Grid.Row="0"
@@ -93,7 +95,14 @@
                                   SelectedItem="{Binding SelectedAction, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                   ItemClick="ListView_OnItemClick" />
 
-                        <ListView Grid.Row="1"
+                        <Grid Grid.Row="1"
+                              Height="1"
+                              HorizontalAlignment="Stretch"
+                              Visibility="{x:Bind ViewModel.SecondaryActions.Count, Converter={StaticResource IntegerToVisibilityConverter}, Mode=OneWay}"
+                              Opacity="0.3"
+                              Background="Gray" />
+
+                        <ListView Grid.Row="2"
                                   Style="{StaticResource NavigationListViewStyle}"
                                   ItemsSource="{x:Bind ViewModel.SecondaryActions, Mode=OneWay}" 
                                   SelectedItem="{Binding SelectedSecondaryAction, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
