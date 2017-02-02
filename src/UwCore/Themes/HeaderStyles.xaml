@@ -31,6 +31,15 @@
                                 Background="Transparent"
                                 FontFamily="{ThemeResource SymbolThemeFontFamily}" />
 
+                        <Grid Grid.Column="0" 
+                              Width="1" 
+                              Margin="0, 4"
+                              VerticalAlignment="Stretch"
+                              HorizontalAlignment="Right"
+                              Visibility="{TemplateBinding NavigationButtonVisibility}"
+                              Background="{ThemeResource SystemListAccentMediumColor}"
+                              Opacity="0.4"/>
+
                         <Viewbox Grid.Column="1"
                                  HorizontalAlignment="Left"
                                  StretchDirection="DownOnly">
