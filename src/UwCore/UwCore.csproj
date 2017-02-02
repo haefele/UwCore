@@ -120,6 +120,7 @@
     <Compile Include="Controls\SettingsControl.cs" />
     <Compile Include="Controls\SettingsGroup.cs" />
     <Compile Include="Controls\SettingsItem.cs" />
+    <Compile Include="Converter\IntegerToVisibilityConverter.cs" />
     <Compile Include="Helpers\CaliburnMicroHelper.cs" />
     <Compile Include="CaliburnMicro\NameTransformer.cs" />
     <Compile Include="CaliburnMicro\RegExHelper.cs" />
