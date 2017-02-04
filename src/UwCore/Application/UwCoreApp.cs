@@ -60,13 +60,13 @@ namespace UwCore.Application
 
             var builder = new ContainerBuilder();
 
+            var stack = new NavigationStack();
+
             var view = new HamburgerView();
-            var popupNavigationService = new PopupNavigationService(view.PopupOverlay);
+            var popupNavigationService = new PopupNavigationService(view.PopupOverlay, stack);
             var navigationService = new NavigationService(view.ContentFrame, this._container.Resolve<IEventAggregator>(), popupNavigationService);
 
-            var stack = new NavigationStack();
             stack.AddStep(navigationService);
-            stack.AddStep(popupNavigationService);
 
             builder.RegisterInstance(stack)
                 .As<INavigationStack>()
