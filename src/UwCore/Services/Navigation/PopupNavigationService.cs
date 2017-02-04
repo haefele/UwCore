@@ -12,10 +12,13 @@ namespace UwCore.Services.Navigation
     public class PopupNavigationService : IPopupNavigationService, IAdvancedPopupNavigationService, INavigationStep
     {
         private readonly PopupOverlay _popupOverlay;
+        private readonly INavigationStack _navigationStack;
 
-        public PopupNavigationService(PopupOverlay popupOverlay)
+        public PopupNavigationService(PopupOverlay popupOverlay, INavigationStack navigationStack)
         {
             this._popupOverlay = popupOverlay;
+            this._navigationStack = navigationStack;
+
             this._popupOverlay.Closing += this.PopupOverlayOnClosing;
             this._popupOverlay.Closed += this.PopupOverlayOnClosed;
         }
@@ -39,6 +42,7 @@ namespace UwCore.Services.Navigation
                 View.SetContext(this._popupOverlay, context);
                 View.SetModel(this._popupOverlay, viewModel);
 
+                this._navigationStack.AddStep(this);
                 this.Changed?.Invoke(this, new NavigationStepChangedEventArgs(viewModel));
             }
         }
@@ -60,6 +64,7 @@ namespace UwCore.Services.Navigation
             this._popupOverlay.Content = null;
 
             this.Changed?.Invoke(this, new NavigationStepChangedEventArgs(null));
+            this._navigationStack.RemoveStep(this);
         }
 
         #region Implementation of INavigationStackStep
