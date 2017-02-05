@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.Reflection;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
+using Microsoft.Toolkit.Uwp.UI;
+using UwCore.Controls;
 
 namespace Caliburn.Micro
 {
@@ -177,6 +179,12 @@ namespace Caliburn.Micro
                 if (isOpenProperty != null)
                 {
                     return () => isOpenProperty.SetValue(contextualView, false, null);
+                }
+
+                var parentPopup = (contextualView as FrameworkElement).FindAscendant<PopupOverlay>();
+                if (parentPopup != null)
+                {
+                    return () => parentPopup.Close();
                 }
             }
 
