@@ -62,10 +62,13 @@ namespace UwCore.Hamburger
 
         private void UpdateBackgroundBlur()
         {
-            bool isBlurActive = this.PopupOverlay.IsOpen || this.LoadingOverlay.IsActive;
-            double blueAmount = isBlurActive ? 3 : 0;
-            
-            this.Content.Blur(blueAmount, duration:200)?.Start();
+            bool isBackgroundBlurActive = this.PopupOverlay.IsOpen || this.LoadingOverlay.IsActive;
+            double backgroundBlurAmount = isBackgroundBlurActive ? 3 : 0;
+            this.Content.Blur(backgroundBlurAmount, duration:200)?.Start();
+
+            bool isPopupBlurActive = this.PopupOverlay.IsOpen && this.LoadingOverlay.IsActive;
+            double popupBlurAmount = isPopupBlurActive ? 3 : 0;
+            this.PopupOverlay.Blur(popupBlurAmount, duration:200)?.Start();
         }
     }
 }
