@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Reactive.Concurrency;
+using System.Threading;
+using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Animation;
+using Caliburn.Micro;
 using Microsoft.Toolkit.Uwp.UI.Animations;
 using PopupOverlayClass = UwCore.Controls.PopupOverlay;
 
@@ -59,16 +63,28 @@ namespace UwCore.Hamburger
         {
             this.UpdateBackgroundBlur();
         }
-
-        private void UpdateBackgroundBlur()
+        
+        private readonly SemaphoreSlim _updateBackgroundLock = new SemaphoreSlim(1, 1);
+        private async void UpdateBackgroundBlur()
         {
-            bool isBackgroundBlurActive = this.PopupOverlay.IsOpen || this.LoadingOverlay.IsActive;
-            double backgroundBlurAmount = isBackgroundBlurActive ? 3 : 0;
-            this.Content.Blur(backgroundBlurAmount, duration:200)?.Start();
+            await this._updateBackgroundLock.WaitAsync();
+            try
+            {
+                bool isBackgroundBlurActive = this.PopupOverlay.IsOpen ^ this.LoadingOverlay.IsActive;
+                double backgroundBlurAmount = isBackgroundBlurActive ? 3 : 0;
 
-            bool isPopupBlurActive = this.PopupOverlay.IsOpen && this.LoadingOverlay.IsActive;
-            double popupBlurAmount = isPopupBlurActive ? 3 : 0;
-            this.PopupOverlay.Blur(popupBlurAmount, duration:200)?.Start();
+                bool isPopupBlurActive = this.PopupOverlay.IsOpen && this.LoadingOverlay.IsActive;
+                double popupBlurAmount = isPopupBlurActive ? 3 : 0;
+                
+                var backgroundTask = this.Content.Blur(backgroundBlurAmount, duration: 200)?.StartAsync() ?? Task.CompletedTask;
+                var popupTask = this.PopupOverlay.Blur(popupBlurAmount, duration: 200)?.StartAsync() ?? Task.CompletedTask;
+
+                await Task.WhenAll(backgroundTask, popupTask);
+            }
+            finally
+            {
+                this._updateBackgroundLock.Release();
+            }
         }
     }
 }
