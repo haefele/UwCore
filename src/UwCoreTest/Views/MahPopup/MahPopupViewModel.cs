@@ -12,8 +12,15 @@ namespace UwCoreTest.Views.MahPopup
         public MahPopupViewModel()
         {
             this.Loading = UwCoreCommand
-                .Create(async _ => this.TryClose())
+                .Create(async _ => await Task.Delay(TimeSpan.FromSeconds(2)))
                 .ShowLoadingOverlay("asdflöjkasdfölkj asdf");
+        }
+
+        protected override async void OnActivate()
+        {
+            base.OnActivate();
+
+            await this.Loading.ExecuteAsync();
         }
     }
 }
