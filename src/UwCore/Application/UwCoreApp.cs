@@ -78,7 +78,7 @@ namespace UwCore.Application
                 .As<ILoadingService>()
                 .SingleInstance();
 
-            var viewModel = new HamburgerViewModel(navigationService, IoC.Get<IEventAggregator>(), IoC.Get<IHockeyClient>(), IoC.Get<IUpdateNotesService>());
+            var viewModel = new HamburgerViewModel(navigationService, this._container.Resolve<IEventAggregator>(), this._container.Resolve<IHockeyClient>(), this._container.Resolve<IUpdateNotesService>());
             builder.RegisterInstance(viewModel)
                 .As<IShell>()
                 .SingleInstance();
@@ -86,8 +86,10 @@ namespace UwCore.Application
             builder.Update(this._container);
 
             this.CustomizeShell(viewModel);
-
+            
             viewModel.CurrentMode = this.GetCurrentMode();
+
+            this.AppStartupFinished();
 
             var customStartup = viewModel.CurrentMode as ICustomStartupShellMode;
             customStartup?.HandleCustomStartup(args.TileId, args.Arguments);
@@ -113,15 +115,15 @@ namespace UwCore.Application
         {
             var deferral = e.SuspendingOperation.GetDeferral();
 
-            await IoC.Get<IApplicationStateService>().SaveStateAsync();
-            IoC.Get<IEventAggregator>().PublishOnCurrentThread(new ApplicationSuspending());
+            await this._container.Resolve<IApplicationStateService>().SaveStateAsync();
+            this._container.Resolve<IEventAggregator>().PublishOnCurrentThread(new ApplicationSuspending());
 
             deferral.Complete();
         }
 
         private void OnResuming(object sender, object e)
         {
-            IoC.Get<IEventAggregator>().PublishOnCurrentThread(new ApplicationResumed());
+            this._container.Resolve<IEventAggregator>().PublishOnCurrentThread(new ApplicationResumed());
         }
 
         private void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
@@ -185,7 +187,7 @@ namespace UwCore.Application
             IoC.BuildUp = instance => this._container.InjectUnsetProperties(instance);
             
             //Restore state
-            await IoC.Get<IApplicationStateService>().RestoreStateAsync();
+            await this._container.Resolve<IApplicationStateService>().RestoreStateAsync();
         }
         #endregion
         
@@ -335,6 +337,11 @@ namespace UwCore.Application
         }
         
         public virtual void Configure()
+        {
+
+        }
+        
+        public virtual void AppStartupFinished()
         {
 
         }
