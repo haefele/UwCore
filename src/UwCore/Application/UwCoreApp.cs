@@ -251,7 +251,8 @@ namespace UwCore.Application
                                        cc.Resolve<IHockeyClient>(), 
                                        this.GetCommonExceptionType(), 
                                        this.GetErrorMessage(), 
-                                       this.GetErrorTitle()))
+                                       this.GetErrorTitle(),
+                                       string.IsNullOrWhiteSpace(this.GetHockeyAppId()) == false && this.IsHockeyAppEnabled()))
                 .As<IExceptionHandler>()
                 .SingleInstance();
 
