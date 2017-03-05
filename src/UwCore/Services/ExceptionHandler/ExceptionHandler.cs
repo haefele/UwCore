@@ -17,14 +17,16 @@ namespace UwCore.Services.ExceptionHandler
         private readonly Type _commonExceptionType;
         private readonly string _errorMessage;
         private readonly string _errorTitle;
+        private readonly bool _isHockeyClientConfigured;
 
-        public ExceptionHandler(IDialogService dialogService, IHockeyClient hockeyClient, Type commonExceptionType, string errorMessage, string errorTitle)
+        public ExceptionHandler(IDialogService dialogService, IHockeyClient hockeyClient, Type commonExceptionType, string errorMessage, string errorTitle, bool isHockeyClientConfigured)
         {
             this._dialogService = dialogService;
             this._hockeyClient = hockeyClient;
             this._commonExceptionType = commonExceptionType;
             this._errorMessage = errorMessage;
             this._errorTitle = errorTitle;
+            this._isHockeyClientConfigured = isHockeyClientConfigured;
         }
 
         public async Task HandleAsync(Exception exception)
@@ -36,7 +38,9 @@ namespace UwCore.Services.ExceptionHandler
             else
             {
                 Logger.Error(exception);
-                this._hockeyClient.TrackException(exception);
+                
+                if (this._isHockeyClientConfigured)
+                    this._hockeyClient.TrackException(exception);
 
                 await this._dialogService.ShowAsync(this._errorMessage, this._errorTitle);
             }
