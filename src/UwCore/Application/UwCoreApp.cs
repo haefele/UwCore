@@ -121,8 +121,9 @@ namespace UwCore.Application
             deferral.Complete();
         }
 
-        private void OnResuming(object sender, object e)
+        private async void OnResuming(object sender, object e)
         {
+            await this._container.Resolve<IApplicationStateService>().RestoreStateAsync();
             this._container.Resolve<IEventAggregator>().PublishOnCurrentThread(new ApplicationResumed());
         }
 
