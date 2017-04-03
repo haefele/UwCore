@@ -19,6 +19,7 @@ using UwCore.Extensions;
 using UwCore.Hamburger;
 using UwCore.Logging;
 using UwCore.Services.ApplicationState;
+using UwCore.Services.Clock;
 using UwCore.Services.Dialog;
 using UwCore.Services.ExceptionHandler;
 using UwCore.Services.Loading;
@@ -269,6 +270,11 @@ namespace UwCore.Application
                 .As<IUpdateNotesService>()
                 .SingleInstance();
 
+            //Clock
+            builder.RegisterType<RealtimeClock>()
+                .As<IClock>()
+                .SingleInstance();
+
             //ViewModels
             var viewModelTypes = this.GetViewModelTypes();
             foreach (var viewModelType in viewModelTypes)
@@ -306,8 +312,8 @@ namespace UwCore.Application
 
         private void ConfigureLogging()
         {
-            HockeyLogManager.GetLog = type => new LogAdapter(type);
-            LogManager.GetLog = type => new LogAdapter(type);
+            HockeyLogManager.GetLog = type => new LogAdapter(type, this._container.Resolve<IClock>());
+            LogManager.GetLog = type => new LogAdapter(type, this._container.Resolve<IClock>());
         }
         #endregion
 

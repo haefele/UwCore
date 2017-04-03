@@ -2,18 +2,22 @@
 using Caliburn.Micro;
 using UwCore.Common;
 using UwCore.Extensions;
+using UwCore.Services.Clock;
 
 namespace UwCore.Logging
 {
     internal class LogAdapter : ILog, Microsoft.HockeyApp.ILog
     {
         private readonly Type _type;
+        private readonly IClock _clock;
 
-        public LogAdapter(Type type)
+        public LogAdapter(Type type, IClock clock)
         {
             Guard.NotNull(type, nameof(type));
+            Guard.NotNull(clock, nameof(clock));
 
             this._type = type;
+            this._clock = clock;
         }
 
         public void Info(string format, params object[] args)
@@ -44,7 +48,7 @@ namespace UwCore.Logging
         }
         private string FormatLog(string level, string message)
         {
-            return $"{DateTimeOffset.Now:O} | {level.ToUpper()} | {this._type.FullName} | {message}";
+            return $"{this._clock.Now():O} | {level.ToUpper()} | {this._type.FullName} | {message}";
         }
     }
 }

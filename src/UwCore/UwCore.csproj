@@ -184,6 +184,7 @@
     <Compile Include="Services\ApplicationState\ApplicationState.cs" />
     <Compile Include="Services\ApplicationState\ApplicationStateService.cs" />
     <Compile Include="Services\ApplicationState\IApplicationStateService.cs" />
+    <Compile Include="Services\Clock\IClock.cs" />
     <Compile Include="Services\Dialog\DialogService.cs" />
     <Compile Include="Services\Dialog\IDialogService.cs" />
     <Compile Include="Services\ExceptionHandler\ExceptionHandler.cs" />
