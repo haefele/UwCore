@@ -84,6 +84,9 @@ namespace UwCore.Behaviors
         #region Private Methods
         private void RegisterEvents(bool onKeyDown)
         {
+            if (this.AssociatedObject == null)
+                return;
+
             if (onKeyDown)
             {
                 this.AssociatedObject.KeyDown += this.AssociatedObjectOnKeyDownOrUp;
@@ -96,6 +99,9 @@ namespace UwCore.Behaviors
 
         private void UnRegisterEvents(bool onKeyDown)
         {
+            if (this.AssociatedObject == null)
+                return;
+
             if (onKeyDown)
             {
                 this.AssociatedObject.KeyDown -= this.AssociatedObjectOnKeyDownOrUp;
