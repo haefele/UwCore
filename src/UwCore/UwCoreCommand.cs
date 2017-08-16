@@ -117,7 +117,7 @@ namespace UwCore
         {
             try
             {
-                if (this.CanExecute)
+                if (this.CanExecute == false)
                     return default(T);
 
                 return await this._innerCommand.Execute();

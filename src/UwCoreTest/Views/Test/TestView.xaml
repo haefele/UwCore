@@ -23,7 +23,7 @@
         
         <TextBox x:Name="textBox" HorizontalAlignment="Left" Margin="61,164,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top">
             <interactivity:Interaction.Behaviors>
-                <behaviors:KeyTriggerBehavior Key="Control">
+                <behaviors:KeyTriggerBehavior Key="Enter">
                     <core:InvokeCommandAction Command="{x:Bind ViewModel.Test}" />
                 </behaviors:KeyTriggerBehavior>
             </interactivity:Interaction.Behaviors>    
