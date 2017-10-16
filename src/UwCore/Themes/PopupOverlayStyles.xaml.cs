@@ -4,6 +4,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Microsoft.Toolkit.Uwp.UI;
+using Microsoft.Toolkit.Uwp.UI.Extensions;
 using UwCore.Controls;
 
 namespace UwCore.Themes
@@ -17,7 +18,7 @@ namespace UwCore.Themes
 
         private void PopupOverlayBackground_OnPointerPressed(object sender, PointerRoutedEventArgs e)
         {
-            var popupOverlay = ((FrameworkElement)sender).FindVisualAscendant<PopupOverlay>();
+            var popupOverlay = ((FrameworkElement)sender).FindAscendant<PopupOverlay>();
             popupOverlay.Close();
         }
 
@@ -37,7 +38,7 @@ namespace UwCore.Themes
 
         private void AttachToEscapeKeyToClosePopup(object sender)
         {
-            var popupOverlay = ((FrameworkElement) sender).FindVisualAscendant<PopupOverlay>();
+            var popupOverlay = ((FrameworkElement) sender).FindAscendant<PopupOverlay>();
             popupOverlay.Dispatcher.AcceleratorKeyActivated += (s, e) =>
             {
                 if (e.VirtualKey == VirtualKey.Escape && popupOverlay.IsOpen)

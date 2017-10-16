@@ -7,6 +7,7 @@ using System.Reflection;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Microsoft.Toolkit.Uwp.UI;
+using Microsoft.Toolkit.Uwp.UI.Extensions;
 using UwCore.Controls;
 
 namespace Caliburn.Micro
