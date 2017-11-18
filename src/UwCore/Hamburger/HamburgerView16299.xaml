@@ -1,0 +1,78 @@
+﻿<Page
+    x:Class="UwCore.Hamburger.HamburgerView16299"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UwCore.Hamburger"
+    xmlns:appModel="using:Windows.ApplicationModel"
+    xmlns:controls="using:UwCore.Controls"
+    xmlns:micro="using:Caliburn.Micro"
+    xmlns:converter="using:UwCore.Converter"
+    
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    
+    DataContextChanged="HamburgerView16299_OnDataContextChanged"
+    
+    RequestedTheme="{x:Bind ViewModel.Theme, Mode=OneWay}"
+    >
+    
+    <Page.Resources>
+    </Page.Resources>
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+        <NavigationView x:Name="NavigationView"
+                        IsSettingsVisible="False"
+                        SelectionChanged="NavigationView_OnSelectionChanged"
+                        Header="{Binding}">
+            <NavigationView.HeaderTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        
+                        <TextBlock Text="{Binding ElementName=ContentFrame, Path=Content.DataContext.DisplayName}"
+                                   VerticalAlignment="Bottom"
+                                   FontWeight="SemiLight"
+                                   FontSize="24"
+                                   Margin="12, 5, 0, 11" />
+
+                        <ContentControl micro:View.Model="{Binding HeaderDetailsViewModel}"
+                                        Height="48"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalContentAlignment="Stretch"
+                                        VerticalContentAlignment="Stretch" />
+                    </Grid>
+                </DataTemplate>
+            </NavigationView.HeaderTemplate>
+            
+            <Frame x:Name="ContentFrame"
+                   x:FieldModifier="public"
+                   DataContext="{x:Null}">
+                <Frame.ContentTransitions>
+                    <TransitionCollection>
+                        <NavigationThemeTransition>
+                            <NavigationThemeTransition.DefaultNavigationTransitionInfo>
+                                <EntranceNavigationTransitionInfo />
+                            </NavigationThemeTransition.DefaultNavigationTransitionInfo>
+                        </NavigationThemeTransition>
+                    </TransitionCollection>
+                </Frame.ContentTransitions>
+            </Frame>
+        </NavigationView>
+
+        <TextBlock x:Name="AppTitle"
+                   Style="{StaticResource CaptionTextBlockStyle}" 
+                   IsHitTestVisible="False" />
+
+        <controls:PopupOverlay x:Name="PopupOverlay"
+                               x:FieldModifier="Public" />
+    
+        <controls:LoadingOverlay x:Name="LoadingOverlay" 
+                                 x:FieldModifier="Public" />
+    </Grid>
+</Page>
