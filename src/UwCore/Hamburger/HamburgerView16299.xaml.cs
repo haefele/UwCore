@@ -73,13 +73,15 @@ namespace UwCore.Hamburger
 
             foreach (var action in this.ViewModel.Actions)
             {
-                this.NavigationView.MenuItems.Add(new NavigationViewItem
+                var item = new NavigationViewItem
                 {
                     Icon = new SymbolIcon { Symbol = action.Symbol },
                     Content = action.Label,
                     DataContext = action,
-                    Tag = action
-                });
+                };
+                ToolTipService.SetToolTip(item, action.Label);
+
+                this.NavigationView.MenuItems.Add(item);
             }
 
             if (this.ViewModel.SecondaryActions.Any())
@@ -87,12 +89,15 @@ namespace UwCore.Hamburger
 
             foreach (var action in this.ViewModel.SecondaryActions)
             {
-                this.NavigationView.MenuItems.Add(new NavigationViewItem
+                var item = new NavigationViewItem
                 {
                     Icon = new SymbolIcon { Symbol = action.Symbol },
                     Content = action.Label,
                     DataContext = action
-                });
+                };
+                ToolTipService.SetToolTip(item, action.Label);
+
+                this.NavigationView.MenuItems.Add(item);
             }
         }
 
