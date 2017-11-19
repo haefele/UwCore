@@ -43,9 +43,13 @@ namespace UwCore.Hamburger
             // Blur background
             this.PopupOverlay.RegisterPropertyChangedCallback(PopupOverlay.IsOpenProperty, this.OnPopupOverlayIsOpenChanged);
             this.LoadingOverlay.RegisterPropertyChangedCallback(LoadingOverlay.IsActiveProperty, this.OnLoadingOverlayIsActiveChanged);
+
+            //Theme changes
+            var settings = new UISettings();
+            settings.ColorValuesChanged += (s, e) => this.UpdateTitleBarButtonForegroundColors();
         }
 
-        #region Navigation
+        #region ViewModel integration
         private void HamburgerView16299_OnDataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
         {
             this.ViewModel.PropertyChanged += this.ViewModelOnPropertyChanged;
@@ -55,8 +59,25 @@ namespace UwCore.Hamburger
 
             this.UpdateNavigationItems();
             this.UpdateSelectedItem();
+            this.UpdateTitleBarButtonForegroundColors();
         }
 
+        private void ViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(this.ViewModel.SelectedAction) ||
+                e.PropertyName == nameof(this.ViewModel.SelectedSecondaryAction))
+            {
+                this.UpdateSelectedItem();
+            }
+
+            if (e.PropertyName == nameof(this.ViewModel.Theme))
+            {
+                this.UpdateTitleBarButtonForegroundColors();
+            }
+        }
+        #endregion
+
+        #region Navigation
         private void OnActionsChanged(NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
         {
             this.UpdateNavigationItems();
@@ -102,16 +123,6 @@ namespace UwCore.Hamburger
         }
 
         private bool _updatingSelectedItemFromViewModel = false;
-
-        private void ViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == nameof(this.ViewModel.SelectedAction) ||
-                e.PropertyName == nameof(this.ViewModel.SelectedSecondaryAction))
-            {
-                this.UpdateSelectedItem();
-            }
-        }
-
         private void UpdateSelectedItem()
         {
             var selectedAction = this.ViewModel.SelectedAction ?? this.ViewModel.SelectedSecondaryAction;
@@ -175,6 +186,32 @@ namespace UwCore.Hamburger
             //If its inset, make it show BEHIND the navigation view
             Canvas.SetZIndex(this.AppTitle, isMini || isCompact || expandedButNotOpen ? -1 : 0);
             this.AppTitle.Margin = new Thickness(inset + 12, 8, 0, 0);
+        }
+        #endregion
+
+        #region Window shell button foreground colors
+        private void UpdateTitleBarButtonForegroundColors()
+        {
+            bool IsDarkThemeCurrently()
+            {
+                if (this.ViewModel == null)
+                    return false; // Whatever, doesnt really matter because we will update again once we have a ViewModel
+
+                if (this.ViewModel.Theme == ElementTheme.Default)
+                {
+                    var settings = new UISettings();
+                    return settings.GetColorValue(UIColorType.Background) == Colors.Black;
+                }
+
+                return this.ViewModel.Theme == ElementTheme.Dark;
+            }
+
+            Color color = IsDarkThemeCurrently()
+                ? Colors.White
+                : Colors.Black;
+
+            ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
+            titleBar.ButtonForegroundColor = color;
         }
         #endregion
 
