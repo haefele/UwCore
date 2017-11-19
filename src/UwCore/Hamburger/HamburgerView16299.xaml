@@ -33,14 +33,21 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        
-                        <TextBlock Text="{Binding ElementName=ContentFrame, Path=Content.DataContext.DisplayName}"
-                                   VerticalAlignment="Bottom"
-                                   FontWeight="SemiLight"
-                                   FontSize="24"
-                                   Margin="12, 5, 0, 11" />
+
+                        <Grid Height="48"
+                              Grid.Column="0"
+                              HorizontalAlignment="Left"
+                              VerticalAlignment="Bottom">
+                            <Viewbox StretchDirection="DownOnly">
+                                <TextBlock Text="{Binding ElementName=ContentFrame, Path=Content.DataContext.DisplayName}"
+                                           FontWeight="SemiLight"
+                                           FontSize="24"
+                                           Margin="12, 5, 0, 11" />
+                            </Viewbox>
+                        </Grid>
 
                         <ContentControl micro:View.Model="{Binding HeaderDetailsViewModel}"
+                                        Grid.Column="1"
                                         Height="48"
                                         HorizontalAlignment="Right"
                                         VerticalAlignment="Bottom"

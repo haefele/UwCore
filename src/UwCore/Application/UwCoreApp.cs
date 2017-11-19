@@ -70,8 +70,6 @@ namespace UwCore.Application
                 ? (IHamburgerView)new HamburgerView16299()
                 : new HamburgerView();
 
-            //IHamburgerView view = new HamburgerView();
-
             var popupNavigationService = new PopupNavigationService(view.PopupOverlay, stack);
             var navigationService = new NavigationService(view.ContentFrame, this._container.Resolve<IEventAggregator>(), popupNavigationService);
 

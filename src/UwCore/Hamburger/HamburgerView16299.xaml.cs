@@ -45,6 +45,7 @@ namespace UwCore.Hamburger
             this.LoadingOverlay.RegisterPropertyChangedCallback(LoadingOverlay.IsActiveProperty, this.OnLoadingOverlayIsActiveChanged);
         }
 
+        #region Navigation
         private void HamburgerView16299_OnDataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
         {
             this.ViewModel.PropertyChanged += this.ViewModelOnPropertyChanged;
@@ -137,6 +138,7 @@ namespace UwCore.Hamburger
 
             action.Execute();
         }
+        #endregion
 
         #region App title position
         private void TitleBar_LayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args)
