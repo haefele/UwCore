@@ -10,6 +10,7 @@ using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Markup;
 using Caliburn.Micro;
 using Microsoft.Toolkit.Uwp.UI.Animations;
 using UwCore.Controls;
@@ -18,11 +19,15 @@ namespace UwCore.Hamburger
 {
     public sealed partial class HamburgerView16299 : Page, IHamburgerView
     {
+        private readonly DataTemplate _navigationItemContentDataTemplate;
+
         public HamburgerViewModel ViewModel => this.DataContext as HamburgerViewModel;
 
         public HamburgerView16299()
         {
             this.InitializeComponent();
+
+            this._navigationItemContentDataTemplate = (DataTemplate) XamlReader.Load("<DataTemplate xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"><TextBlock Text=\"{Binding Label, Mode=OneWay}\" /></DataTemplate>");
 
             // Draw into the title bar
             CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
@@ -98,7 +103,8 @@ namespace UwCore.Hamburger
                 var item = new NavigationViewItem
                 {
                     Icon = new SymbolIcon { Symbol = action.Symbol },
-                    Content = action.Label,
+                    Content = action,
+                    ContentTemplate = this._navigationItemContentDataTemplate,
                     DataContext = action,
                 };
                 ToolTipService.SetToolTip(item, action.Label);
@@ -114,7 +120,8 @@ namespace UwCore.Hamburger
                 var item = new NavigationViewItem
                 {
                     Icon = new SymbolIcon { Symbol = action.Symbol },
-                    Content = action.Label,
+                    Content = action,
+                    ContentTemplate = this._navigationItemContentDataTemplate,
                     DataContext = action
                 };
                 ToolTipService.SetToolTip(item, action.Label);
@@ -122,24 +129,19 @@ namespace UwCore.Hamburger
                 this.NavigationView.MenuItems.Add(item);
             }
         }
-
-        private bool _updatingSelectedItemFromViewModel = false;
+        
         private void UpdateSelectedItem()
         {
             var selectedAction = this.ViewModel.SelectedAction ?? this.ViewModel.SelectedSecondaryAction;
-
-            this._updatingSelectedItemFromViewModel = true;
-
+            
             this.NavigationView.SelectedItem = this.NavigationView.MenuItems
                 .OfType<NavigationViewItemBase>()
                 .FirstOrDefault(f => f.DataContext == selectedAction);
-
-            this._updatingSelectedItemFromViewModel = false;
         }
 
         private void NavigationView_OnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
         {
-            if (args.SelectedItem == null || this._updatingSelectedItemFromViewModel)
+            if (args.SelectedItem == null)
                 return;
 
             var item = (NavigationViewItemBase)args.SelectedItem;
@@ -152,8 +154,6 @@ namespace UwCore.Hamburger
             this.ViewModel.SelectedSecondaryAction = this.ViewModel.SecondaryActions.Contains(action)
                 ? action
                 : null;
-
-            action.Execute();
         }
         #endregion
 
@@ -259,5 +259,11 @@ namespace UwCore.Hamburger
         Frame IHamburgerView.ContentFrame => this.ContentFrame;
         LoadingOverlay IHamburgerView.LoadingOverlay => this.LoadingOverlay;
         #endregion
+
+        private void NavigationView_OnItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
+        {
+            var item = (HamburgerItem) args.InvokedItem;
+            item.Execute();
+        }
     }
 }

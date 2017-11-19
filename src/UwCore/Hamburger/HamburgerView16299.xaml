@@ -24,6 +24,7 @@
 
         <NavigationView x:Name="NavigationView"
                         IsSettingsVisible="False"
+                        ItemInvoked="NavigationView_OnItemInvoked"
                         SelectionChanged="NavigationView_OnSelectionChanged"
                         Header="{Binding}">
             <NavigationView.HeaderTemplate>
