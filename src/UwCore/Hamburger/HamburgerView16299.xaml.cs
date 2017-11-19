@@ -10,6 +10,7 @@ using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Caliburn.Micro;
 using Microsoft.Toolkit.Uwp.UI.Animations;
 using UwCore.Controls;
 
@@ -206,12 +207,15 @@ namespace UwCore.Hamburger
                 return this.ViewModel.Theme == ElementTheme.Dark;
             }
 
-            Color color = IsDarkThemeCurrently()
-                ? Colors.White
-                : Colors.Black;
+            Execute.OnUIThread(() =>
+            {
+                Color color = IsDarkThemeCurrently()
+                    ? Colors.White
+                    : Colors.Black;
 
-            ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
-            titleBar.ButtonForegroundColor = color;
+                ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
+                titleBar.ButtonForegroundColor = color;
+            });
         }
         #endregion
 
