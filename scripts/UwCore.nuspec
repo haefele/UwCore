@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>UwCore</id>
-    <version></version>
+    <version>1.0.0</version>
     <authors>Daniel Häfele</authors>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Makes my life with uwp projects easier.</description>

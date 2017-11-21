@@ -1,11 +1,27 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2009
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UwCore", "UwCore\UwCore.csproj", "{BEE32CEA-DC4E-4C55-9D7D-80AFF9D7D027}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UwCore", "src\UwCore\UwCore.csproj", "{BEE32CEA-DC4E-4C55-9D7D-80AFF9D7D027}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UwCoreTest", "UwCoreTest\UwCoreTest.csproj", "{957DE25D-4534-48ED-9ECF-1655F2C320DA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UwCoreTest", "src\UwCoreTest\UwCoreTest.csproj", "{957DE25D-4534-48ED-9ECF-1655F2C320DA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{343F46B0-3FB6-48D8-94AE-9C4E990D1305}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{E728E45C-6B85-41D7-BB53-A0CE33AA38CF}"
+	ProjectSection(SolutionItems) = preProject
+		scripts\build.cake = scripts\build.cake
+		scripts\build.ps1 = scripts\build.ps1
+		scripts\UwCore.nuspec = scripts\UwCore.nuspec
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solution items", "solution items", "{0A937497-664E-4466-AB4F-F96B8E484B9E}"
+	ProjectSection(SolutionItems) = preProject
+		appveyor.yml = appveyor.yml
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -62,6 +78,13 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BEE32CEA-DC4E-4C55-9D7D-80AFF9D7D027} = {343F46B0-3FB6-48D8-94AE-9C4E990D1305}
+		{957DE25D-4534-48ED-9ECF-1655F2C320DA} = {343F46B0-3FB6-48D8-94AE-9C4E990D1305}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B7EBDC57-74DC-4434-9109-59DF8B8E759E}
 	EndGlobalSection
 	GlobalSection(CodealikeProperties) = postSolution
 		SolutionGuid = d423924c-00c0-42b1-8617-4909614a68e4
