@@ -7,9 +7,12 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.VoiceCommands;
+using Windows.Foundation;
+using Windows.Foundation.Metadata;
 using Windows.Storage;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 using Autofac;
 using Caliburn.Micro;
 using Microsoft.HockeyApp;
@@ -63,7 +66,10 @@ namespace UwCore.Application
 
             var stack = new NavigationStack();
 
-            var view = new HamburgerView();
+            IHamburgerView view = ApiInformation.IsApiContractPresent(typeof(UniversalApiContract).FullName, 5)
+                ? (IHamburgerView)new HamburgerView16299()
+                : new HamburgerView();
+
             var popupNavigationService = new PopupNavigationService(view.PopupOverlay, stack);
             var navigationService = new NavigationService(view.ContentFrame, this._container.Resolve<IEventAggregator>(), popupNavigationService);
 
@@ -95,10 +101,10 @@ namespace UwCore.Application
             var customStartup = viewModel.CurrentMode as ICustomStartupShellMode;
             customStartup?.HandleCustomStartup(args.TileId, args.Arguments);
 
-            ViewModelBinder.Bind(viewModel, view, null);
+            ViewModelBinder.Bind(viewModel, (DependencyObject)view, null);
             ScreenExtensions.TryActivate(viewModel);
 
-            Window.Current.Content = view;
+            Window.Current.Content = (UIElement)view;
             Window.Current.Activate();
         }
 

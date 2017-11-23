@@ -8,11 +8,12 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Animation;
 using Caliburn.Micro;
 using Microsoft.Toolkit.Uwp.UI.Animations;
+using UwCore.Controls;
 using PopupOverlayClass = UwCore.Controls.PopupOverlay;
 
 namespace UwCore.Hamburger
 {
-    public sealed partial class HamburgerView : Page
+    public sealed partial class HamburgerView : Page, IHamburgerView
     {
         public HamburgerViewModel ViewModel => this.DataContext as HamburgerViewModel;
 
@@ -86,5 +87,11 @@ namespace UwCore.Hamburger
                 this._updateBackgroundLock.Release();
             }
         }
+
+        #region Implementation of IHamburgerView
+        PopupOverlayClass IHamburgerView.PopupOverlay => this.PopupOverlay;
+        Frame IHamburgerView.ContentFrame => this.ContentFrame;
+        LoadingOverlay IHamburgerView.LoadingOverlay => this.LoadingOverlay;
+        #endregion
     }
 }

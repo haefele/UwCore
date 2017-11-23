@@ -38,7 +38,7 @@ namespace UwCoreTest.ApplicationModes
             await base.AddActions();
 
             this.Shell.Actions.Add(this._testHamburgerItem);
-            this.Shell.Actions.Add(this._test2HamburgerItem);
+            this.Shell.SecondaryActions.Add(this._test2HamburgerItem);
         }
 
         protected override async Task RemoveActions()
@@ -46,7 +46,7 @@ namespace UwCoreTest.ApplicationModes
             await base.RemoveActions();
 
             this.Shell.Actions.Remove(this._testHamburgerItem);
-            this.Shell.Actions.Remove(this._test2HamburgerItem);
+            this.Shell.SecondaryActions.Remove(this._test2HamburgerItem);
         }
 
         public void HandleCustomStartup(string tileId, string arguments)
