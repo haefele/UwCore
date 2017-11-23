@@ -64,9 +64,6 @@ Task("CreateNuGetPackage")
 	.IsDependentOn("Build")
 	.Does(() => 
 {
-	var stream = new FileStream(".\\test.txt", FileMode.Create);
-	stream.Dispose();
-
 	string buildOutputPath = buildInAppveyor && manualBuild && isNotForPullRequest
 		? @"..\src\UwCore\bin\Release\UwCore**"
 		: @"..\src\UwCore\bin\Debug\UwCore**";
@@ -98,7 +95,12 @@ Task("CreateNuGetPackage")
 			})
 		.Select(f => $"<dependency id=\"{f.Name}\" version=\"{f.Version}\" />"));
 
-	FileWriteText("./UwCore.nuspec", nuspec.Replace("$version$", versionNumber).Replace("$dependencies$", dependencies));
+		
+	using (var stream = new FileStream("./UwCore.nuspec", FileMode.Create))
+	using (var writer = new StreamWriter(stream, Encoding.UTF8))
+	{
+		writer.Write(nuspec.Replace("$version$", versionNumber).Replace("$dependencies$", dependencies));
+	}
 	
 	var settings = new NuGetPackSettings
 	{
