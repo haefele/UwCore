@@ -107,6 +107,7 @@ Task("CreateNuGetPackage")
 
 Task("UploadArtifacts")
 	.IsDependentOn("CreateNuGetPackage")
+	.WithCriteria(() => buildInAppveyor)
 	.Does(() => 
 {	
 	var nugetPackagePath = string.Format("./../artifacts/UwCore.{0}.nupkg", versionNumber);
