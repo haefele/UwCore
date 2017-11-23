@@ -64,6 +64,9 @@ Task("CreateNuGetPackage")
 	.IsDependentOn("Build")
 	.Does(() => 
 {
+	var stream = new FileStream(".\\test.txt", FileMode.Create);
+	stream.Dispose();
+
 	string buildOutputPath = buildInAppveyor && manualBuild && isNotForPullRequest
 		? @"..\src\UwCore\bin\Release\UwCore**"
 		: @"..\src\UwCore\bin\Debug\UwCore**";
