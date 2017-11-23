@@ -37,12 +37,25 @@ Task("Build")
     .IsDependentOn("NuGetRestore")
     .Does(() => 
 {
-    var settings = new MSBuildSettings 
+    MSBuildSettings settings;
+    if (buildInAppveyor && manualBuild && isNotForPullRequest)
     {
-        Configuration = "Release",
-		MSBuildPlatform = MSBuildPlatform.x86,
-		ToolVersion = MSBuildToolVersion.VS2017,
-    };
+        settings = new MSBuildSettings 
+        {
+            Configuration = "Release",
+			MSBuildPlatform = MSBuildPlatform.x86,
+			ToolVersion = MSBuildToolVersion.VS2017,
+        };
+    }
+    else
+    {
+        settings = new MSBuildSettings 
+        {
+            Configuration = "Debug",
+			MSBuildPlatform = MSBuildPlatform.x86,
+			ToolVersion = MSBuildToolVersion.VS2017,
+        };
+    }
 
     MSBuild(slnPath, settings);
 });
@@ -51,7 +64,11 @@ Task("CreateNuGetPackage")
 	.IsDependentOn("Build")
 	.Does(() => 
 {
-	var nuspec = @"<?xml version=""1.0"" encoding=""utf-8""?>
+	string buildOutputPath = buildInAppveyor && manualBuild && isNotForPullRequest
+		? @"..\src\UwCore\bin\Release\UwCore**"
+		: @"..\src\UwCore\bin\Debug\UwCore**";
+
+	var nuspec = $@"<?xml version=""1.0"" encoding=""utf-8""?>
 <package xmlns=""http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd"">
   <metadata>
     <id>UwCore</id>
@@ -64,7 +81,7 @@ Task("CreateNuGetPackage")
     </dependencies>
   </metadata>
   <files>
-    <file src=""..\src\UwCore\bin\Release\UwCore**"" target=""lib\uap10.0"" />
+    <file src=""{buildOutputPath}"" target=""lib\uap10.0"" />
   </files>
 </package>";
 
