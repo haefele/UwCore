@@ -37,25 +37,12 @@ Task("Build")
     .IsDependentOn("NuGetRestore")
     .Does(() => 
 {
-    MSBuildSettings settings;
-    if (buildInAppveyor && manualBuild && isNotForPullRequest)
+    var settings = new MSBuildSettings 
     {
-        settings = new MSBuildSettings 
-        {
-            Configuration = "Release",
-			MSBuildPlatform = MSBuildPlatform.x86,
-			ToolVersion = MSBuildToolVersion.VS2017,
-        };
-    }
-    else
-    {
-        settings = new MSBuildSettings 
-        {
-            Configuration = "Debug",
-			MSBuildPlatform = MSBuildPlatform.x86,
-			ToolVersion = MSBuildToolVersion.VS2017,
-        };
-    }
+        Configuration = "Release",
+		MSBuildPlatform = MSBuildPlatform.x86,
+		ToolVersion = MSBuildToolVersion.VS2017,
+    };
 
     MSBuild(slnPath, settings);
 });
