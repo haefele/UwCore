@@ -62,7 +62,6 @@ Task("Build")
 
 Task("CreateNuGetPackage")
 	.IsDependentOn("Build")
-	.WithCriteria(() => buildInAppveyor && manualBuild && isNotForPullRequest)
 	.Does(() => 
 {
 	var nuspec = @"<?xml version=""1.0"" encoding=""utf-8""?>
@@ -103,8 +102,7 @@ Task("CreateNuGetPackage")
 });
 
 Task("UploadArtifacts")
-	.IsDependentOn("CreateNuGetPackage")	
-    .WithCriteria(() => buildInAppveyor && manualBuild && isNotForPullRequest)
+	.IsDependentOn("CreateNuGetPackage")
 	.Does(() => 
 {	
 	var nugetPackagePath = string.Format("./../artifacts/UwCore.{0}.nupkg", versionNumber);
