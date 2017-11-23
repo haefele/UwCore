@@ -110,7 +110,7 @@ Task("UploadArtifacts")
 	.Does(() => 
 {	
 	var nugetPackagePath = string.Format("./../artifacts/UwCore.{0}.nupkg", versionNumber);
-	BuildSystem.AppVeyor.UploadArtifact("./../artifacts/UwCore.nupkg");
+	BuildSystem.AppVeyor.UploadArtifact(nugetPackagePath);
 });
 
 Task("Default")
