@@ -64,6 +64,7 @@ Task("CreateNuGetPackage")
 	.IsDependentOn("Build")
 	.Does(() => 
 {
+	string name = "Daniel H\u00E4fele";
 	string buildOutputPath = buildInAppveyor && manualBuild && isNotForPullRequest
 		? @"..\src\UwCore\bin\Release\UwCore**"
 		: @"..\src\UwCore\bin\Debug\UwCore**";
@@ -73,7 +74,7 @@ Task("CreateNuGetPackage")
   <metadata>
     <id>UwCore</id>
     <version>$version$</version>
-    <authors>Daniel Häfele</authors>
+    <authors>""{name}""</authors>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Makes my life with uwp projects easier.</description>
     <dependencies>
