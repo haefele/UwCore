@@ -62,15 +62,19 @@ Task("Build")
 
 Task("CreateNuGetPackage")
 	.IsDependentOn("Build")
-	.WithCriteria(() => buildInAppveyor && manualBuild && isNotForPullRequest)
 	.Does(() => 
 {
-	var nuspec = @"<?xml version=""1.0"" encoding=""utf-8""?>
+	string name = "Daniel H\u00E4fele";
+	string buildOutputPath = buildInAppveyor && manualBuild && isNotForPullRequest
+		? @"..\src\UwCore\bin\Release\UwCore**"
+		: @"..\src\UwCore\bin\Debug\UwCore**";
+
+	var nuspec = $@"<?xml version=""1.0"" encoding=""utf-8""?>
 <package xmlns=""http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd"">
   <metadata>
     <id>UwCore</id>
     <version>$version$</version>
-    <authors>Daniel Häfele</authors>
+    <authors>""{name}""</authors>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Makes my life with uwp projects easier.</description>
     <dependencies>
@@ -78,7 +82,7 @@ Task("CreateNuGetPackage")
     </dependencies>
   </metadata>
   <files>
-    <file src=""..\src\UwCore\bin\Release\UwCore**"" target=""lib\uap10.0"" />
+    <file src=""{buildOutputPath}"" target=""lib\uap10.0"" />
   </files>
 </package>";
 
@@ -92,7 +96,12 @@ Task("CreateNuGetPackage")
 			})
 		.Select(f => $"<dependency id=\"{f.Name}\" version=\"{f.Version}\" />"));
 
-	FileWriteText("./UwCore.nuspec", nuspec.Replace("$version$", versionNumber).Replace("$dependencies$", dependencies));
+		
+	using (var stream = new FileStream("./UwCore.nuspec", FileMode.Create))
+	using (var writer = new StreamWriter(stream, Encoding.UTF8))
+	{
+		writer.Write(nuspec.Replace("$version$", versionNumber).Replace("$dependencies$", dependencies));
+	}
 	
 	var settings = new NuGetPackSettings
 	{
@@ -103,12 +112,12 @@ Task("CreateNuGetPackage")
 });
 
 Task("UploadArtifacts")
-	.IsDependentOn("CreateNuGetPackage")	
-    .WithCriteria(() => buildInAppveyor && manualBuild && isNotForPullRequest)
+	.IsDependentOn("CreateNuGetPackage")
+	.WithCriteria(() => buildInAppveyor)
 	.Does(() => 
 {	
 	var nugetPackagePath = string.Format("./../artifacts/UwCore.{0}.nupkg", versionNumber);
-	BuildSystem.AppVeyor.UploadArtifact("./../artifacts/UwCore.nupkg");
+	BuildSystem.AppVeyor.UploadArtifact(nugetPackagePath);
 });
 
 Task("Default")
