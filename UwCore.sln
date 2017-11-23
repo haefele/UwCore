@@ -13,7 +13,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{E728
 	ProjectSection(SolutionItems) = preProject
 		scripts\build.cake = scripts\build.cake
 		scripts\build.ps1 = scripts\build.ps1
-		scripts\UwCore.nuspec = scripts\UwCore.nuspec
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solution items", "solution items", "{0A937497-664E-4466-AB4F-F96B8E484B9E}"

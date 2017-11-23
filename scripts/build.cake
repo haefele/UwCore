@@ -1,5 +1,7 @@
 #addin "Cake.FileHelpers"
 
+using System.Xml.Linq;
+
 var target = Argument("target", "Default");
 var buildInAppveyor = bool.Parse(EnvironmentVariable("APPVEYOR") ?? "False");
 var manualBuild = bool.Parse(EnvironmentVariable("APPVEYOR_FORCED_BUILD") ?? "False");
@@ -63,8 +65,34 @@ Task("CreateNuGetPackage")
 	.WithCriteria(() => buildInAppveyor && manualBuild && isNotForPullRequest)
 	.Does(() => 
 {
-	//TODO: Add versionnumber to UwCore.nuspec
-	//TODO: Add dependencies to UwCore.nuspec
+	var nuspec = @"<?xml version=""1.0"" encoding=""utf-8""?>
+<package xmlns=""http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd"">
+  <metadata>
+    <id>UwCore</id>
+    <version>$version$</version>
+    <authors>Daniel Häfele</authors>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Makes my life with uwp projects easier.</description>
+    <dependencies>
+		$dependencies$
+    </dependencies>
+  </metadata>
+  <files>
+    <file src=""..\src\UwCore\bin\Release\UwCore**"" target=""lib\uap10.0"" />
+  </files>
+</package>";
+
+	var dependencies = string.Join(Environment.NewLine, XDocument.Load("./../src/UwCore/UwCore.csproj")
+		.Descendants()
+		.Where(f => f.Name.LocalName == "PackageReference")
+		.Select(f => new 
+			{
+				Name = f.Attribute("Include").Value,
+				Version = f.Attribute("Version")?.Value ?? f.Descendants().Where(d => d.Name.LocalName == "Version").FirstOrDefault()?.Value
+			})
+		.Select(f => $"<dependency id=\"{f.Name}\" version=\"{f.Version}\" />"));
+
+	FileWriteText("./UwCore.nuspec", nuspec.Replace("$version$", versionNumber).Replace("$dependencies$", dependencies));
 	
 	var settings = new NuGetPackSettings
 	{
