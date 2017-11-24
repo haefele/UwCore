@@ -7,6 +7,7 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Globalization;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -16,7 +17,9 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Caliburn.Micro;
+using Microsoft.AppCenter.Analytics;
 using UwCore.Application;
+using UwCore.Services.Analytics;
 using UwCoreTest.ApplicationModes;
 using UwCoreTest.Views.HeaderDetails;
 using UwCoreTest.Views.MahPopup;
@@ -75,7 +78,17 @@ namespace UwCoreTest
             shell.Theme = ElementTheme.Light;
             shell.HeaderDetailsViewModel = IoC.Get<HeaderDetailsViewModel>();
         }
-        
+
+        public override bool IsAnalyticsServiceEnabled()
+        {
+            return true;
+        }
+
+        public override IAnalyticsService GetAnalyticsService()
+        {
+            return new AppCenterAnalyticsService("08633b56-6a0b-4568-8b93-b5024a34ef20", typeof(Analytics));
+        }
+
         public override void Configure()
         {
             ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(360, 500));
