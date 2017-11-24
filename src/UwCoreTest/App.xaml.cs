@@ -89,6 +89,11 @@ namespace UwCoreTest
             return new AppCenterAnalyticsService("08633b56-6a0b-4568-8b93-b5024a34ef20", typeof(Analytics));
         }
 
+        public override bool UseNewShellIfPossible()
+        {
+            return true;
+        }
+
         public override void Configure()
         {
             ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(360, 500));

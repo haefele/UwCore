@@ -66,7 +66,7 @@ namespace UwCore.Application
 
             var stack = new NavigationStack();
 
-            IHamburgerView view = ApiInformation.IsApiContractPresent(typeof(UniversalApiContract).FullName, 5)
+            IHamburgerView view = ApiInformation.IsApiContractPresent(typeof(UniversalApiContract).FullName, 5) && this.UseNewShellIfPossible()
                 ? (IHamburgerView)new HamburgerView16299()
                 : new HamburgerView();
 
@@ -362,6 +362,11 @@ namespace UwCore.Application
         public virtual Type GetUpdateNotesViewModelType()
         {
             return null;
+        }
+        
+        public virtual bool UseNewShellIfPossible()
+        {
+            return true;
         }
 
         public virtual IEnumerable<Assembly> SelectAssemblies()
