@@ -4,12 +4,12 @@ using System.Linq;
 using System.Reflection;
 using Windows.UI.Xaml;
 using Caliburn.Micro;
-using Microsoft.HockeyApp;
 using ReactiveUI;
 using UwCore.Application;
 using UwCore.Application.Events;
 using UwCore.Common;
 using UwCore.Extensions;
+using UwCore.Services.Analytics;
 using UwCore.Services.Navigation;
 using UwCore.Services.Navigation.Stack;
 using UwCore.Services.UpdateNotes;
@@ -20,7 +20,7 @@ namespace UwCore.Hamburger
     {
         private readonly NavigationService _navigationService;
         private readonly IEventAggregator _eventAggregator;
-        private readonly IHockeyClient _hockeyClient;
+        private readonly IAnalyticsService _analyticsService;
         private readonly IUpdateNotesService _updateNotesService;
 
         private HamburgerItem _selectedAction;
@@ -73,7 +73,7 @@ namespace UwCore.Hamburger
                 this._currentMode.Enter().Wait();
                 this._eventAggregator.PublishOnCurrentThread(new ShellModeEntered(this._currentMode));
 
-                this._hockeyClient.TrackEvent("ShellModeChanged", new Dictionary<string, string> { ["ShellMode"] = this._currentMode.GetType().Name });
+                this._analyticsService.TrackEvent("ShellModeChanged", new Dictionary<string, string> { ["ShellMode"] = this._currentMode.GetType().Name });
                 
                 this._navigationService.ClearBackStack();
 
@@ -102,15 +102,15 @@ namespace UwCore.Hamburger
             }
         }
 
-        public HamburgerViewModel(NavigationService navigationService, IEventAggregator eventAggregator, IHockeyClient hockeyClient, IUpdateNotesService updateNotesService)
+        public HamburgerViewModel(NavigationService navigationService, IEventAggregator eventAggregator, IAnalyticsService analyticsService, IUpdateNotesService updateNotesService)
         {
             Guard.NotNull(navigationService, nameof(navigationService));
             Guard.NotNull(eventAggregator, nameof(eventAggregator));
-            Guard.NotNull(hockeyClient, nameof(hockeyClient));
+            Guard.NotNull(analyticsService, nameof(analyticsService));
 
             this._navigationService = navigationService;
             this._eventAggregator = eventAggregator;
-            this._hockeyClient = hockeyClient;
+            this._analyticsService = analyticsService;
             this._updateNotesService = updateNotesService;
 
             this.Theme = ElementTheme.Default;

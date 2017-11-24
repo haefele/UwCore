@@ -4,7 +4,6 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Caliburn.Micro;
-using Microsoft.HockeyApp;
 using UwCore.Extensions;
 using UwCore.Helpers;
 using UwCore.Services.Navigation.Stack;

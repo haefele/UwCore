@@ -4,9 +4,9 @@ using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Caliburn.Micro;
-using Microsoft.HockeyApp;
 using ReactiveUI;
 using UwCore.Common;
+using UwCore.Services.Analytics;
 using UwCore.Services.ExceptionHandler;
 using UwCore.Services.Loading;
 
@@ -122,7 +122,7 @@ namespace UwCore
             {
                 if (f)
                 {
-                    IoC.Get<IHockeyClient>().TrackEvent(eventName);
+                    IoC.Get<IAnalyticsService>().TrackEvent(eventName);
                 }
             });
         }

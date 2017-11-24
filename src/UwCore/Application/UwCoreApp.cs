@@ -15,12 +15,12 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Autofac;
 using Caliburn.Micro;
-using Microsoft.HockeyApp;
 using UwCore.Application.Events;
 using UwCore.Events;
 using UwCore.Extensions;
 using UwCore.Hamburger;
 using UwCore.Logging;
+using UwCore.Services.Analytics;
 using UwCore.Services.ApplicationState;
 using UwCore.Services.Clock;
 using UwCore.Services.Dialog;
@@ -85,7 +85,7 @@ namespace UwCore.Application
                 .As<ILoadingService>()
                 .SingleInstance();
 
-            var viewModel = new HamburgerViewModel(navigationService, this._container.Resolve<IEventAggregator>(), this._container.Resolve<IHockeyClient>(), this._container.Resolve<IUpdateNotesService>());
+            var viewModel = new HamburgerViewModel(navigationService, this._container.Resolve<IEventAggregator>(), this._container.Resolve<IAnalyticsService>(), this._container.Resolve<IUpdateNotesService>());
             builder.RegisterInstance(viewModel)
                 .As<IShell>()
                 .SingleInstance();
@@ -182,7 +182,6 @@ namespace UwCore.Application
             this.UnhandledException += this.OnUnhandledException;
 
             //Configure
-            this.ConfigureHockeyApp();
             this.ConfigureContainer();
             this.ConfigureLogging();
             this.Configure();
@@ -200,18 +199,6 @@ namespace UwCore.Application
         #endregion
         
         #region Configure
-        private void ConfigureHockeyApp()
-        {
-            var appId = this.GetHockeyAppId();
-
-            if (string.IsNullOrWhiteSpace(appId) == false && this.IsHockeyAppEnabled())
-            {
-                HockeyClient.Current
-                    .Configure(appId)
-                    .SetExceptionDescriptionLoader(f => string.Join(Environment.NewLine, InMemoryLogMessages.GetLogs()));
-            }
-        }
-
         private void ConfigureContainer()
         {
             var builder = new ContainerBuilder();
@@ -245,9 +232,13 @@ namespace UwCore.Application
                 .As<IEventAggregator>()
                 .SingleInstance();
 
-            //HockeyApp
-            builder.RegisterInstance(HockeyClient.Current)
-                .As<IHockeyClient>()
+            //Analytics
+            var analyticsService = this.GetAnalyticsService();
+            if (analyticsService == null || this.IsAnalyticsServiceEnabled() == false)
+                analyticsService = new NullAnalyticsService();
+
+            builder.RegisterInstance(analyticsService)
+                .As<IAnalyticsService>()
                 .SingleInstance();
 
             //Dialog
@@ -258,11 +249,10 @@ namespace UwCore.Application
             //Exception
             builder.Register(cc => new ExceptionHandler(
                                        cc.Resolve<IDialogService>(), 
-                                       cc.Resolve<IHockeyClient>(), 
+                                       cc.Resolve<IAnalyticsService>(), 
                                        this.GetCommonExceptionType(), 
                                        this.GetErrorMessage(), 
-                                       this.GetErrorTitle(),
-                                       string.IsNullOrWhiteSpace(this.GetHockeyAppId()) == false && this.IsHockeyAppEnabled()))
+                                       this.GetErrorTitle()))
                 .As<IExceptionHandler>()
                 .SingleInstance();
 
@@ -318,7 +308,6 @@ namespace UwCore.Application
 
         private void ConfigureLogging()
         {
-            HockeyLogManager.GetLog = type => new LogAdapter(type, this._container.Resolve<IClock>());
             LogManager.GetLog = type => new LogAdapter(type, this._container.Resolve<IClock>());
         }
         #endregion
@@ -359,12 +348,12 @@ namespace UwCore.Application
 
         }
 
-        public virtual string GetHockeyAppId()
+        public virtual IAnalyticsService GetAnalyticsService()
         {
             return null;
         }
 
-        public virtual bool IsHockeyAppEnabled()
+        public virtual bool IsAnalyticsServiceEnabled()
         {
             var currentVersion = Package.Current.Id.Version.ToVersion();
             return currentVersion != Version.Parse("1.0.0.0");

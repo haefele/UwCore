@@ -6,7 +6,7 @@ using UwCore.Services.Clock;
 
 namespace UwCore.Logging
 {
-    internal class LogAdapter : ILog, Microsoft.HockeyApp.ILog
+    internal class LogAdapter : ILog
     {
         private readonly Type _type;
         private readonly IClock _clock;
