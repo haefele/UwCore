@@ -233,8 +233,11 @@ namespace UwCore.Application
                 .SingleInstance();
 
             //Analytics
-            var analyticsService = this.GetAnalyticsService();
-            if (analyticsService == null || this.IsAnalyticsServiceEnabled() == false)
+            var analyticsService = this.IsAnalyticsServiceEnabled() == false 
+                ? null 
+                : this.GetAnalyticsService();
+
+            if (analyticsService == null)
                 analyticsService = new NullAnalyticsService();
 
             builder.RegisterInstance(analyticsService)
