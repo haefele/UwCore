@@ -20,7 +20,7 @@ namespace UwCoreTest.Views.MahPopup
         {
             base.OnActivate();
 
-            await this.Loading.ExecuteAsync();
+            //await this.Loading.ExecuteAsync();
         }
     }
 }

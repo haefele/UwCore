@@ -3,7 +3,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="using:UwCore.Themes"
                     xmlns:controls="using:UwCore.Controls"
-                    xmlns:converter="using:UwCore.Converter">
+                    xmlns:converter="using:UwCore.Converter"
+                    xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations">
     
     <Style TargetType="controls:PopupOverlay">
         <Setter Property="Padding"
@@ -41,9 +42,21 @@
                         </Grid.Resources>
 
                         <Grid Visibility="{Binding IsOpen, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource IsOpenToVisibilityConverter}}">
+
+                            <animations:Implicit.ShowAnimations>
+                                <animations:OffsetAnimation Duration="0:0:0.5" From="0, -100, 0" To="0" />
+                                <animations:OpacityAnimation Duration="0:0:0.5" From="0" To="1.0" />
+                            </animations:Implicit.ShowAnimations>
+
+                            <animations:Implicit.HideAnimations>
+                                <animations:OffsetAnimation Duration="0:0:0.5" From="0" To="0, -100, 0" />
+                                <animations:OpacityAnimation Duration="0:0:0.5" From="1.0" To="0.0" />
+                            </animations:Implicit.HideAnimations>
+                            
                             <Grid Background="{ThemeResource OverlayBackgroundBrush}"
                                   Opacity="0.3"
-                                  PointerPressed="PopupOverlayBackground_OnPointerPressed" />
+                                  PointerPressed="PopupOverlayBackground_OnPointerPressed"
+                                  Margin="-100" />
 
                             <!-- MaxWidth and MaxHeight are set in code-behind taken to the content -->
                             <Grid Margin="{TemplateBinding Padding}"
