@@ -10,6 +10,7 @@ using Windows.ApplicationModel.VoiceCommands;
 using Windows.Foundation;
 using Windows.Foundation.Metadata;
 using Windows.Storage;
+using Windows.UI.Composition;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -174,6 +175,7 @@ namespace UwCore.Application
                     Coroutine.BeginExecute(coroutine.GetEnumerator(), context);
                 }
             };
+
             AssemblySource.Assemblies.AddRange(this.SelectAssemblies());
 
             //Attach to application events

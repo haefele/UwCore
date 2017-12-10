@@ -38,8 +38,11 @@ namespace UwCore.Services.Loading
             {
                 string message = string.Join(Environment.NewLine, this._messages.Values);
 
-                this._overlay.Message = message;
-                this._overlay.IsActive = string.IsNullOrWhiteSpace(this._overlay.Message) == false;
+                // If it was the last message, leave it in there to allow a smooth transition
+                if (this._messages.IsEmpty == false)
+                    this._overlay.Message = message;
+
+                this._overlay.IsActive = string.IsNullOrWhiteSpace(message) == false;
             });
         }
     }

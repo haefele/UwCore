@@ -3,7 +3,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="using:UwCore.Themes"
                     xmlns:controls="using:UwCore.Controls"
-                    xmlns:converter="using:UwCore.Converter">
+                    xmlns:converter="using:UwCore.Converter"
+                    xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations">
 
     <Style TargetType="controls:LoadingOverlay">
         <Setter Property="Template">
@@ -33,19 +34,35 @@
                         </Grid.Resources>
 
                         <Grid Visibility="{Binding IsActive, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource IsActiveToVisibilityConverter}}">
-                            <Grid Background="{ThemeResource OverlayBackgroundBrush}"
-                                  Opacity="0.3" />
 
-                            <StackPanel VerticalAlignment="Center"
-                                        HorizontalAlignment="Stretch">
-                                <TextBlock Text="{TemplateBinding Message}"
-                                           HorizontalAlignment="Center"
-                                           TextAlignment="Center"
-                                           Margin="0, 0, 0, 5" />
-                                <ProgressRing IsActive="{TemplateBinding IsActive}"
-                                              Width="40"
-                                              Height="40" />
-                            </StackPanel>
+                            <animations:Implicit.ShowAnimations>
+                                <animations:OffsetAnimation Duration="0:0:0.5" From="-100, 0, 0" To="0" />
+                                <animations:OpacityAnimation Duration="0:0:0.5" From="0" To="1.0" />
+                            </animations:Implicit.ShowAnimations>
+
+                            <animations:Implicit.HideAnimations>
+                                <animations:OffsetAnimation Duration="0:0:0.5" From="-0" To="100, 0, 0" />
+                                <animations:OpacityAnimation Duration="0:0:0.5" From="1.0" To="0.0" />
+                            </animations:Implicit.HideAnimations>
+
+                            <Grid Background="{ThemeResource OverlayBackgroundBrush}"
+                                  Opacity="0.3"
+                                  Margin="-100" />
+
+                            <Grid>
+
+                                <StackPanel VerticalAlignment="Center"
+                                            HorizontalAlignment="Stretch">
+
+                                    <TextBlock Text="{TemplateBinding Message}"
+                                               HorizontalAlignment="Center"
+                                               TextAlignment="Center"
+                                               Margin="0, 0, 0, 5" />
+                                    <ProgressRing IsActive="True"
+                                                  Width="40"
+                                                  Height="40" />
+                                </StackPanel>
+                            </Grid>
                         </Grid>
                     </Grid>
                 </ControlTemplate>

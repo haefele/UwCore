@@ -87,18 +87,18 @@ namespace UwCoreTest.Views.Test
         {
             await Task.Delay(TimeSpan.FromSeconds(2), token);
 
-            if (this._shell.Theme == ElementTheme.Default)
-            {
-                this._shell.Theme = ElementTheme.Dark;
-            }
-            else if (this._shell.Theme == ElementTheme.Dark)
-            {
-                this._shell.Theme = ElementTheme.Light;
-            }
-            else if (this._shell.Theme == ElementTheme.Light)
-            {
-                this._shell.Theme = ElementTheme.Default;
-            }
+            //if (this._shell.Theme == ElementTheme.Default)
+            //{
+            //    this._shell.Theme = ElementTheme.Dark;
+            //}
+            //else if (this._shell.Theme == ElementTheme.Dark)
+            //{
+            //    this._shell.Theme = ElementTheme.Light;
+            //}
+            //else if (this._shell.Theme == ElementTheme.Light)
+            //{
+            //    this._shell.Theme = ElementTheme.Default;
+            //}
 
             return string.Empty;
         }

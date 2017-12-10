@@ -61,7 +61,8 @@ namespace UwCore.Services.Navigation
             var content = this._popupOverlay.Content as FrameworkElement;
             ScreenExtensions.TryDeactivate(content?.DataContext, true);
 
-            this._popupOverlay.Content = null;
+            // Leave the content in there to allow a smooth animation
+            //this._popupOverlay.Content = null;
 
             this.Changed?.Invoke(this, new NavigationStepChangedEventArgs(null));
             this._navigationStack.RemoveStep(this);

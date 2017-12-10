@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
@@ -14,6 +15,7 @@ using Windows.UI.Xaml.Markup;
 using Caliburn.Micro;
 using Microsoft.Toolkit.Uwp.UI.Animations;
 using UwCore.Controls;
+using UwCore.Extensions;
 
 namespace UwCore.Hamburger
 {
@@ -56,8 +58,15 @@ namespace UwCore.Hamburger
         }
 
         #region ViewModel integration
+        private HamburgerViewModel _previousViewModel;
+
         private void HamburgerView16299_OnDataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
         {
+            if (this._previousViewModel == this.ViewModel)
+                return;
+
+            this._previousViewModel = this.ViewModel;
+
             this.ViewModel.PropertyChanged += this.ViewModelOnPropertyChanged;
 
             this.ViewModel.Actions.Changed.Subscribe(this.OnActionsChanged);
@@ -96,7 +105,7 @@ namespace UwCore.Hamburger
         
         private void UpdateNavigationItems()
         {
-            this.NavigationView.MenuItems.Clear();
+            var newNavigation = new List<object>();
 
             foreach (var action in this.ViewModel.Actions)
             {
@@ -109,11 +118,11 @@ namespace UwCore.Hamburger
                 };
                 ToolTipService.SetToolTip(item, action.Label);
 
-                this.NavigationView.MenuItems.Add(item);
+                newNavigation.Add(item);
             }
 
             if (this.ViewModel.SecondaryActions.Any())
-                this.NavigationView.MenuItems.Add(new NavigationViewItemSeparator());
+                newNavigation.Add(new NavigationViewItemSeparator());
 
             foreach (var action in this.ViewModel.SecondaryActions)
             {
@@ -126,7 +135,13 @@ namespace UwCore.Hamburger
                 };
                 ToolTipService.SetToolTip(item, action.Label);
 
-                this.NavigationView.MenuItems.Add(item);
+                newNavigation.Add(item);
+            }
+
+            if (this.NavigationView.MenuItems.SequenceEqual(newNavigation, new NavigationViewItemEqualityComparer()) == false)
+            {
+                this.NavigationView.MenuItems.Clear();
+                this.NavigationView.MenuItems.AddRange(newNavigation);
             }
         }
         
@@ -154,6 +169,12 @@ namespace UwCore.Hamburger
             this.ViewModel.SelectedSecondaryAction = this.ViewModel.SecondaryActions.Contains(action)
                 ? action
                 : null;
+        }
+
+        private void NavigationView_OnItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
+        {
+            var item = (HamburgerItem)args.InvokedItem;
+            item.Execute();
         }
         #endregion
 
@@ -260,10 +281,36 @@ namespace UwCore.Hamburger
         LoadingOverlay IHamburgerView.LoadingOverlay => this.LoadingOverlay;
         #endregion
 
-        private void NavigationView_OnItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
+        #region Implementation
+        private class NavigationViewItemEqualityComparer : IEqualityComparer<object>
         {
-            var item = (HamburgerItem) args.InvokedItem;
-            item.Execute();
+            bool IEqualityComparer<object>.Equals(object x, object y)
+            {
+                if (x is NavigationViewItemSeparator && y is NavigationViewItemSeparator)
+                    return true;
+
+                if (x is NavigationViewItem xItem && y is NavigationViewItem yItem)
+                {
+                    var xHamburgerItem = xItem.DataContext as HamburgerItem;
+                    var yHamburgerItem = yItem.DataContext as HamburgerItem;
+
+                    return object.Equals(xHamburgerItem, yHamburgerItem);
+                }
+
+                return object.Equals(x, y);
+            }
+
+            int IEqualityComparer<object>.GetHashCode(object obj)
+            {
+                if (obj is NavigationViewItemSeparator separator)
+                    return 0;
+
+                if (obj is NavigationViewItem item && item.DataContext is HamburgerItem hamburgerItem)
+                    return hamburgerItem.GetHashCode();
+
+                return obj.GetHashCode();
+            }
         }
+        #endregion
     }
 }
