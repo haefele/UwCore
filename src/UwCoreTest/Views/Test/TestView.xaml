@@ -18,6 +18,7 @@
         
         <Button Command="{x:Bind ViewModel.Test}" 
                 Content="Button" 
+                Margin="0, 50, 0, 0"
                 HorizontalAlignment="Stretch" 
                 VerticalAlignment="Top"/>
         
@@ -29,7 +30,7 @@
             </interactivity:Interaction.Behaviors>    
         </TextBox>
 
-        <controls:SettingsControl Margin="0, 300, 0, 0">
+        <controls:SettingsControl Margin="0, 0, 0, 0">
             <controls:SettingsGroup Header="Change privacy options">
                 <controls:SettingsItem Description="Let apps use my advertising ID for experiences across apps (turning this off will reset your ID)">
                     <ToggleSwitch />
