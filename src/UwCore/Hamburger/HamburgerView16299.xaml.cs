@@ -43,6 +43,7 @@ namespace UwCore.Hamburger
             CoreApplicationViewTitleBar titleBar2 = CoreApplication.GetCurrentView().TitleBar;
             titleBar2.LayoutMetricsChanged += this.TitleBar_LayoutMetricsChanged;
             this.NavigationView.DisplayModeChanged += this.NavigationViewOnDisplayModeChanged;
+            this.NavigationView.DisplayModeChanged += this.NavigationViewOnDisplayModeChangedForAutoExpand;
             this.NavigationView.RegisterPropertyChangedCallback(NavigationView.IsPaneOpenProperty, this.OnNavigationVIewIsOpenChanged);
             
             // App title text
@@ -272,6 +273,14 @@ namespace UwCore.Hamburger
             {
                 this._updateBackgroundLock.Release();
             }
+        }
+        #endregion
+
+        #region Auto expand navigation if wide enough
+        private void NavigationViewOnDisplayModeChangedForAutoExpand(NavigationView sender, NavigationViewDisplayModeChangedEventArgs args)
+        {
+            if (this.NavigationView.DisplayMode == NavigationViewDisplayMode.Expanded)
+                this.NavigationView.IsPaneOpen = true;
         }
         #endregion
 
