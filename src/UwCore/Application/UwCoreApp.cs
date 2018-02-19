@@ -53,7 +53,7 @@ namespace UwCore.Application
             if (args.PreviousExecutionState == ApplicationExecutionState.Running ||
                 args.PreviousExecutionState == ApplicationExecutionState.Suspended)
             {
-                var hamburgerView = (HamburgerView)Window.Current.Content;
+                var hamburgerView = (IHamburgerView)Window.Current.Content;
 
                 var custom = hamburgerView.ViewModel.CurrentMode as ICustomStartupShellMode;
                 custom?.HandleCustomStartup(args.TileId, args.Arguments);
