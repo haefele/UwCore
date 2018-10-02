@@ -43,7 +43,7 @@
                         Header="{Binding}">
             <NavigationView.HeaderTemplate>
                 <DataTemplate>
-                    <Grid>
+                    <Grid Height="80">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
