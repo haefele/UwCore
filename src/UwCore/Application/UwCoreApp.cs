@@ -31,6 +31,7 @@ using UwCore.Services.Navigation;
 using UwCore.Services.Navigation.Stack;
 using UwCore.Services.UpdateNotes;
 using INavigationService = UwCore.Services.Navigation.INavigationService;
+using UnhandledExceptionEventArgs = Windows.UI.Xaml.UnhandledExceptionEventArgs;
 
 namespace UwCore.Application
 {
