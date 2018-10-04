@@ -9,6 +9,11 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>portable</DebugType>
 
+    <Authors>Daniel Häfele</Authors>
+    <Description>Makes my life easier with UWP.</Description>
+
+    <Authors>Daniel Häfele</Authors>
+
     <ExtrasEnableDefaultXamlItems>true</ExtrasEnableDefaultXamlItems>
   </PropertyGroup>
 

@@ -237,3 +237,6 @@ _Pvt_Extensions
 
 # Cake Build Tools
 /scripts/tools/
+/build/tools
+/build/artifacts
+/build/dotnettools
