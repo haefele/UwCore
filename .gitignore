@@ -239,3 +239,4 @@ _Pvt_Extensions
 /scripts/tools/
 /build/tools
 /build/artifacts
+/build/dotnettools
