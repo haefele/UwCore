@@ -59,8 +59,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ steps.nbgv.outputs.SimpleVersion }}
-        release_name: ${{ steps.nbgv.outputs.SimpleVersion }}
+        tag_name: v${{ steps.nbgv.outputs.SimpleVersion }}
+        release_name: v${{ steps.nbgv.outputs.SimpleVersion }}
         draft: false
         prerelease: false
     
@@ -75,4 +75,4 @@ jobs:
         asset_content_type: application/zip
     
     - name: Publish nuget package
-      run: dotnet nuget push ./Package/UwCore.*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+      run: dotnet nuget push ./Package/UwCore.${{ steps.nbgv.outputs.SimpleVersion }}.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
