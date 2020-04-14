@@ -1,0 +1,76 @@
+name: Build
+
+on:
+  push: 
+    branches: master
+  pull_request:
+
+jobs:
+  Build:
+    runs-on: windows-latest
+    steps: 
+
+    - name: Checkout code
+      uses: actions/checkout@v1
+      with:
+        fetch-depth: 0
+
+    - name: Disable dotnet welcome message
+      run: New-Item -Force "$env:USERPROFILE/.dotnet/$(dotnet --version).dotnetFirstUseSentinel" | Out-Null
+
+    - name: Build
+      run: dotnet run --project "./scripts/UwCore.Scripts/UwCore.Scripts.csproj" -- build-nuget-package
+
+    - name: Setup versioning
+      uses: aarnott/nbgv@v0.3
+      id: nbgv
+    
+    - name: Upload artifact
+      uses: actions/upload-artifact@v1
+      with:
+        name: Package
+        path: ./artifacts/UwCore.${{ steps.nbgv.outputs.SimpleVersion }}.nupkg
+
+  Publish:
+    runs-on: windows-latest
+    needs: Build
+    if: github.event_name == 'push'
+    steps: 
+
+    - name: Checkout code
+      uses: actions/checkout@v1
+      with:
+        fetch-depth: 0
+
+    - name: Setup versioning
+      uses: aarnott/nbgv@v0.3
+      id: nbgv
+
+    - name: Download artifact
+      uses: actions/download-artifact@v1
+      with:
+        name: Package
+
+    - name: Create release
+      id: create_release
+      uses: actions/create_release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ steps.nbgv.outputs.SimpleVersion }}
+        release_name: ${{ steps.nbgv.outputs.SimpleVersion }}
+        draft: false
+        prerelease: false
+    
+    - name: Upload nuget package
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./Package/UwCore.${{ steps.nbgv.outputs.SimpleVersion }}.nupkg
+        asset_name: UwCore.${{ steps.nbgv.outputs.SimpleVersion }}.nupkg
+        asset_content_type: application/zip
+    
+    - name: Publish nuget package
+      run: dotnet nuget push ./Package/UwCore.*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
