@@ -1,9 +1,9 @@
 {
-    "version": "0.3.0-preview",
-    "publicReleaseRefSpec": [
-      "^refs/heads/master$"
-    ],
-    "nugetPackageVersion":{
-      "semVer": 2
-    }
+  "version": "0.4",
+  "publicReleaseRefSpec": [
+    "^refs/heads/master$"
+  ],
+  "nugetPackageVersion": {
+    "semVer": 2
   }
+}

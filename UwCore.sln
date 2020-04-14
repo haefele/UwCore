@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27004.2009
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30002.166
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UwCore", "src\UwCore\UwCore.csproj", "{BEE32CEA-DC4E-4C55-9D7D-80AFF9D7D027}"
 EndProject
@@ -11,10 +11,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{343F46B0-3FB
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solution items", "solution items", "{0A937497-664E-4466-AB4F-F96B8E484B9E}"
 	ProjectSection(SolutionItems) = preProject
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		Directory.Build.props = Directory.Build.props
 		LICENSE = LICENSE
 		README.md = README.md
-		version.txt = version.txt
+		version.json = version.json
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{AE069125-2317-443D-A6AA-7773A61CAE3E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UwCore.Scripts", "scripts\UwCore.Scripts\UwCore.Scripts.csproj", "{1CDA6400-5DC0-48D6-B4C2-7A016F610CF3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -68,6 +75,22 @@ Global
 		{957DE25D-4534-48ED-9ECF-1655F2C320DA}.Release|x86.ActiveCfg = Release|x86
 		{957DE25D-4534-48ED-9ECF-1655F2C320DA}.Release|x86.Build.0 = Release|x86
 		{957DE25D-4534-48ED-9ECF-1655F2C320DA}.Release|x86.Deploy.0 = Release|x86
+		{1CDA6400-5DC0-48D6-B4C2-7A016F610CF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1CDA6400-5DC0-48D6-B4C2-7A016F610CF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1CDA6400-5DC0-48D6-B4C2-7A016F610CF3}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{1CDA6400-5DC0-48D6-B4C2-7A016F610CF3}.Debug|ARM.Build.0 = Debug|Any CPU
+		{1CDA6400-5DC0-48D6-B4C2-7A016F610CF3}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1CDA6400-5DC0-48D6-B4C2-7A016F610CF3}.Debug|x64.Build.0 = Debug|Any CPU
+		{1CDA6400-5DC0-48D6-B4C2-7A016F610CF3}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1CDA6400-5DC0-48D6-B4C2-7A016F610CF3}.Debug|x86.Build.0 = Debug|Any CPU
+		{1CDA6400-5DC0-48D6-B4C2-7A016F610CF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1CDA6400-5DC0-48D6-B4C2-7A016F610CF3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1CDA6400-5DC0-48D6-B4C2-7A016F610CF3}.Release|ARM.ActiveCfg = Release|Any CPU
+		{1CDA6400-5DC0-48D6-B4C2-7A016F610CF3}.Release|ARM.Build.0 = Release|Any CPU
+		{1CDA6400-5DC0-48D6-B4C2-7A016F610CF3}.Release|x64.ActiveCfg = Release|Any CPU
+		{1CDA6400-5DC0-48D6-B4C2-7A016F610CF3}.Release|x64.Build.0 = Release|Any CPU
+		{1CDA6400-5DC0-48D6-B4C2-7A016F610CF3}.Release|x86.ActiveCfg = Release|Any CPU
+		{1CDA6400-5DC0-48D6-B4C2-7A016F610CF3}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -75,6 +98,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{BEE32CEA-DC4E-4C55-9D7D-80AFF9D7D027} = {343F46B0-3FB6-48D8-94AE-9C4E990D1305}
 		{957DE25D-4534-48ED-9ECF-1655F2C320DA} = {343F46B0-3FB6-48D8-94AE-9C4E990D1305}
+		{1CDA6400-5DC0-48D6-B4C2-7A016F610CF3} = {AE069125-2317-443D-A6AA-7773A61CAE3E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B7EBDC57-74DC-4434-9109-59DF8B8E759E}
