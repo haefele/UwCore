@@ -23,10 +23,12 @@ jobs:
 
     - name: Setup versioning
       uses: aarnott/nbgv@v0.3
+      if: github.event_name == 'push'
       id: nbgv
     
     - name: Upload artifact
       uses: actions/upload-artifact@v1
+      if: github.event_name == 'push'
       with:
         name: Package
         path: ./artifacts/UwCore.${{ steps.nbgv.outputs.SimpleVersion }}.nupkg
@@ -53,7 +55,7 @@ jobs:
 
     - name: Create release
       id: create_release
-      uses: actions/create_release@v1
+      uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
