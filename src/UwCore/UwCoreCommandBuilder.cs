@@ -86,7 +86,7 @@ namespace UwCore
             return new UwCoreCommand<T>(innerCommand);
         }
 
-        private static void AttachLoadingService(ReactiveCommand innerCommand, Func<string> message)
+        private static void AttachLoadingService(IReactiveCommand innerCommand, Func<string> message)
         {
             Guard.NotNull(innerCommand, nameof(innerCommand));
             Guard.NotNull(message, nameof(message));
@@ -105,7 +105,7 @@ namespace UwCore
             });
         }
 
-        private static void AttachExceptionHandler(ReactiveCommand innerCommand)
+        private static void AttachExceptionHandler(IReactiveCommand innerCommand)
         {
             Guard.NotNull(innerCommand, nameof(innerCommand));
 
@@ -113,11 +113,11 @@ namespace UwCore
             innerCommand.ThrownExceptions.Subscribe(async e => await exceptionHandler.HandleAsync(e));
         }
 
-        private static void TrackEvent(ReactiveCommand innerCommand, string eventName)
+        private static void TrackEvent(IReactiveCommand innerCommand, string eventName)
         {
             Guard.NotNull(innerCommand, nameof(innerCommand));
             Guard.NotNullOrWhiteSpace(eventName, nameof(eventName));
-
+                        
             innerCommand.IsExecuting.Subscribe(f =>
             {
                 if (f)

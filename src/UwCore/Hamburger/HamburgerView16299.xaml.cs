@@ -16,6 +16,7 @@ using Caliburn.Micro;
 using Microsoft.Toolkit.Uwp.UI.Animations;
 using UwCore.Controls;
 using UwCore.Extensions;
+using DynamicData.Binding;
 
 namespace UwCore.Hamburger
 {
@@ -70,8 +71,8 @@ namespace UwCore.Hamburger
 
             this.ViewModel.PropertyChanged += this.ViewModelOnPropertyChanged;
 
-            this.ViewModel.Actions.Changed.Subscribe(this.OnActionsChanged);
-            this.ViewModel.SecondaryActions.Changed.Subscribe(this.OnSecondaryActionsChanged);
+            this.ViewModel.Actions.ToObservableChangeSet().Subscribe(_ => this.UpdateNavigationItems());
+            this.ViewModel.SecondaryActions.ToObservableChangeSet().Subscribe(_ => this.UpdateNavigationItems());
 
             this.UpdateNavigationItems();
             this.UpdateSelectedItem();
@@ -93,17 +94,7 @@ namespace UwCore.Hamburger
         }
         #endregion
 
-        #region Navigation
-        private void OnActionsChanged(NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
-        {
-            this.UpdateNavigationItems();
-        }
-
-        private void OnSecondaryActionsChanged(NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
-        {
-            this.UpdateNavigationItems();
-        }
-        
+        #region Navigation        
         private void UpdateNavigationItems()
         {
             var newNavigation = new List<object>();
