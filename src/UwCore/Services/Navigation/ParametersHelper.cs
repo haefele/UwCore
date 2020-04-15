@@ -53,7 +53,7 @@ namespace UwCore.Services.Navigation
             if (parametersProperty != null)
             {
                 var parameter = parametersProperty.GetValue(self);
-                return parameter.AreValuesInjected(values);
+                return parameter != null && parameter.AreValuesInjected(values);
             }
             else
             {

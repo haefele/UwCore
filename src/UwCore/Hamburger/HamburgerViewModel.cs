@@ -13,6 +13,8 @@ using UwCore.Services.Analytics;
 using UwCore.Services.Navigation;
 using UwCore.Services.Navigation.Stack;
 using UwCore.Services.UpdateNotes;
+using DynamicData;
+using DynamicData.Binding;
 
 namespace UwCore.Hamburger
 {
@@ -31,7 +33,7 @@ namespace UwCore.Hamburger
 
         private object _latestViewModel;
 
-        public ReactiveList<HamburgerItem> Actions { get; }
+        public ObservableCollectionExtended<HamburgerItem> Actions { get; }
 
         public HamburgerItem SelectedAction
         {
@@ -39,7 +41,7 @@ namespace UwCore.Hamburger
             set { this.RaiseAndSetIfChanged(ref this._selectedAction, value); }
         }
 
-        public ReactiveList<HamburgerItem> SecondaryActions { get; }
+        public ObservableCollectionExtended<HamburgerItem> SecondaryActions { get; }
 
         public HamburgerItem SelectedSecondaryAction
         {
@@ -117,13 +119,13 @@ namespace UwCore.Hamburger
 
             ((INavigationStep)this._navigationService).Changed += this.OnChanged;
 
-            this.Actions = new ReactiveList<HamburgerItem>();
-            this.SecondaryActions = new ReactiveList<HamburgerItem>();
+            this.Actions = new ObservableCollectionExtended<HamburgerItem>();
+            this.SecondaryActions = new ObservableCollectionExtended<HamburgerItem>();
 
             //Just make sure the selected action is always correct
             //Because it might happen, that we navigate to some view-model and then after that update the actions
-            this.Actions.Changed.Subscribe(_ => this.UpdateSelectedAction());
-            this.SecondaryActions.Changed.Subscribe(_ => this.UpdateSelectedAction());
+            this.Actions.ToObservableChangeSet().Subscribe(_ => this.UpdateSelectedAction());
+            this.SecondaryActions.ToObservableChangeSet().Subscribe(_ => this.UpdateSelectedAction());
         }
 
         private void OnChanged(object sender, NavigationStepChangedEventArgs eventArgs)

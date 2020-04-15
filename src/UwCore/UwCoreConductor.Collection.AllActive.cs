@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Reflection;
 using Caliburn.Micro;
+using DynamicData.Binding;
 using ReactiveUI;
 
 namespace UwCore
@@ -20,7 +21,7 @@ namespace UwCore
             /// </summary>
             public class AllActive : ConductorBase<T>
             {
-                private readonly ReactiveList<T> _items = new ReactiveList<T>();
+                private readonly ObservableCollectionExtended<T> _items = new ObservableCollectionExtended<T>();
                 private readonly bool _openPublicItems;
 
                 /// <summary>
@@ -62,7 +63,7 @@ namespace UwCore
                 /// <summary>
                 /// Gets the items that are currently being conducted.
                 /// </summary>
-                public ReactiveList<T> Items
+                public ObservableCollectionExtended<T> Items
                 {
                     get { return this._items; }
                 }
@@ -101,7 +102,10 @@ namespace UwCore
                         if (!canClose && closeableList.Any())
                         {
                             closeableList.OfType<IDeactivate>().Apply(x => x.Deactivate(true));
-                            this._items.RemoveAll(closeableList);
+                            foreach (var item in closeableList)
+                            {
+                                this._items.Remove(item);
+                            }
                         }
 
                         callback(canClose);
