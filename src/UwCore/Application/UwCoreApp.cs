@@ -64,35 +64,8 @@ namespace UwCore.Application
             
             await this.Initialize();
 
-            var builder = new ContainerBuilder();
-
-            var stack = new NavigationStack();
-
-            IHamburgerView view = ApiInformation.IsApiContractPresent(typeof(UniversalApiContract).FullName, 5) && this.UseNewShellIfPossible()
-                ? (IHamburgerView)new HamburgerView16299()
-                : new HamburgerView();
-
-            var popupNavigationService = new PopupNavigationService(view.PopupOverlay, stack);
-            var navigationService = new NavigationService(view.ContentFrame, this._container.Resolve<IEventAggregator>(), popupNavigationService);
-
-            stack.AddStep(navigationService);
-
-            builder.RegisterInstance(stack)
-                .As<INavigationStack>()
-                .SingleInstance();
-            builder.RegisterInstance(navigationService)
-                .As<INavigationService>()
-                .SingleInstance();
-            builder.RegisterInstance(new LoadingService(view.LoadingOverlay))
-                .As<ILoadingService>()
-                .SingleInstance();
-
-            var viewModel = new HamburgerViewModel(navigationService, this._container.Resolve<IEventAggregator>(), this._container.Resolve<IAnalyticsService>(), this._container.Resolve<IUpdateNotesService>());
-            builder.RegisterInstance(viewModel)
-                .As<IShell>()
-                .SingleInstance();
-
-            builder.Update(this._container);
+            var view = this._container.Resolve<IHamburgerView>();
+            var viewModel = this._container.Resolve<IShell>();
 
             this.CustomizeShell(viewModel);
             
@@ -221,6 +194,9 @@ namespace UwCore.Application
 
                         if (ee.Instance is IScreen && typeInfo.IsDefined(typeof(AutoSubscribeEventsForScreenAttribute)))
                             this._container.Resolve<IEventAggregator>().SubscribeScreen((IScreen)ee.Instance);
+
+                        if (ee.Instance is NavigationService)
+                            this._container.Resolve<INavigationStack>().AddStep((NavigationService)ee.Instance);
                     };
                 };
             });
@@ -305,6 +281,34 @@ namespace UwCore.Application
                     .As(serviceType)
                     .SingleInstance();
             }
+
+            //Shell
+            builder.Register(context => ApiInformation.IsApiContractPresent(typeof(UniversalApiContract).FullName, 5) && this.UseNewShellIfPossible()
+                    ? (IHamburgerView)new HamburgerView16299()
+                    : new HamburgerView())
+                .As<IHamburgerView>()
+                .SingleInstance();
+
+            builder.RegisterType<NavigationStack>()
+                .As<INavigationStack>()
+                .SingleInstance();
+
+            builder.Register(context => new PopupNavigationService(context.Resolve<IHamburgerView>().PopupOverlay, context.Resolve<INavigationStack>()))
+                .As<PopupNavigationService>()
+                .SingleInstance();
+
+            builder.Register(context => new NavigationService(context.Resolve<IHamburgerView>().ContentFrame, context.Resolve<IEventAggregator>(), context.Resolve<PopupNavigationService>()))
+                .As<NavigationService>()
+                .As<INavigationService>()
+                .SingleInstance();
+
+            builder.Register(context => new LoadingService(context.Resolve<IHamburgerView>().LoadingOverlay))
+                .As<ILoadingService>()
+                .SingleInstance();
+
+            builder.Register(context => new HamburgerViewModel(context.Resolve<NavigationService>(), context.Resolve<IEventAggregator>(), context.Resolve<IAnalyticsService>(), context.Resolve<IUpdateNotesService>()))
+                .As<IShell>()
+                .SingleInstance();
 
             //Other
             this.ConfigureContainer(builder);
