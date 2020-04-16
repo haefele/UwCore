@@ -86,7 +86,7 @@ namespace UwCoreTest
 
         public override IAnalyticsService GetAnalyticsService()
         {
-            return new AppCenterAnalyticsService("08633b56-6a0b-4568-8b93-b5024a34ef20", typeof(Analytics));
+            return new AppCenterAnalyticsService("08633b56-6a0b-4568-8b93-b5024a34ef20");
         }
 
         public override bool UseNewShellIfPossible()

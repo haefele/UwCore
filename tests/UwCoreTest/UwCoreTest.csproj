@@ -131,7 +131,7 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\UwCore\UwCore.csproj">
+    <ProjectReference Include="..\..\src\UwCore\UwCore.csproj">
       <Project>{bee32cea-dc4e-4c55-9d7d-80aff9d7d027}</Project>
       <Name>UwCore</Name>
     </ProjectReference>
